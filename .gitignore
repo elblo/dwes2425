@@ -9,3 +9,5 @@ site/planning.html
 site/sitemap.xml
 site/sitemap.xml.gz
 site/search/search_index.json
+
+.DS_Store
