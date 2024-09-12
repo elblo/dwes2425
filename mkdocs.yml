@@ -1,5 +1,5 @@
 site_name: Desarrollo Web en Entorno Servidor
-site_url: https://aitor-medrano.github.io/dwes2122
+site_url: https://elblo.github.io/dwes2425
 use_directory_urls: false
 
 nav:
@@ -34,7 +34,7 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: "imagenes/logofp.png"
+  logo: "imagenes/logoies.png"
   features:
     - header.autohide
     - toc.integrate
@@ -47,12 +47,12 @@ extra:
     language: "es"
   social:
     - icon: material/twitter
-      link: https://twitter.com/aitormedrano
+      link: https://twitter.com/eladioblanco
     - icon: material/email-edit
-      link: mailto:<a.medrano@edu.gva.es>
-  analytics:
-    provider: google
-    property: G-X6D0LR7TC8
+      link: mailto:<eladio.blanco@fernando3martos.com>
+  # analytics:
+    # provider: google
+    # property: G-X6D0LR7TC8
 
 plugins:
   - search

@@ -1,9 +1,7 @@
 # Desarrollo Web en Entorno Servidor
 
-!!! tip "Apuntes obsoletos"
-    Estos apuntes se redactaron durante el curso 21/22. La primera mitad fueron escritos por mí (*Aitor Medrano*), y luego los continuó *Luis Alemañ*. Desde entonces ya no imparto este módulo y por lo tanto, ya no se actualizan.
-
-    Repasándolos en perspectiva no están mal pero tienen mucho margen de mejora. Si los has utilizado y ampliado, si quieres, mándame un [mail](mailto:a.medrano@edu.gva.es) y pondré un enlace a tu repositorio para visibilizarlo y poder ayudar a más gente, ya sea profesorado o alumnado.
+!!! tip "Apuntes en construcción"
+    Estos apuntes se están redactando durante el curso 24/25 tomando como base los elaborados en el curso 21/22 por [*Aitor Medrano*](https://x.com/aitormedrano) y *Luis Alemañ*.
 
 Aquí puedes encontrar los apuntes del módulo de ***Desarrollo web en entorno servidor***, que se imparte en el segundo curso del ciclo formativo de grado superior de *Desarrollo de Aplicaciones Web*.
 
@@ -12,20 +10,20 @@ La duración del módulo es de 160 horas lectivas, a razón de **8 horas semanal
 ## ¿Qué voy a aprender?
 
 * A desarrollar aplicaciones web dinámicas, que obtienen la información a partir de una base de datos.
-* Analizar la estructura de una aplicación cliente/servidor, separando el código de presentación de la lógica de negocio
+* Analizar la estructura de una aplicación cliente/servidor, separando el código de presentación de la lógica de negocio.
 * Obtener información a partir de los datos almacenados, así como modificarlos.
 
 ## Resultados de aprendizaje
 
-1. Selecciona las arquitecturas y tecnologías de programación Web en entorno servidor, analizando sus capacidades y características propias.
-2. Escribe sentencias ejecutables por un servidor Web reconociendo y aplicando procedimientos de integración del código en lenguajes de marcas.
+1. Selecciona las arquitecturas y tecnologías de programación web en entorno servidor, analizando sus capacidades y características propias.
+2. Escribe sentencias ejecutables por un servidor web reconociendo y aplicando procedimientos de integración del código en lenguajes de marcas.
 3. Escribe bloques de sentencias embebidos en lenguajes de marcas, seleccionando y utilizando las estructuras de programación.
-4. Desarrolla aplicaciones Web embebidas en lenguajes de marcas analizando e incorporando funcionalidades según especificaciones.
-5. Desarrolla aplicaciones Web identificando y aplicando mecanismos para separar el código de presentación de la lógica de negocio.
-6. Desarrolla aplicaciones de acceso a almacenes de datos, aplicando medidas para mantener la seguridad y la integridad de la información.
-7. Desarrolla servicios Web analizando su funcionamiento e implantando la estructura de sus componentes.
-8. Genera páginas Web dinámicas analizando y utilizando tecnologías del servidor Web que añadan código al lenguaje de marcas.
-9. Desarrolla aplicaciones Web híbridas seleccionando y utilizando librerías de código y repositorios heterogéneos de información.
+4. Desarrolla aplicaciones web embebidas en lenguajes de marcas analizando e incorporando funcionalidades según especificaciones.
+5. Desarrolla aplicaciones web identificando y aplicando mecanismos para separar el código de presentación de la lógica de negocio.
+6. Desarrolla aplicaciones web de acceso a almacenes de datos, aplicando medidas para mantener la seguridad y la integridad de la información.
+7. Desarrolla servicios web reutilizables y accesibles mediante protocolos web, verificando su funcionamiento.
+8. Genera páginas web dinámicas analizando y utilizando tecnologías y frameworks del servidor web que añadan código al lenguaje de marcas.
+9. Desarrolla aplicaciones web híbridas seleccionando y utilizando tecnologías, frameworks servidor y repositorios heterogéneos de información.
 
 ## Unidades didácticas / Temporalización
 
@@ -78,20 +76,14 @@ Duración estimada: 88 sesiones
     * *AJAX* con *JSON*.
     * Interacción con *Vue.js*.
 
-<!--
 ## Instrumentos de calificación
 
-La nota de cada evaluación se calcula mediante:
+La nota de cada evaluación y también final se calcula mediante una suma ponderada de las notas de cada *Criterio de Evaluación* evaluados hasta el momento.
 
-* 30% Trabajo en Clase / Actividades
-    * Se evalúan todas las actividades realizadas en clase y en casa.
-    * Las actividades se evalúan mediante tareas de *Aules* con calificaciones comprendidas entre 0 y 3 puntos:
-        * 0: No entregada
-        * 1: Entregada pero solución errónea o incompleta
-        * 2: Entregada y solución aceptable, aunque tiene algún apartado incompleto
-        * 3: Entregada y solución correcta.
-* 70% Actividad de evaluación
-    * Una o dos pruebas por evaluación.
+A cada criterio se le asigna un porcentaje del total de la nota final y va asociado a un tipo de actividad que puede ser:
+* Examen Teoría
+* Examen Prácticas
+* Ejercicios de clase
+* Prácticas obligatorias
 
-La nota final se calcula mediante la media de cada una de las evaluaciones.
--->
+<!-- Incluir imagen ponderación CE ->
