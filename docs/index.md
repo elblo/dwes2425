@@ -25,7 +25,7 @@ La duración del módulo es de 168 horas lectivas, a razón de **8 horas semanal
 8. Genera páginas web dinámicas analizando y utilizando tecnologías y frameworks del servidor web que añadan código al lenguaje de marcas.
 9. Desarrolla aplicaciones web híbridas seleccionando y utilizando tecnologías, frameworks servidor y repositorios heterogéneos de información.
 
-## Unidades didácticas / Temporalización
+## Unidades didácticas y temporalización
 
 A continuación se muestran las unidades didácticas y una estimación temporal de cada una de ellas.
 La primera evaluación contendría las unidades comprendidas entre la 1 y 5, y parte de la unidad 6. Así pues, desde la mitad de la  unidad 6 a la unidad 9 se verán en la segunda evaluación.
