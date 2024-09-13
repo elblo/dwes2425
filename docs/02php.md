@@ -1397,8 +1397,10 @@ var_dump(is_int(intval($uno))); // true
 
 200. Visualiza el vídeo de Jesús Amieiro sobre [PHP en 2020](https://www.youtube.com/watch?v=o3IwAqslGUM&t=12724s) a partir del minuto 3:32 (son 40 minutos aproximadamente).
     * ¿Qué relación existe entre PHP y Facebook?
-    * Respecto al rendimiento, ¿qué versión mínima deberíamos utilizar?
-    * ¿Por qué PHP tiene mala fama? 
+    * Respecto al rendimiento, ¿qué versión mínima deberíamos utilizar? Amplía la información buscando las peticiones/segundo, latencia... para las últimas versiones de PHP 8.
+    * ¿Por qué PHP tiene mala fama?
+    * ¿Con qué frecuencia actualiza PHP de versión? ¿Cuánto tiempo de soporte da a cada versión? 
+    * ¿Qué porcentaje aproximado de las webs están escritas en PHP? Busca el dato actualizado a este año.
 201. `201tresfrases.php`: Muestra 3 frases, cada una en un párrafo utilizando las tres posibilidades que existen de mostrar contenido.
 Tras ello, introduce dos comentarios, uno de bloque y otro de una línea.
 202. `202calculos.php`: Escribe un programa que utilice las variables `$x` y `$y`. Asígnales los valores `166` y `999` respectivamente.
