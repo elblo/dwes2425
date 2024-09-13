@@ -75,16 +75,14 @@ Duración estimada: 86 horas
 4. Servicios REST (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.
-<!-- * Interacción con *Vue.js*.-->
 
 ## Instrumentos de calificación
 
 La nota de cada evaluación y también final se calcula mediante una suma ponderada de la nota de cada *Criterio de Evaluación* evaluado hasta el momento.
 
 A cada criterio se le asigna un porcentaje del total de la nota final y va asociado a un tipo de actividad que puede ser:
-* Examen Teoría
-* Examen Prácticas
-* Ejercicios de clase
-* Prácticas obligatorias
 
-<!-- Incluir imagen ponderación CE ->
+- Examen Teoría
+- Examen Prácticas
+- Ejercicios de clase
+- Prácticas obligatorias
