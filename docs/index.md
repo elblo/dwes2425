@@ -5,7 +5,7 @@
 
 Aquí puedes encontrar los apuntes del módulo de ***Desarrollo web en entorno servidor***, que se imparte en el segundo curso del ciclo formativo de grado superior de *Desarrollo de Aplicaciones Web*.
 
-La duración del módulo es de 160 horas lectivas, a razón de **8 horas semanales**, y se desarrolla a lo largo de los **dos primeros trimestres** del curso. Se ha [planificado](planning.md) basándose en 4 sesiones de 2 horas lectivas por semana.
+La duración del módulo es de 168 horas lectivas, a razón de **8 horas semanales**, y se desarrolla a lo largo de los **dos primeros trimestres** del curso. Se ha [planificado](planning.md) basándose en 4 sesiones de 2 horas lectivas por semana.
 
 ## ¿Qué voy a aprender?
 
@@ -28,45 +28,46 @@ La duración del módulo es de 160 horas lectivas, a razón de **8 horas semanal
 ## Unidades didácticas / Temporalización
 
 A continuación se muestran las unidades didácticas y una estimación temporal de cada una de ellas.
-La primera evaluación contendría las unidades comprendidas entre la 1 y 5, y parte de la unidades 6. Así pues, desde la mitad de la  unidad 6 a la unidad 9 se verán en la segunda evaluación.
+La primera evaluación contendría las unidades comprendidas entre la 1 y 5, y parte de la unidad 6. Así pues, desde la mitad de la  unidad 6 a la unidad 9 se verán en la segunda evaluación.
 
 ### Primera evaluación
 
-Duración estimada: 72 sesiones
+Duración estimada: 76 horas <!-- TODO ajustar sesiones ->
 
 1. [Arquitecturas Web](01arquitecturas.md) (4h)
     * Cliente/Servidor.
     * MVC.
+    * Puesta en marcha con XAMPP y Docker.
 2. [El lenguaje PHP](02php.md) (26h)
     * Condiciones y bucles.
     * Arrays.
-3. [Orientación a objetos con PHP](03phpoo.md) (18h)
+3. Orientación a objetos con PHP (18h)
     * Clases y objetos
     * Namespaces
     * Excepciones
-4. [Programación Web](04web.md) (12h)
+4. Programación Web (12h)
     * Formularios.
-    * Cookies y sesión.
-5. [Herramientas Web](05herramientas.md) (16h)
-    * *Composer*.
-    * Uso de logs con *Monolog*.
-    * *Webscraping*.
+    * Cookies.
+    * Sesiones.
+5. Herramientas Web (16h)
+    * Gestión de librerías con *Composer*.
+    * Gestión de logs con *Monolog*.
     * Documentación con *phpDocumentor*.
+    * Web scraping con *Goutte*.
     * Pruebas con *PhpUnit*.
 
 ### Segunda evaluación
 
-Duración estimada: 88 sesiones
+Duración estimada: 86 horas <!-- TODO ajustar sesiones ->
 
 6. Acceso a datos (28h)
     * *SQL*
     * *PDO*
     * Ficheros CSV y PDF.
-    * *ORM* con *Eloquent*.
 7. Frameworks PHP. Laravel básico (24h)
     * Rutas.
     * Vistas.
-    * Migraciones e integración con *Eloquent*.
+    * Migraciones e integración con el ORM *Eloquent*.
 8. Uso avanzado de Frameworks (22h)
     * Plantillas con *Blade*.
     * Autenticación y autorización.
@@ -74,11 +75,11 @@ Duración estimada: 88 sesiones
 9. Servicios REST (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.
-    * Interacción con *Vue.js*.
+<!-- * Interacción con *Vue.js*.-->
 
 ## Instrumentos de calificación
 
-La nota de cada evaluación y también final se calcula mediante una suma ponderada de las notas de cada *Criterio de Evaluación* evaluados hasta el momento.
+La nota de cada evaluación y también final se calcula mediante una suma ponderada de la nota de cada *Criterio de Evaluación* evaluado hasta el momento.
 
 A cada criterio se le asigna un porcentaje del total de la nota final y va asociado a un tipo de actividad que puede ser:
 * Examen Teoría

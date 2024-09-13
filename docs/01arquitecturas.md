@@ -380,7 +380,7 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
     * Año de creación
     * Última versión
 
-102. Busca tres ofertas de trabajo de *desarrollo de software* en Infojobs en la provincia de Alicante que citen PHP y anota:
+102. Busca tres ofertas de trabajo en en Infojobs o LinkedIn de empresas cercanas o con modalidad de trabajar en remoto sobre *desarrollo de software* que citen PHP y anota:
 
     * Empresa + puesto + frameworks PHP + requísitos + sueldo + enlace a la oferta.
 
@@ -395,6 +395,8 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
     * *Loaded Configuration File*
     * `memory_limit`
     * `DOCUMENT_ROOT`
+    * `post_max_size`
+    * `upload_max_filesize`
 
 104. Abre el archivo `php.ini-production` que está dentro del contenedor (puedes averiguar la ruta a partir de la propiedad *Configuration File (php.ini) Path*) e indica para qué sirven las siguientes propiedades y qué valores contienen:
 

@@ -138,8 +138,8 @@ Desde PHP 5 se lanzan como una excepción. Más adelante veremos el uso de `try`
 
 ``` php
 <?php
-$nombre = "Aitor";
-$nombreCompleto = "Aitor Medrano";
+$nombre = "Rasmus";
+$nombreCompleto = "Rasmus Lerdorf";
 $numero = 123;
 $numero2 = 456;
 $pi = 3.14;
