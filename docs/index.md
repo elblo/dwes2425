@@ -32,7 +32,7 @@ La primera evaluación contendría las unidades comprendidas entre la 1 y 5, y p
 
 ### Primera evaluación
 
-Duración estimada: 76 horas <!-- TODO ajustar sesiones ->
+Duración estimada: 76 horas
 
 1. [Arquitecturas Web](01arquitecturas.md) (4h)
     * Cliente/Servidor.
@@ -58,21 +58,21 @@ Duración estimada: 76 horas <!-- TODO ajustar sesiones ->
 
 ### Segunda evaluación
 
-Duración estimada: 86 horas <!-- TODO ajustar sesiones ->
+Duración estimada: 86 horas
 
-6. Acceso a datos (28h)
+1. Acceso a datos (28h)
     * *SQL*
     * *PDO*
     * Ficheros CSV y PDF.
-7. Frameworks PHP. Laravel básico (24h)
+2. Frameworks PHP. Laravel básico (24h)
     * Rutas.
     * Vistas.
     * Migraciones e integración con el ORM *Eloquent*.
-8. Uso avanzado de Frameworks (22h)
+3. Uso avanzado de Frameworks (22h)
     * Plantillas con *Blade*.
     * Autenticación y autorización.
     * *i18n*.
-9. Servicios REST (12h)
+4. Servicios REST (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.
 <!-- * Interacción con *Vue.js*.-->
