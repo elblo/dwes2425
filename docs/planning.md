@@ -2,7 +2,7 @@
 
 ## 1.- Arquitecturas Web (4h)
 
-- [X] 1.- (1) Introducción asignatura. Arquitecturas, decisiones de diseño - Ejercicios 101,102 - *Martes 17/09/2024*
+- [X] 1.- (1) Introducción asignatura. Arquitecturas, decisiones de diseño - Ejercicios 101,102 - *Miércoles 18/09/2024*
 - [X] 2.- (2) Herramientas. Puesta en marcha / Docker - Ejercicios 103,104
 
 ## 2.- El lenguaje PHP (26h)

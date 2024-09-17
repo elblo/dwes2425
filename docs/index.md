@@ -1,6 +1,6 @@
 # Desarrollo Web en Entorno Servidor
 
-!!! tip "Apuntes en construcción"
+??? info "Apuntes en construcción"
     Estos apuntes se están actualizando por [*Eladio Blanco*](https://x.com/eladioblanco) durante el curso 24/25 tomando como base los elaborados en el curso 21/22 por [*Aitor Medrano*](https://x.com/aitormedrano) y *Luis Alemañ*.
 
 Aquí puedes encontrar los apuntes del módulo de ***Desarrollo web en entorno servidor***, que se imparte en el segundo curso del ciclo formativo de grado superior de *Desarrollo de Aplicaciones Web*.
@@ -12,6 +12,8 @@ La duración del módulo es de 168 horas lectivas, a razón de **8 horas semanal
 * A desarrollar aplicaciones web dinámicas, que obtienen la información a partir de una base de datos.
 * Analizar la estructura de una aplicación cliente/servidor, separando el código de presentación de la lógica de negocio.
 * Obtener información a partir de los datos almacenados, así como modificarlos.
+* Utilizar frameworks de desarrollo web para agilizar el proceso de desarrollo.
+* Crear servicios web para la comunicación entre aplicaciones.
 
 ## Resultados de aprendizaje
 
@@ -38,7 +40,7 @@ Duración estimada: 76 horas
     * Cliente/Servidor.
     * MVC.
     * Puesta en marcha con XAMPP y Docker.
-2. [El lenguaje PHP](02php.md) (26h)
+2. El lenguaje PHP (26h)
     * Condiciones y bucles.
     * Arrays.
 3. Orientación a objetos con PHP (18h)
@@ -76,7 +78,7 @@ Duración estimada: 86 horas
     * Producción y consumo.
     * *AJAX* con *JSON*.
 
-## Instrumentos de calificación
+## Evaluación
 
 La nota de cada evaluación y también final se calcula mediante una suma ponderada de la nota de cada *Criterio de Evaluación* evaluado hasta el momento.
 
@@ -86,3 +88,40 @@ A cada criterio se le asigna un porcentaje del total de la nota final y va asoci
 - Examen Prácticas
 - Ejercicios de clase
 - Prácticas obligatorias
+
+### Recursos
+
+!!! abstract "Recursos del módulo"
+
+    === "Documentación"
+        * Tutoriales
+            * [Programación web en PHP - mclibre.org](https://www.mclibre.org/consultar/php/index.html)
+            * [Tutorial para principiantes](https://www.ionos.es/digitalguide/paginas-web/creacion-de-paginas-web/tutorial-de-php-fundamentos-basicos-para-principiantes/)
+
+        * Referencias
+            * [Documentación oficial de PHP](https://www.php.net/manual/es/)
+
+        * Recopilatorio
+            * [Awesome PHP](https://github.com/ziadoz/awesome-php)
+    
+    === "Software"
+        * IDEs
+            * [Visual Studio Code](https://code.visualstudio.com/)
+            * [PHPStorm](https://www.jetbrains.com/phpstorm/)
+        * Administración de bases de datos
+            * [DBeaver](https://dbeaver.io/)
+        * Entorno de desarrollo
+            * [Laragon](https://laragon.org/)
+            * [XAMPP](https://www.apachefriends.org/es/index.html)
+
+        * Entorno de desarrollo en contenedores
+            * [Docker: Devilbox](https://devilbox.io/)
+            * [Docker: Laradock](https://laradock.io/)
+    
+    === "Cursos Openwebinars"
+        * PHP:
+            * [PHP: fundamentos](https://openwebinars.net/academia/aprende/curso-php-basico)
+            * [PHP: Ampliando conceptos](https://openwebinars.net/academia/aprende/php-ampliar-conceptos)
+            * [PHP y MySQL: Creando sitios dinámicos](https://openwebinars.net/academia/aprende/php-mysql)
+        * Frameworks:
+            * [Desarrollo Web Moderno con Laravel: De la teoría a la práctica](https://openwebinars.net/academia/portada/desarrollo-web-moderno-laravel-teoria-practica/)

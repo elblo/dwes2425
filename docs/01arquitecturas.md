@@ -22,7 +22,7 @@
 
 Las arquitecturas web definen la forma en que las páginas de un sitio web están estructuradas y enlazadas entre sí. Las aplicaciones web se basan en en modelo cliente-servidor.
 
-## Cliente / Servidor
+## 1.1 Modelo Cliente/Servidor
 
 <figure>
   <img src="imagenes/01/clienteservidor.png" />
@@ -57,7 +57,7 @@ Las tecnologías empleadadas (y los perfiles de desarrollo asociados) para la ge
 !!! tip "Perfil *Full-stack*"
     En las ofertas de trabajo cuando hacen referencia a un *Full-stack developer*, están buscando un perfil que domina tanto el *front-end* como el *back-end*.
 
-### *Single Page Application*
+### Single Page Application
 
 A día de hoy, gran parte del desarrollo web está transicionando de una arquitectura web cliente-servidor clásica donde el cliente realiza una llamada al backend, por una arquitectura SPA donde el cliente gana mucho mayor peso y sigue una programación reactiva que accede a servicios remotos REST que realizan las operaciones (comunicandose mediante JSON).
 
@@ -66,7 +66,97 @@ A día de hoy, gran parte del desarrollo web está transicionando de una arquite
   <figcaption>Arquitectura tradicional vs SPA</figcaption>
 </figure>
 
-## Arquitectura de 3 capas
+??? info "Más info sobre las SPA"
+
+    Para profundizar en las aplicaciones SPA, puedes consultar los siguientes recursos:
+
+    - [Aplicaciones SPA vs Aplicaciones MPA](https://youtu.be/2z0FChkphvo){ target="_blank" }
+    - [SPA Wikipedia](https://es.wikipedia.org/wiki/Single-page_application)
+    - [¿Qué es una SPA en programación?](https://keepcoding.io/blog/que-es-una-spa-en-programacion/)
+
+### Técnicas de renderizado de sitios web
+
+#### ¿Qué es el renderizado?
+
+Es el proceso de transformar código (HTML, CSS, JavaScript) en una página web visual que podemos ver en nuestro navegador.
+
+#### Tipos de renderizado:
+
+Existen diferentes técnicas o enfoques de renderizado, cada uno con sus ventajas y desventajas, dependiendo de las necesidades de la aplicación. Los principales tipos de renderizado son:
+
+##### Client-Side Rendering (CSR)
+
+**¿Cómo funciona?**
+
+El navegador descarga el HTML básico y el JavaScript necesario. Luego, el código JavaScript se ejecuta en el navegador del usuario para crear la interfaz de usuario completa.
+
+**Ventajas:**
+- Experiencia de usuario dinámica: Permite crear interfaces altamente interactivas y aplicaciones de una sola página (SPA) con transiciones suaves.
+- Flexibilidad: Fácil de desarrollar y actualizar.
+  
+**Desventajas:**
+- Rendimiento inicial: La primera carga puede ser lenta, ya que el navegador tiene que descargar todo el JavaScript y renderizar la página.
+- SEO: Los motores de búsqueda pueden tener dificultades para indexar el contenido, ya que la página no está completamente renderizada en el servidor.
+
+##### Server-Side Rendering (SSR):
+
+**¿Cómo funciona?**
+
+El servidor genera el HTML completo de la página y lo envía al navegador. El navegador solo tiene que renderizar el HTML, lo que es mucho más rápido.
+
+**Ventajas:**
+- Rendimiento inicial: La página se carga mucho más rápido, mejorando la experiencia del usuario.
+- SEO: Los motores de búsqueda pueden indexar el contenido fácilmente, ya que la página está completamente renderizada en el servidor.
+
+**Desventajas:**
+- Escalabilidad: Puede ser más costoso en términos de recursos del servidor, especialmente para sitios con mucho tráfico.
+- Complejidad: Requiere una configuración más compleja en el servidor.
+
+##### Static Site Generation (SSG):
+
+**¿Cómo funciona?**
+
+Las páginas se generan como archivos HTML estáticos en tiempo de construcción y se sirven directamente desde el servidor.
+
+**Ventajas:**
+- Rendimiento extremo: Las páginas se cargan instantáneamente, ya que no hay necesidad de renderizar nada en el servidor o en el cliente.
+- SEO: Excelente para SEO, ya que las páginas son completamente estáticas.
+
+**Desventajas:**
+- Menos dinámico: No es ideal para sitios que requieren contenido generado dinámicamente.
+
+##### Incremental Static Regeneration (ISR):
+
+**¿Cómo funciona?**
+Combina lo mejor de SSG y SSR. Genera páginas estáticas en tiempo de construcción, pero puede actualizar partes de ellas dinámicamente en el servidor.
+
+**Ventajas:**
+- Excelente equilibrio: Ofrece un buen rendimiento y flexibilidad.
+- SEO: Bueno para SEO, ya que la mayoría del contenido es estático.
+
+**Desventajas:**
+- Complejidad: Requiere una configuración más compleja.
+
+##### ¿Cuándo usar cada uno?
+- **CSR**: Ideal para aplicaciones de una sola página (SPA) con mucha interactividad y actualizaciones frecuentes.
+- **SSR**: Perfecto para sitios que priorizan el SEO y el rendimiento inicial, como tiendas en línea o blogs.
+- **SSG**: Ideal para sitios estáticos o con contenido que cambia con poca frecuencia, como portafolios o sitios de documentación.
+- **ISR**: Perfecto para sitios que necesitan una combinación de contenido estático y dinámico, como blogs con comentarios o noticias.
+
+En resumen:
+
+La elección del tipo de renderizado dependerá de las necesidades específicas de tu proyecto. Considera factores como el rendimiento, el SEO, la complejidad y la frecuencia de actualización del contenido.
+
+??? info "Más info sobre los tipos de renderizado"
+
+    Para profundizar en los tipos de renderizado de sitios web, puedes consultar los siguientes recursos:
+
+    - [Next.js: Tipos de Renderizado (CSR, SSR, SSG, ISR)](https://somospnt.com/blog/314-next-js-tipos-de-renderizado-csr-ssr-ssg-isr)
+    - [Client Side Rendering vs Server Side Rendering (vídeo)](https://youtu.be/CnavwJZAMw0)
+    - [CSR vs SSR (tablero)](https://www.figma.com/board/Og8AlCVH3536kQ8frU6dmD/Next.js-Diagrams-(Community)-CSR-vs-SSR)
+    - [Hacer rápida tu web - Tipos de renderizado (vídeo)](https://www.youtube.com/watch?v=VSyhuWSyrQE)
+
+## 1.2 Arquitectura de 3 capas
 
 Hay que distinguir entre capas **físicas** (*tier*) y capas **lógicas** (*layer*).
 
@@ -86,7 +176,7 @@ Ejemplo de arquitectura en tres capas físicas (*3 tier*):
 </figure>
 
 !!! warning "Cluster en tiers"
-    No confundir las capas con la cantidad de servidores. Actualmente se trabaja con arquitecturas con múltiples servidores en una misma capa física mediante un cluster, para ofrecer tolerancia a errores y escalabilidad horizontal.
+    No confundir las capas con la cantidad de servidores. Actualmente se trabaja con arquitecturas con múltiples servidores en una misma capa física mediante un cluster, para ofrecer [tolerancia a errores](https://es.wikipedia.org/wiki/Dise%C3%B1o_de_tolerancia_a_fallos) y [escalabilidad horizontal](https://www.arsys.es/blog/escalado-horizontal-vs-vertical).
 
 ### Layer
 
@@ -105,7 +195,7 @@ Como se observa, cada una de las capas se puede implementar con diferentes lengu
   <figcaption>Arquitectura de tres capas físicas en tres lógicas</figcaption>
 </figure>
 
-## MVC
+## 1.3 MVC
 
 ![MVC](imagenes/01/mvc.png){align=right & width=500}
 
@@ -113,13 +203,13 @@ Como se observa, cada una de las capas se puede implementar con diferentes lengu
 
 Al separar los componentes en elementos conceptuales permite reutilizar el código y mejorar su organización y mantenimiento. Sus elementos son:
 
-* Modelo: representa la información y gestiona todos los accesos a ésta, tanto consultas como actualizaciones provenientes, normalmente, de una base de datos. Se accede via el controlador.
-* Controlador: Responde a las acciones del usuario, y realiza peticiones al modelo para solicitar información. Tras recibir la respuesta del modelo, le envía los datos a la vista.
-* Vista: Presenta al usuario de forma visual el modelo y los datos preparados por el controlador. El usuario interactura con la vista y realiza nuevas peticiones al controlador.
+* **Modelo**: representa la información y gestiona todos los accesos a ésta, tanto consultas como actualizaciones provenientes, normalmente, de una base de datos. Se accede via el controlador.
+* **Controlador**: Responde a las acciones del usuario, y realiza peticiones al modelo para solicitar información. Tras recibir la respuesta del modelo, le envía los datos a la vista.
+* **Vista**: Presenta al usuario de forma visual el modelo y los datos preparados por el controlador. El usuario interactura con la vista y realiza nuevas peticiones al controlador.
 
 Lo estudiaremos en más detalle al profundizar en el uso de los frameworks PHP.
 
-## Decisiones de diseño
+## 1.4 Decisiones de diseño
 
 * ¿Qué tamaño tiene el proyecto?
 * ¿Qué lenguajes de programación conozco? ¿Vale la pena el esfuerzo de aprender uno nuevo?
@@ -128,11 +218,11 @@ Lo estudiaremos en más detalle al profundizar en el uso de los frameworks PHP.
 * ¿Cuento con algún servidor web o gestor de base de datos disponible o puedo decidir libremente utilizar el que crea necesario?
 * ¿Qué tipo de licencia voy a aplicar a la aplicación que desarrolle?
 
-## Herramientas
+## 1.5 Herramientas
 
 ### Servidor Web
 
-Software que recibe peticiones HTTP (GET, POST, DELETE, ...). Devuelve el recurso solicitado (HTML, CSS, JS, JSON, imágenes, etc...)
+Software que recibe peticiones HTTP (GET, POST, DELETE, ...) y devuelve el recurso solicitado (HTML, CSS, JS, JSON, imágenes, etc...) normalmente desde el navegador del usuario.
 
 El producto más implantando es Apache Web Server (<https://httpd.apache.org/>), creado en 1995.
 
@@ -154,7 +244,7 @@ En la actualidad, *Apache* está perdiendo mercado respecto a Nginx (<https://ww
     * Contiende un contenedor Web Java que interpreta *Servlets* y JSP.
 
 !!! info
-    Tanto los servidores web como los servidores de aplicaciones los estudiaremos en profundidad en el módulo de *"Despliegue de Aplicaciones Web"*.
+    Tanto los servidores web como los servidores de aplicaciones se estudian en profundidad en el módulo de *"Despliegue de Aplicaciones Web"*.
 
 ### Lenguajes en el servidor
 
@@ -172,6 +262,15 @@ Las aplicaciones que generan las páginas web se programan en alguno de los sigu
 *Java Enterprise Edition* es la solución Java para el desarrollo de aplicaciones *enterprise*. Ofrece una arquitectura muy completa y compleja, escalable y tolerante a fallos. Planteada para aplicaciones para grandes sistemas.
 
 ![JavaEE](imagenes/01/javaee.png)
+
+#### Node.js
+
+* Entorno de ejecución de JavaScript en el servidor
+* Basado en el motor V8 de Google
+* Desarrollado por Ryan Dahl en 2009
+* Utilizado por Netflix, Uber, LinkedIn, PayPal, ...
+* Frameworks: Express, Koa, Hapi, Sails, Meteor, NestJS, ...
+* Permite el desarrollo de aplicaciones web, de escritorio y móviles
 
 #### PHP
 
@@ -195,7 +294,12 @@ El siguiente mapa mental muestra un resumen de sus elementos:
 
 Durante las siguientes unidades vamos a estudiar PHP en profundidad.
 
-## Puesta en marcha
+!!! example "A jugar..."
+
+    Kahoot para repasar conceptos de redes e Internet: [40 preguntas sobre Internet](https://create.kahoot.it/share/40-preguntas-sobre-internet/ffb5a58c-4e58-4656-826f-0f8d94304331)
+
+
+## 1.6 Puesta en marcha
 
 Para poder trabajar con un entorno de desarrollo local, hemos de preparar nuestro entorno de desarrollo con las herramientas comentadas. A lo largo del curso vamos a utilizar la versión 8 de PHP.
 
@@ -213,6 +317,15 @@ Desde la propia página se puede descargar el archivo ejecutable para el sistema
 
 !!! note "XAMPP en Windows"
     Si vas a trabajar con tu propio ordenador, XAMPP es una solución más sencilla que Docker, sobre todo si trabajar con Windows como sistema operativo.
+
+### Laragon
+
+Laragon (https://laragon.org/) es una herramienta similar a XAMPP (solo para Windows) pero más moderna, con más opciones y un mantenimiento más activo que el de XAMPP.
+
+Si te animas a probarla, sigue estos pasos:
+
+1. [Instalar Laragon](https://laragon.org/docs/install)
+2. [Montar el entorno de desarrollo con Laragon](https://youtu.be/tvbu-cezBI8?t=198)
 
 ### Docker
 
@@ -345,6 +458,9 @@ Por ejemplo, si abrimos la extensión de *Docker*, podréis visualizar tanto los
   <figcaption>Opciones mediante extensión Docker en VSCode</figcaption>
 </figure>
 
+Puedes seguir este [tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-visual-studio-code-for-php-projects) (inglés) para configurar VSCode para trabajar con PHP.
+
+
 ### Hola Mundo
 
 Y como no, nuestro primer ejemplo será un *Hola Mundo* en PHP.
@@ -367,14 +483,14 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
 </html>
 ```
 
-## Referencias
+## 1.7 Referencias
 
 * Curso de introducción a Docker, por *Sergi García Barea* : <https://sergarb1.github.io/CursoIntroduccionADocker/>
 * Artículo [Arquitecturas Web y su evolución](https://www.arquitecturajava.com/arquitecturas-web-y-su-evolucion/)
 
-## Actividades
+## 1.8 Actividades
 
-101. Busca en internet cuales son los tres frameworks PHP más utilizados, y indica:
+101. Busca en internet cuales son los tres frameworks PHP más utilizados e indica:
 
     * Nombre y URL
     * Año de creación
@@ -406,3 +522,5 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
 
     !!! note "php.ini"
         Es el archivo de configuración de PHP, y en toda instalación vienen dos plantillas (`php.ini-development` y `php.ini-production`) para que elijamos los valores más acordes a nuestro proyecto y creemos nuestro archivo propio de `php.ini`.
+
+105. Crea una tabla comparativa explicando con tus palabras los tipos de renderizados de sitios web.
