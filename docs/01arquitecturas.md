@@ -74,68 +74,69 @@ A día de hoy, gran parte del desarrollo web está transicionando de una arquite
     - [SPA Wikipedia](https://es.wikipedia.org/wiki/Single-page_application)
     - [¿Qué es una SPA en programación?](https://keepcoding.io/blog/que-es-una-spa-en-programacion/)
 
-### Técnicas de renderizado de sitios web
+### Técnicas de renderizado
 
 #### ¿Qué es el renderizado?
 
 Es el proceso de transformar código (HTML, CSS, JavaScript) en una página web visual que podemos ver en nuestro navegador.
 
-#### Tipos de renderizado:
+#### Tipos de renderizado de sitios web:
 
 Existen diferentes técnicas o enfoques de renderizado, cada uno con sus ventajas y desventajas, dependiendo de las necesidades de la aplicación. Los principales tipos de renderizado son:
 
-##### Client-Side Rendering (CSR)
+??? abstract "Client-Side Rendering (CSR)"
 
-**¿Cómo funciona?**
+    **¿Cómo funciona?**
 
-El navegador descarga el HTML básico y el JavaScript necesario. Luego, el código JavaScript se ejecuta en el navegador del usuario para crear la interfaz de usuario completa.
+    El navegador descarga el HTML básico y el JavaScript necesario. Luego, el código JavaScript se ejecuta en el navegador del usuario para crear la interfaz de usuario completa.
 
-**Ventajas:**
-- Experiencia de usuario dinámica: Permite crear interfaces altamente interactivas y aplicaciones de una sola página (SPA) con transiciones suaves.
-- Flexibilidad: Fácil de desarrollar y actualizar.
-  
-**Desventajas:**
-- Rendimiento inicial: La primera carga puede ser lenta, ya que el navegador tiene que descargar todo el JavaScript y renderizar la página.
-- SEO: Los motores de búsqueda pueden tener dificultades para indexar el contenido, ya que la página no está completamente renderizada en el servidor.
+    **Ventajas:**
+    - Experiencia de usuario dinámica: Permite crear interfaces altamente interactivas y aplicaciones de una sola página (SPA) con transiciones suaves.
+    - Flexibilidad: Fácil de desarrollar y actualizar.
+      
+    **Desventajas:**
+    - Rendimiento inicial: La primera carga puede ser lenta, ya que el navegador tiene que descargar todo el JavaScript y renderizar la página.
+    - SEO: Los motores de búsqueda pueden tener dificultades para indexar el contenido, ya que la página no está completamente renderizada en el servidor.
 
-##### Server-Side Rendering (SSR):
+??? abstract "Server-Side Rendering (SSR)"
 
-**¿Cómo funciona?**
+    **¿Cómo funciona?**
+    
+    El servidor genera el HTML completo de la página y lo envía al navegador. El navegador solo tiene que renderizar el HTML, lo que es mucho más rápido.
 
-El servidor genera el HTML completo de la página y lo envía al navegador. El navegador solo tiene que renderizar el HTML, lo que es mucho más rápido.
+    **Ventajas:**
+    - Rendimiento inicial: La página se carga mucho más rápido, mejorando la experiencia del usuario.
+    - SEO: Los motores de búsqueda pueden indexar el contenido fácilmente, ya que la página está completamente renderizada en el servidor.
 
-**Ventajas:**
-- Rendimiento inicial: La página se carga mucho más rápido, mejorando la experiencia del usuario.
-- SEO: Los motores de búsqueda pueden indexar el contenido fácilmente, ya que la página está completamente renderizada en el servidor.
+    **Desventajas:**
+    - Escalabilidad: Puede ser más costoso en términos de recursos del servidor, especialmente para sitios con mucho tráfico.
+    - Complejidad: Requiere una configuración más compleja en el servidor.
 
-**Desventajas:**
-- Escalabilidad: Puede ser más costoso en términos de recursos del servidor, especialmente para sitios con mucho tráfico.
-- Complejidad: Requiere una configuración más compleja en el servidor.
+??? abstract "Static Site Generation (SSG)"
 
-##### Static Site Generation (SSG):
+    **¿Cómo funciona?**
 
-**¿Cómo funciona?**
+    Las páginas se generan como archivos HTML estáticos en tiempo de construcción y se sirven directamente desde el servidor.
 
-Las páginas se generan como archivos HTML estáticos en tiempo de construcción y se sirven directamente desde el servidor.
+    **Ventajas:**
+    - Rendimiento extremo: Las páginas se cargan instantáneamente, ya que no hay necesidad de renderizar nada en el servidor o en el cliente.
+    - SEO: Excelente para SEO, ya que las páginas son completamente estáticas.
 
-**Ventajas:**
-- Rendimiento extremo: Las páginas se cargan instantáneamente, ya que no hay necesidad de renderizar nada en el servidor o en el cliente.
-- SEO: Excelente para SEO, ya que las páginas son completamente estáticas.
+    **Desventajas:**
+    - Menos dinámico: No es ideal para sitios que requieren contenido generado dinámicamente.
 
-**Desventajas:**
-- Menos dinámico: No es ideal para sitios que requieren contenido generado dinámicamente.
+??? abstract "Incremental Static Regeneration (ISR)"
 
-##### Incremental Static Regeneration (ISR):
+    **¿Cómo funciona?**
 
-**¿Cómo funciona?**
-Combina lo mejor de SSG y SSR. Genera páginas estáticas en tiempo de construcción, pero puede actualizar partes de ellas dinámicamente en el servidor.
+    Combina lo mejor de SSG y SSR. Genera páginas estáticas en tiempo de construcción, pero puede actualizar partes de ellas dinámicamente en el servidor.
 
-**Ventajas:**
-- Excelente equilibrio: Ofrece un buen rendimiento y flexibilidad.
-- SEO: Bueno para SEO, ya que la mayoría del contenido es estático.
+    **Ventajas:**
+    - Excelente equilibrio: Ofrece un buen rendimiento y flexibilidad.
+    - SEO: Bueno para SEO, ya que la mayoría del contenido es estático.
 
-**Desventajas:**
-- Complejidad: Requiere una configuración más compleja.
+    **Desventajas:**
+    - Complejidad: Requiere una configuración más compleja.
 
 ##### ¿Cuándo usar cada uno?
 - **CSR**: Ideal para aplicaciones de una sola página (SPA) con mucha interactividad y actualizaciones frecuentes.
