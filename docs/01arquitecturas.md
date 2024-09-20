@@ -336,7 +336,7 @@ El uso de contenedores requiere menos recursos que una máquina virtual, por lo 
 
 Así pues, *Docker* permite crear, probar e implementar aplicaciones rápidamente, a partir de una serie de plantillas que se conocen como imágenes de *Docker*.
 
-Para ello es necesario tener instalado *Docker Desktop* (<https://www.docker.com/products/docker-desktop>) en nuestros entornos de desarrollo (el cual ya incluye en nucleo de *Docker* y la herramienta *docker compose*). En los ordenadores del aula ya está instalado. Para instalarlo en casa, en el caso de Windows, es necesario instalar previamente *WSL 2*, el cual es un subsistema de *Linux* dentro de *Windows*.
+Para ello es necesario tener instalado *Docker Desktop* (<https://www.docker.com/products/docker-desktop>) en nuestros entornos de desarrollo (el cual ya incluye en nucleo de *Docker* y la herramienta *docker compose*). Para instalarlo en casa, en el caso de Windows, es necesario instalar previamente *WSL 2*, el cual es un subsistema de *Linux* dentro de *Windows*.
 
 A lo largo del curso iremos creando diferentes contenedores con los servicios necesarios, de manera que cada vez sólo trabajemos con el software mínimo.
 
@@ -525,3 +525,4 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
         Es el archivo de configuración de PHP, y en toda instalación vienen dos plantillas (`php.ini-development` y `php.ini-production`) para que elijamos los valores más acordes a nuestro proyecto y creemos nuestro archivo propio de `php.ini`.
 
 105. Crea una tabla comparativa explicando con tus palabras los tipos de renderizados de sitios web.
+106. Buscar en Internet un proveedor de hosting gratuito que soporte PHP y MySQL. Regístrate y sube el *Hola Mundo* que hicíste. Anota aquí la URL para acceder.
