@@ -40,7 +40,7 @@ Duración estimada: 76 horas
     * Cliente/Servidor.
     * MVC.
     * Puesta en marcha con XAMPP y Docker.
-2. El lenguaje PHP (26h)
+2. [El lenguaje PHP](02php.md) (26h)
     * Condiciones y bucles.
     * Arrays.
 3. Orientación a objetos con PHP (18h)

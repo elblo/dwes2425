@@ -46,7 +46,7 @@
 * El cliente recibe el resultado generado tras interpretar el código en el servidor.
 * El código se almacena en archivo con extensión `.php`.
 
-La última versión es la 8.0, de Noviembre de 2020 (y en menos de un par de meses tendremos la versión 8.1). La versión 7.0 salió en Diciembre de 2015. Además de numerosas nuevas funcionalidades que iremos viendo durante el curso, tiene más de dos veces mejor rendimiento que PHP5.
+La última versión estable es la 8.3.11, de agosto de 2024 (y ya está disponible la beta de php 8.4). Se recomienda utilizar como mínimo la versión 8.0 de php porque tiene mejor rendimiento y compatibilidad que versiones anteriores.
 
 Su documentación es extensa y está traducida: <https://www.php.net/manual/es/>.
 
