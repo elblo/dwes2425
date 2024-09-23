@@ -35,7 +35,7 @@
     6. Se han empleado métodos para recuperar la información introducida en el formulario.
     7. Se han añadido comentarios al código.
 
-## PHP
+## 2.1 Introducción
 
 ![PHP](imagenes/02/phplogo.png){align=right & width=300}
 
@@ -172,7 +172,7 @@ echo PI, " ", IVA; // No se pone el símbolo dolar
 * Se declaran siempre en MAYÚSCULAS
 * Hay un conjunto de constantes ya predefinidas, también conocidas como *magic constants*: <https://www.php.net/manual/es/language.constants.predefined.php>
 
-## Operadores
+## 2.2 Operadores
 
 ### Ariméticos
 
@@ -262,7 +262,7 @@ Más adelante estudiaremos algunas funciones para el tratamiento de cadenas.
 !!! question "Autoevaluación"
     Si `$a=5` y `$b=4`, averigua el valor de `$c` si `$c = $a*2 > $b+5 && !($b<>4)`
 
-## Trabajando con formularios
+## 2.3 Trabajando con formularios
 
 Los datos se envían via URL con el formato `var1=valor1&var2=valor2…`. Por ejemplo: `ejemplo.php?nombre=Bruce+apellido1=Wayne`
 
@@ -319,7 +319,7 @@ Si lo quisiéramos realizar todo en un único archivo (*lo cual no es recomendab
 
 El trabajo con formularios lo estudiaremos en profundidad en la unidad 4, y veremos que además de `GET`, podemos enviar los datos con `POST`.
 
-## Condiciones
+## 2.4 Condicionales
 
 La condición simple se realiza mediante la instrucción `if`. Entre paréntesis se pone la condición que se evalua a `true` o `false`. Si no se ponen llaves, en vez de abrir un bloque, se ejecutará sólo la siguiente instrucción.
 
@@ -410,7 +410,7 @@ $nombre = $_GET['nombre'] ?: "desconocido"
 ?>
 ```
 
-## Bucles
+## 2.5 Bucles
 
 Mediante la instrucción `while`:
 
@@ -478,7 +478,7 @@ A su vez, `continue` permite saltar a la siguiente iteración.
     ?>
     ```
 
-## Arrays
+## 2.6 Arrays
 
 Para almacenar datos compuestos, podemos utilizar tanto arrays sencillos como arrays asociativos (similares a un mapa). En realidad todos los arrays son mapas ordenados compuestos de pares clave-valor.
 
@@ -714,7 +714,7 @@ $postre0 = $menus[0]["Postre"];
 
 Aunque pueda parecer una buena idea crear este tipo de estructuras, es mejor utilizar objetos conjuntamente con arrays (posiblemente arrays de otros objetos) para crear estructuras complejas que permitan modelar mejor los problemas.
 
-## Funciones
+## 2.7 Funciones
 
 Al no declararse los tipos de datos, los parámetros de las funciones no tienen tipo ni se indica el tipo de dato que devuelven. El paso de parámetros se realiza por valor, es decir, se realiza una copia de la variable.
 
@@ -1088,7 +1088,7 @@ include("pie.html");
 ?>
 ```
 
-## Funciones predefinidas
+## 2.8 Funciones predefinidas
 
 El lenguaje ofrece un abanico de funciones ya definidas, agrupadas por su funcionalidad: <https://www.php.net/manual/es/funcref.php>
 
@@ -1383,7 +1383,7 @@ var_dump(is_int(intval($uno))); // true
 ?>
 ```
 
-## Referencias
+## 2.9 Referencias
 
 * [Manual de PHP](https://www.php.net/manual/es/index.php)
 * [PHP en 2020](https://www.jesusamieiro.com/wp-content/uploads/2020/10/20201024-hacktoberday-PHP-en-2020.pdf), por Jesús Amieiro
@@ -1391,7 +1391,7 @@ var_dump(is_int(intval($uno))); // true
 * [Guía de Estilo - PSR](http://coppeldev.github.io/php/standards/coppel.html)
 * [PHP - La manera correcta](http://phpdevenezuela.github.io/php-the-right-way/)
 
-## Actividades
+## 2.10 Actividades
 
 ### PHP básico
 
