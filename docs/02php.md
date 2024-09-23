@@ -58,14 +58,14 @@ Los bloques de código se escriben entre **`<?php`** y **`?>`**, mientras que la
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>PHP fácil</title>
+    <meta charset="UTF-8">
+    <title>PHP fácil</title>
 </head>
 <body>
-<!-- Muestra una frase con HTML -->
-Hola mundo<br>
-<!-- Muestra una frase con PHP -->
-<?php echo "Es muy fácil programar en PHP."; ?>
+    <!-- Muestra una frase con HTML -->
+    Hola mundo<br>
+    <!-- Muestra una frase con PHP -->
+    <?php echo "Es muy fácil programar en PHP."; ?>
 </body>
 </html>
 ```
@@ -78,7 +78,7 @@ Hola mundo<br>
 Tenemos tres posibilidades a la hora de generar contenido en nuestros documentos PHP:
 
 * **`echo`**`expresión;`
-* **`print`**`(expresión);`
+* **`print`**`(expresión);` | **`print`**`expresión;`
 * **`<?=`**` expresión ?>`
 
 Las que vamos a utilizar son `echo` cuando lo hagamos dentro de un bloque de instrucciones y `<?=` cuando sólo vayamos a mostrar el valor de una variable dentro de un fragmento HTML.
@@ -87,14 +87,14 @@ Las que vamos a utilizar son `echo` cuando lo hagamos dentro de un bloque de ins
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Echo y print</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo y print</title>
 </head>
 <body>
-<p><?php echo "Este texto se mostrará en la página web." ?></p>
-<p><?= "Este texto se mostrará en la página web." ?></p>
-<p><?php print("Este texto se mostrará en la página web.") ?></p>
+    <p><?php echo "Este texto se mostrará en la página web." ?></p>
+    <p><?= "Este texto se mostrará en la página web." ?></p>
+    <p><?php print("Este texto se mostrará en la página web.") ?></p>
 </body>
 </html>
 ```
@@ -231,6 +231,8 @@ Más adelante estudiaremos algunas funciones para el tratamiento de cadenas.
 | `$a >= $b` | Mayor o igual que |`true` si `$a` es mayor o igual que `$b`.
 | `$a <=> $b` | Nave espacial | Devuelve `-1`, `0` o `1` cuando `$a` es respectivamente menor, igual, o mayor que `$b`. PHP >= 7.
 | `$a ?? $b ?? $c` | Fusión de *null* | El primer operando de izquierda a derecha que exista y no sea `null`. `null` si no hay valores definidos y no son `null`. PHP >= 7.
+
+Puedes consultar ejemplos sobre los últimos operadores [aquí](https://www.php.net/manual/es/language.operators.comparison.php).
 
 ### Lógicos
 
@@ -391,6 +393,45 @@ switch ($hora) {
 
 !!! warning "No olvides el `break`"
     Un error muy común es olvidar la instrucción `break` tras cada caso. Si no lo ponemos, ejecutará el siguiente caso automáticamente.
+
+La expresión `match` (PHP 8.0) permite asignar un valor según múltiples condiciones, funcionando de forma similar a la sentencia `switch`, solo que realiza una comprobación de identidad (===) en lugar de una comprobación de igualdad débil (==) como hace este último.
+
+``` php
+<?php
+
+ // Ejemplo básico
+ $comida = 'pastel';
+
+ $valor_devuelto = match ($comida) {
+     'manzana' => 'Esta comida es una manzana',
+     'barra' => 'Esta comida es una barra',
+     'pastel' => 'Esta comida es un pastel',
+ };
+
+ // Ejemplo con operadores de comparación
+$age = 18;
+
+$output = match (true) {
+     $age < 2 => 'Eres un bebé',
+     $age < 10 => 'Eres un niño',
+     $age < 18 => 'Eres un adolescente',
+     $age >= 18 && $age < 30 => 'Eres jovenzuelo',
+     $age < 45 => 'Eres un viejoven',
+     $age >= 45 && $age < 90 > => 'Eres un viejuno',
+     default => 'Matusalén!!!'
+};
+
+// Ejemplo con expresiones regulares
+$string = "Vamos al bar";
+
+$message = match (true) {
+    preg_match('/^foo/', $string) => 'String starts with foo',
+    preg_match('/bar$/', $string) => 'String ends with bar',
+    default => 'String does not start with foo or end with bar',
+};
+
+?>
+```
 
 Finalmente, también tenemos el operador ternario `condición ? valorTrue : valorFalse`:
 
@@ -1094,7 +1135,7 @@ El lenguaje ofrece un abanico de funciones ya definidas, agrupadas por su funcio
 
 ### Cadenas
 
-Ya hemos visto que se pueden crear con comillas simples (`''`, sin interpretación) o comillas dobles (`""`, interpretan el contenido y las secuencias de escape `\n`, `\t`, `\$`, `{`, … - *magic quotes*)
+Ya hemos visto que se pueden crear con comillas simples (`''`, sin interpretación) o comillas dobles (`""`, interpretan el contenido interpolando variables y las secuencias de escape `\n`, `\t`, `\$`, `{`, … - *magic quotes*)
 
 ``` php
 <?php
@@ -1465,7 +1506,7 @@ Ten en cuenta que puede tener 2, 1 o no tener solución dependiendo del valor de
 
 Ejercicios de investigación:
 
-214. Investiga para que sirve el operador nave espacial, disponible desde PHP7 (<https://www.php.net/manual/es/migration70.new-features.php>). Explica con un par de líneas su propósito y mediante código demuestra su uso.
+214. Investiga para qué sirven los operadores `<=>` (nave espacial) y `??` (fusión de null o null coalescing operator), disponibles desde PHP7 (<https://www.php.net/manual/es/migration70.new-features.php>). Explica con un par de líneas el propósito de cada uno y mediante código demuestra sus usos con un ejemplo práctico.
 215. Investiga para qué sirve la instrucción `match()`, disponible desde PHP8 (<https://www.php.net/manual/es/control-structures.match.php>). Explica con un par de líneas su propósito y mediante código demuestra su uso.
 
 ### Bucles

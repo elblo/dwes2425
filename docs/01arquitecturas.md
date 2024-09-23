@@ -484,6 +484,13 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
 </html>
 ```
 
+### Intérpretes online
+
+Existen multitud de intérpretes de PHP online para poder probar nuestros scripts sin necesidad de tener nada instalado en local, como:
+* [Programiz](https://www.programiz.com/php/online-compiler/)
+* [OnlinePHP](https://onlinephp.io/)
+* [myCompiler](https://www.mycompiler.io/es/new/php)
+
 ## 1.7 Referencias
 
 * Curso de introducción a Docker, por *Sergi García Barea* : <https://sergarb1.github.io/CursoIntroduccionADocker/>
