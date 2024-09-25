@@ -341,7 +341,7 @@ Para ello es necesario tener instalado *Docker Desktop* (<https://www.docker.com
 A lo largo del curso iremos creando diferentes contenedores con los servicios necesarios, de manera que cada vez sólo trabajemos con el software mínimo.
 
 !!! caution "Versiones"
-    A lo largo del curso vamos a usar PHP `8.0`. Respecto a *Docker*, para escribir los apuntes hemos utilizado la version `20.10` y la version `2.19` de *docker compose*. Finalmente, la versión de *Docker Desktop* que hemos utilizado es la `4.0`.
+    A lo largo del curso vamos a usar PHP `8.3`. Respecto a *Docker*, para escribir los apuntes hemos utilizado la version `26.0.0` y la version `2.26.1` de *docker compose*. Finalmente, la versión de *Docker Desktop* que hemos utilizado es la `4.29.0`.
 
 #### Plantilla Servidor Web + PHP
 
