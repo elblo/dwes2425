@@ -451,6 +451,8 @@ $nombre = $_GET['nombre'] ?: "desconocido"
 ?>
 ```
 
+Realmente es como un operador ternario sin especificar la parte intermedia. La expresión *expr1 ?: expr3* devuelve expr1 si expr1 se evalúa como true y expr3 si es de otra manera.
+
 ## 2.5 Bucles
 
 Mediante la instrucción `while`:
