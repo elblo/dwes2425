@@ -594,13 +594,33 @@ foreach ($capitales as $pais => $ciudad) { // separamos cada elemento en clave =
 
 ### Operaciones
 
-Las operaciones más importantes que podemos realizar con arrays son:
+!!! tip "Todas las operaciones"
+    Consultar en [https://www.php.net/manual/es/book.array.php](https://www.php.net/manual/es/book.array.php) todas las operaciones disponibles para los arrays con su sintaxis y ejemplos.
 
-* `print_r($array)`: muestra el contenido de todo el `$array`. Si queremos mostrar el contenido con un formato determinado, hemos de recorrer el array con `foreach`.
-* `var_dump($mixed)`: muestra el contenido del elemento recibido. Muestra más información que `print_r`.
-* `$elem = array_pop($array)`: elimina el último `$elemento`
-* `array_push($array, $elem)`: añade un `$elemento` al final
+Unas de las operaciones más utilizadas con arrays son:
+
+#### Visualización
+
+* `print_r($array)`: muestra el contenido de todo el `$array` en formato índice => valor. Si queremos mostrar el contenido con un formato determinado, hemos de recorrer el array con `foreach`.
+* `var_dump($mixed)`: muestra el contenido del elemento recibido. Muestra más información que `print_r` dando el tipo de dato de cada elemento y en el caso de cadenas, su longitud.
+
+#### Inserción/Eliminación de datos
+
+* `$elemento = array_pop($array)`: elimina el último elemento
+* `array_push($array, $elemento)`: añade uno o más elementos al final
+* `$elemento = array_shift($array)`: elimina el primer primer elemento
+* `array_unshift($array, $elemento)`: añade uno o más elementos al inicio
+* `$array3 = array_replace($array, $array2)`: reemplaza los valores de `$array` con valores que tienen las mismas claves en cada uno de los siguientes arrays pasados
+
+#### Búsqueda 
+
 * `$booleano = in_array($elem, $array)`: averigua si `$elem` está en el `$array`
+* `$clave = array_search($elem, $array)`: busca `$elem` en el `$array` y devuelve su clave o null en el caso de no encontrarlo
+
+Las siguientes instrucciones no son específicas de los arrays pero se usan frecuentemente con arrays: 
+
+* `isset($array[elemento])`: indica si existe/tiene valor elemento dentro del array
+* `unset($array[elemento])`: elimina el elemento del array (deja un hueco)
 
 === "PHP"
 
@@ -639,11 +659,18 @@ Las operaciones más importantes que podemos realizar con arrays son:
     )
     ```
 
+#### Claves y valores
+
 * `$claves = array_keys($array)`: devuelve las claves del `$array` asociativo
+* `$valores = values($array)`: devuelve los valores del `$array` asociativo
 * `$tam = count($array)`: devuelve el tamaño de `$array`
+
+#### Ordenación
+
 * `sort($array)`: ordena los elementos del `$array`
-* `isset($array[elemento])`: indica si existe/tiene valor elemento dentro del array
-* `unset($array[elemento])`: elimina el elemento del array (deja un hueco)
+* `rsort($array)`: ordena los elementos del `$array` en orden inverso
+* `ksort($array)`: ordena los elementos del `$array` por clave
+* `krsort($array)`: ordena los elementos del `$array` por clave en orden inverso
 
 === "PHP"
 
@@ -684,7 +711,7 @@ Las operaciones más importantes que podemos realizar con arrays son:
     )
     ```
 
-Al asignar un array a otro se realiza una copia. Cuidado con esta operación que puede consumir muchos recursos.
+Al asignar un array a otro se realiza una **copia por valor**. Cuidado con esta operación que puede consumir muchos recursos.
 
 === "PHP"
 
@@ -716,7 +743,7 @@ Al asignar un array a otro se realiza una copia. Cuidado con esta operación que
     )
     ```
 
-Existen muchísimas más funciones para trabajar con arrays. Puedes consultar roda la información en la [documentación oficial](https://www.php.net/manual/es/ref.array.php).
+Existen muchísimas más funciones para trabajar con arrays. Te vuelvo a recomendar que utilices la [documentación oficial](https://www.php.net/manual/es/ref.array.php) para ampliar información sobre funciones como *array_slice*, *array_splice*, *array_map*, *array_reduce*...
 
 !!! tip "Artículos para profundizar en las operaciones con arrays"
     * Un artículo muy completo (en inglés) de [Cómo trabajar con arrays en PHP de la manera correcta](https://code.tutsplus.com/tutorials/working-with-php-arrays-in-the-right-way--cms-28606).  
@@ -1541,14 +1568,14 @@ Ejercicios de investigación:
     !!! tip inline end
         Para guardar un dato oculto puedes utilizar un campo de formulario de tipo oculto: `<input type="hidden" name="cantidad" value="33" />`
 
-    `224leerDatos.php`: a partir de `cantidad`, prepara un formulario con tantas cajas de datos como su valor.  
+    `224leerDatos.php`: prepara un formulario con tantos input de texto como indica el valor de `cantidad`.  
     Finalmente, en `224sumarDatos.php`: a partir de los datos de todas las cajas de la página anterior, súmalos y muestra el total.
 
 225. `225formulario.html` y `225tabla.php`: A partir de un número de `filas` y `columnas`, crear una tabla con ese tamaño.
 Las celdas deben estar rellenadas con los valores de las coordenadas de cada celda.
 226. `226formulario.html` y `226cuadrado.php`: Basándote en el ejercicio anterior, rellena la tabla de manera que solo los bordes tengan contenido, quedándose el resto de celdas en blanco.
 ![228](imagenes/02/02p228.png){align=right & width=200}
-227. `227formulario.html` y `227equis.php`: Basándote en el ejercicio anterior, ahora sólo debe aparecer el contenido de los dos diagonales.
+227. `227formulario.html` y `227equis.php`: Basándote en el ejercicio anterior, ahora sólo debe aparecer el contenido de las dos diagonales. Ojo, se trata de un cuadrado, por tanto debe tener el mismo número de filas que de columnas.
 228. `228cuadradoMultiplicar.php`: Crea un programa que muestre por pantalla un cuadrado exactamente igual (fíjate bien en los encabezados, tanto de las filas como de las columnas) al de la imagen con las tablas de multiplicar.
 
 ### Arrays
@@ -1584,10 +1611,12 @@ Finalmente añade una última fila a la tabla con la altura media.
 236. `236personas.php`: Mediante un array bidimensional, almacena el nombre, altura y email de 5 personas. Para ello, crea un array de personas, siendo cada persona un array asociativo: `[ ['nombre'=>'Aitor', 'altura'=>182, 'email'=>'aitor@correo.com'],[…],… ]`
 Posteriormente, recorre el array y muéstralo en una tabla HTML.
 
-237. `237leerCantidad.html` y `237leerPersonas.php`: a partir de un formulario con un campo de `cantidad` de personas, generar un nuevo formulario para leer el nombre, altura y email de `cantidad` personas.  
-`237gestionarPersonas.php`: A partir de las personas introducidas, mostrar sus datos en una tabla, y posteriormente, destacar los datos del más alto y el del más bajo.
+237. Investiga sobre el uso de funciones avanzadas como *array_slice*, *array_splice*, *array_map*, *array_reduce* y otras 2 más a tu elección no vistas en el los apuntes. Recuerda que puedes consultar la [documentación oficial](https://www.php.net/manual/es/ref.array.php).
 
-238. `238tablaDistintos.php`: Rellena un array bidimensional de 6 filas por 9 columnas con números aleatorios comprendidos entre 100 y 999 (ambos incluidos). Todos los números deben ser distintos, es decir, no se puede repetir ninguno.  
+238. `238leerCantidad.html` y `238leerPersonas.php`: a partir de un formulario con un campo de `cantidad` de personas, generar un nuevo formulario para leer el nombre, altura y el email de `cantidad` personas.  
+`238gestionarPersonas.php`: A partir de las personas introducidas, mostrar sus datos en una tabla, y posteriormente, destacar los datos del más alto y el del más bajo.
+
+239. `239tablaDistintos.php`: Rellena un array bidimensional de 6 filas por 9 columnas con números aleatorios comprendidos entre 100 y 999 (ambos incluidos). Todos los números deben ser distintos, es decir, no se puede repetir ninguno.  
 Muestra a continuación por pantalla el contenido del array de tal forma que:
 
     * La columna del máximo debe aparecer en azul.
