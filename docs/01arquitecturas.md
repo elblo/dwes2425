@@ -487,13 +487,14 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
 
 ### Servidor Live Reload
 
-Con cada nuevo cambio que hagamos en una página PHP como la anterior, tendremos que refrescar el navegador manualmente para poder visualizarlos.
+Para poder visualizar cada nuevo cambio que hagamos en una página PHP como la anterior, tendremos que refrescar el navegador manualmente.
 
 Para *refrescar el navegador de forma automática* podemos utilizar la extensión de Chrome [Live Server web Extension](https://chromewebstore.google.com/detail/live-server-web-extension/fiegdmejfepffgpnejdinekhfieaogmj) en combinación con la extensión de VS Code [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
 
 Una vez instalada la extensión de Chrome, hay que configurarla indicando:
-1. La dirección del servidor web que utilicemos (mediante XAMPP o Docker) y donde están nuestros archivos PHP.
-2. La dirección del Live Server que nos da VS Code.
+
+* La dirección del servidor web que utilicemos (mediante XAMPP o Docker) para acceder a nuestros archivos PHP.
+* La dirección del Live Server que nos da VS Code.
 
 <figure>
   <img src="imagenes/01/liveserverchromeextension.png" />
