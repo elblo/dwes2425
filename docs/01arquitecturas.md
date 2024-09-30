@@ -447,6 +447,7 @@ En este curso vamos a emplear *Visual Studio Code* (<https://code.visualstudio.c
 
 *VSCode* es un editor de código fuente que se complementa mediante extensiones. Para facilitar el trabajo a lo largo del curso vamos a utilizar las siguientes extensiones:
 
+* [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
 * [PHP Intelephense](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client)
 * [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 
@@ -483,6 +484,23 @@ Si nombramos el archivo como `index.php`, al acceder a `http://localhost` autom�
 </body>
 </html>
 ```
+
+### Servidor Live Reload
+
+Con cada nuevo cambio que hagamos en una página PHP como la anterior, tendremos que refrescar el navegador manualmente para poder visualizarlos.
+
+Para *refrescar el navegador de forma automática* podemos utilizar la extensión de Chrome [Live Server web Extension](https://chromewebstore.google.com/detail/live-server-web-extension/fiegdmejfepffgpnejdinekhfieaogmj) en combinación con la extensión de VS Code [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+
+Una vez instalada la extensión de Chrome, hay que configurarla indicando:
+1. La dirección del servidor web que utilicemos (mediante XAMPP o Docker) y donde están nuestros archivos PHP.
+2. La dirección del Live Server que nos da VS Code.
+
+<figure>
+  <img src="imagenes/01/liveserverchromeextension.png" />
+  <figcaption>Opciones de Live Server Web Extension</figcaption>
+</figure>
+
+Ahora, cada vez que guardes en VS Code, los cambios se reflejarán automáticamente en el navegador. Si tienes dudas puedes consultar este [vídeo](https://www.youtube.com/watch?v=54wcX1G2GH8).
 
 ### Intérpretes online
 

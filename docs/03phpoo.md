@@ -20,7 +20,7 @@
     7. Se han aplicado los principios de la programación orientada a objetos. 
     8. Se ha probado y documentado el código.
 
-## Clases y Objetos
+## 3.1 Clases y Objetos
 
 PHP sigue un paradigma de programación orientada a objetos (POO) basada en clases.
 
@@ -89,7 +89,7 @@ $bruno->imprimir();
 
 Aunque se pueden declarar varias clases en el mismo archivo, es una mala práctica. Así pues, cada fichero contedrá una sola clase, y se nombrará con el nombre de la clase.
 
-## Encapsulación
+## 3.2 Encapsulación
 
 Las propiedades se definen privadas o protegidas (si queremos que las clases heredadas puedan acceder).
 
@@ -151,7 +151,7 @@ echo "<br>Mayor: ".$resultado->getMayor();
 echo "<br>Menor: ".$resultado->getMenor();
 ```
 
-## Constructor
+## 3.3 Constructor
 
 El constructor de los objetos se define mediante el método mágico `__construct`.
 Puede o no tener parámetros, pero sólo puede haber un único constructor.
@@ -234,7 +234,7 @@ class Punto {
     ?>
     ```
 
-## Clases estáticas
+## 3.4 Clases estáticas
 
 Son aquellas que tienen propiedades y/o métodos estáticos (también se conocen como *de clase*, por que su valor se comparte entre todas las instancias de la misma clase).
 
@@ -283,7 +283,7 @@ $prod3 = new Producto("Nintendo Switch");
 echo $prod3->mostrarResumen();
 ```
 
-## Introspección
+## 3.5 Introspección
 
 Al trabajar con clases y objetos, existen un conjunto de funciones ya definidas por el lenguaje que permiten obtener información sobre los objetos:
 
@@ -324,7 +324,7 @@ if ($p instanceof Producto) {
 
     Más información en <https://www.php.net/manual/es/language.oop5.cloning.php>
 
-## Herencia
+## 3.6 Herencia
 
 PHP soporta herencia simple, de manera que una clase solo puede heredar de otra, no de dos clases a la vez. Para ello se utiliza la palabra clave `extends`. Si queremos que la clase A hereda de la clase B haremos:
 
@@ -465,7 +465,7 @@ En los hijos no se crea ningún constructor de manera automática. Por lo que si
     }
     ```
 
-## Clases abstractas
+## 3.7 Clases abstractas
 
 Las clases abstractas obligan a heredar de una clase, ya que no se permite su instanciación. Se define mediante `abstract class NombreClase {`.  
 Una clase abstracta puede contener propiedades y métodos no-abstractos, y/o métodos abstractos.
@@ -501,7 +501,7 @@ $t = new Tv();
 echo $t->getCodigo();
 ```
 
-## Clases finales
+## 3.8 Clases finales
 
 Son clases opuestas a abstractas, ya que evitan que se pueda heredar una clase o método para sobreescribirlo.
 
@@ -531,7 +531,7 @@ final class Microondas extends Producto {
 }
 ```
 
-## Interfaces
+## 3.9 Interfaces
 
 Permite definir un contrato con las firmas de los métodos a cumplir. Así pues, sólo contiene declaraciones de funciones y todas deben ser públicas.
 
@@ -568,7 +568,7 @@ class Producto implements MostrableTodo, Facturable {
 }
 ```
 
-## Métodos encadenados
+## 3.10 Métodos encadenados
 
 Sigue el planteamiento de la programación funcional, y también se conoce como *method chaining*. Plantea que sobre un objeto se realizan varias llamadas.
 
@@ -615,7 +615,7 @@ class Libro {
 }
 ```
 
-## Métodos mágicos
+## 3.11 Métodos mágicos
 
 Todas las clases PHP ofrecen un conjunto de métodos, también conocidos como *magic methods* que se pueden sobreescribir para sustituir su comportamiento. Algunos de ellos ya los hemos utilizado.
 
@@ -631,7 +631,7 @@ Los más destacables son:
 * `__sleep()`, `__wakeup()` → Se ejecutan al recuperar (*unserialize^*) o almacenar un objeto que se serializa (*serialize*), y se utilizan para permite definir qué propiedades se serializan.
 * `__call()`, `__callStatic()` → Se ejecutan al llamar a un método que no es público. Permiten sobrecargan métodos.
 
-## Espacio de nombres
+## 3.12 Espacio de nombres
 
 Desde PHP 5.3 y también conocidos como *Namespaces*, permiten organizar las clases/interfaces, funciones y/o constantes de forma similar a los paquetes en *Java*.
 
@@ -772,7 +772,7 @@ spl_autoload_register( function( $nombreClase ) {
     ?>
     ```
 
-## Gestión de Errores
+## 3.13 Gestión de Errores
 
 PHP clasifica los errores que ocurren en diferentes niveles. Cada nivel se identifica con una constante. Por ejemplo:
 
@@ -825,7 +825,7 @@ A continuación tenemos un ejemplo mediante código:
     Error de tipo Warning: Division by zero.
     ```
 
-## Excepciones
+## 3.14 Excepciones
 
 La gestión de excepciones forma parte desde PHP 5. Su funcionamiento es similar a *Java*, haciendo uso de un bloque `try / catch / finally`.
 Si detectamos una situación anómala y queremos lanzar una excepción, deberemos realizar `throw new Exception` (adjuntando el mensaje que lo ha provocado).
@@ -990,7 +990,7 @@ try {
 }
 ```
 
-## SPL
+## 3.15 SPL
 
 *Standard PHP Library* es el conjunto de funciones y utilidades que ofrece PHP, como:
 
@@ -1019,11 +1019,12 @@ También define un conjunto de excepciones que podemos utilizar para que las lan
 
 También podéis consultar la documentación de estas excepciones en <https://www.php.net/manual/es/spl.exceptions.php>.
 
-## Referencias
+## 3.16 Referencias
 
 * [Manual de PHP](https://www.php.net/manual/es/index.php)
 * [Manual de OO en PHP - www.desarrolloweb.com](https://desarrolloweb.com/manuales/manual-php.html#manual68)
-## Actividades
+
+## 3.17 Actividades
 
 300. Investiga la diferencia entre un paradigma orientado a objetos basado en clases (*PHP*) respecto a uno basado en prototipos (*JavaScript*).
 
