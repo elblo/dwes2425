@@ -1288,7 +1288,7 @@ var_dump( strnatcmp($frase4, $frase5) ); // -1 → f4 < f5
 Si lo que queremos es buscar dentro de una cadena, tenemos:
 
 * `strpos` / `strrpos`: busca en una cadena y devuelve la posición de la primera/última ocurrencia.
-* `strstr` / `strchr (alias)`: busca una cadena y devuelve la subcadena a partir de donde la ha encontrado
+* `strstr` / `strchr (alias de strstr)`: busca una cadena y devuelve la subcadena a partir de donde la ha encontrado
 * `stristr`: ignora las mayúsculas
 
 ``` php
