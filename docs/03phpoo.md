@@ -47,7 +47,7 @@ $ob = new NombreClase();
 !!! important "Clases con mayúscula"
     Todas las clases empiezan por letra mayúscula.
 
-Cuando un proyecto crece, es normal modelar las clases mediante UML (¿recordáis *Entornos de Desarrollo*?). La clases se representan mediante un cuadrado, separando el nombre, de las propiedades y los métodos:
+Cuando un proyecto crece, es normal modelar las clases mediante UML. La clases se representan mediante un cuadrado, separando el nombre, de las propiedades y los métodos:
 
 ![UML](imagenes/03/uml.png){ width=500 }
 
@@ -335,7 +335,7 @@ class A extends B
 El hijo hereda los atributos y métodos públicos y protegidos.
 
 !!! warning "Cada clase en un archivo"
-    Como ya hemos comentado, deberíamos colocar cada clase en un archivo diferente para posteriormente utilizarlo mediante `include`. En los siguiente ejemplo los hemos colocado junto para facilitar su legibilidad.
+    Como ya hemos comentado, deberíamos colocar cada clase en un archivo diferente para posteriormente utilizarlo mediante `include`. En los siguientes ejemplos los hemos colocado juntos para facilitar su legibilidad.
 
 Por ejemplo, tenemos una clase `Producto` y una `Tv` que hereda de `Producto`:
 

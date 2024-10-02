@@ -970,7 +970,7 @@ funcionArgumentosNombre(1, c: 3); // "1 2 3"
 
 ### Funciones tipadas
 
-Desde PHP7 en las funciones, tanto los parámetro como su devolución, permiten la definición de tipos. Esto se conoce como *strict_types* (tipificación estricta) y hay que definirlo en la primera línea de cada archivo `.php` para que el propio interprete PHP compruebe los tipos y lance errores si los tipos son incorrectos, mediante la sentencia
+Desde PHP7 en las funciones, tanto los parámetro como su devolución, permiten la definición de tipos. Esto se conoce como *strict_types* (tipificación estricta) y hay que definirlo en la primera línea de cada archivo `.php` para que el propio interprete PHP compruebe los tipos y lance errores si los tipos son incorrectos, mediante la sentencia:
 
 ``` php
 <?php
@@ -1096,8 +1096,9 @@ Posteriormente, se incluye con:
 * `include(archivo);` / `include_once(archivo);`
 * `require(archivo);` / `require_once(archivo);`
 
-Si no encuentra el archivo, `require` lanza un error fatal, `include` lo ignora
-Las funciones `_once` sólo se cargan una vez, si ya ha sido incluida previamente, no lo vuelve a hacer, evitando bucles.
+Si no encuentra el archivo, `require` lanza un error fatal, `include` lo ignora.
+
+Las funciones `_once` sólo se cargan una vez. Si ya ha sido incluida previamente, no lo vuelve a hacer, evitando bucles.
 
 Por ejemplo, colocamos las funciones en el archivo `biblioteca.php`:
 
