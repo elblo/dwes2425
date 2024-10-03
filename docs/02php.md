@@ -1260,7 +1260,7 @@ La comparación de cadenas puede ser con conversión de tipos mediante `==` o es
 También funcionan los operadores `<` y `>` si ambas son cadenas.
 Al comparar cadenas con valores numericos podemos utilizar:
 
-* `strcmp`: 0 iguales, <0 si `a<b` o >0 si `a>b`
+* `strcmp`: 0 iguales, negativo si `a<b` o positivo si `a>b`
 * `strcasecmp`: las pasa a minúsculas y compara
 * `strncmp` / `strncasecmp`: compara los N primeros caracteres
 * `strnatcmp`: comparaciones naturales
@@ -1329,9 +1329,9 @@ echo ctype_space($prueba5[0])."<br>"; // true
 
 Si queremos romper las cadenas en trozos, tenemos:
 
-* `explode`: convierte en array la cadena mediante un separador.
-* `implode` / `join`: pasa un array a cadena con un separador
-* `str_split` / `chunk_split`: pasa una cadena a una array/cadena cada X caracteres
+* `explode`: pasa una cadena a array mediante un separador.
+* `implode` / `join (alias de implode)`: pasa un array a cadena con un separador.
+* `str_split` / `chunk_split`: pasa una cadena a una array/cadena cada X caracteres.
 
 ``` php
 <?php
@@ -1661,7 +1661,7 @@ Muestra a continuación por pantalla el contenido del array de tal forma que:
     
     `244calculadoraEuros.php`: utiliza `243euros.php` y prueba las funciones pasando tanto cantidades con la cotización por defecto, como con nuevas cotizaciones. Recuerda que 1 euro son/eran 166.36 pesetas.
 
-245. `245preparaTiquetCompra.php`: A partir de una cantidad de productos, leer el nombre y coste de la cantidad de productos indicados (similar al ejercicio 237, pero esta vez no hace falta crear el formulario con la cantidad, se recibe mediante un parámetro GET via URL).  
+245. `245preparaTiquetCompra.php`: A partir de una cantidad de productos, leer el nombre y coste de la cantidad de productos indicados (similar al ejercicio 238, pero esta vez no hace falta crear el formulario con la cantidad, se recibe mediante un parámetro GET via URL).  
 `245imprimeTiquetCompra.php`: Tras leer los datos del tiquet de compra, enumera en una tabla los productos, con su precio en euros y pesetas, y finalmente, en una última fila, totalizar en ambas monedas.
 ![245](imagenes/02/02p245.png){align=right & width=200}
 246. A partir de los archivos creados en el ejercicio anterior, crea una plantilla mediante includes:
