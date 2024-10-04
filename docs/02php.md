@@ -1054,39 +1054,66 @@ echo $miFuncionSuma(3,4); // invoca a la función suma
 ?>
 ```
 
-!!! info "Funciones anónimas"
-    PHP permite la definición y uso de funciones anónimas, es decir, funciones que no tienen nombre, y se utilizan principalmente para gestionar los *callbacks*. Este tipo de funciones se utiliza mucho en **Javascript** para gestionar los eventos y promesas.
+### Funciones anónimas
+    
+Son funciones que no tienen nombre y se utilizan principalmente para gestionar los *callbacks*. Este tipo de funciones se utiliza mucho en **Javascript** para gestionar los eventos y promesas.
 
-    ``` php
-    <?php
-    $anonima = function() {
-        echo "Hola";
-    };
-    $anonima();
+``` php
+<?php
+$anonima = function() {
+    echo "Hola";
+};
+$anonima();
 
-    $anonimaConParametro = function($nombre) {
-        echo "Hola ".$nombre;
-    };
-    $anonimaConParametro("Aitor");
+$anonimaConParametro = function($nombre) {
+    echo "Hola ".$nombre;
+};
+$anonimaConParametro("Aitor");
 
-    // Uso de variables externas a la función anónima --> `use`
-    $mensaje = "Hola";
-    $miClosure = function() use ($mensaje) {
-        echo $mensaje;
-    };
-    $miClosure();
+// Uso de variables del ámbito padre en la función anónima --> `use`
+$mensaje = "Hola";
+$miClosure = function() use ($mensaje) {
+    echo $mensaje;
+};
+$miClosure();
 
-    // Uso de parámetros
-    $holaPHP = function($arg) use ($mensaje) {
-        echo $mensaje." ".$arg;
-    };
-    $holaPHP("PHP");
-    ?>
-    ```
+// Uso de parámetros y variables del ámbito padre
+$holaPHP = function($arg) use ($mensaje) {
+    echo $mensaje." ".$arg;
+};
+$holaPHP("PHP");
+?>
+```
 
-    Desde PHP 7.4 se han introducido las funciones flecha (*arrow functions*) para simplificar su definición y uso.
+[Más info sobre funciones anónimas](https://www.php.net/manual/es/functions.anonymous.php)
 
-    Tenéis más información sobre funciones anónimas y flecha en el siguiente artículo (en inglés): [Funciones anónimas y flecha en PHP](https://code.tutsplus.com/tutorials/anonymous-and-arrow-functions-in-php--cms-36725)
+
+### Funciones flecha
+
+Desde PHP 7.4 se han introducido las funciones flecha (*arrow functions*) como una sintásis más concisa de las funciones anónimas.
+
+Las funciones flecha tienen la forma básica de `fn(argument_list) => expr`. La palabra reservada *function* se reduce a *fn*, se omiten las llaves y el *return*, devolviéndose directamente la expresión.
+
+Las funciones flecha soportan las mismas características que las funciones anónimas, sólo que además, el uso de variables del ámbito padre siempre es automático (no es necesario especificarlas mediante `use`).
+
+``` php
+<?php
+$y = 1;
+
+// Función anónima usando variable $y del ámbito padre explícitamente
+$fn1 = function ($x) use ($y) {
+    return $x + $y;
+};
+
+// Función flecha usando variable $y del ámbito padre automáticamente
+$fn2 = fn($x) => $x + $y;
+
+echo $fn1(3); // 4
+echo $fn2(3); // 4
+?>
+```
+
+[Más info sobre funciones flecha](https://www.php.net/manual/es/functions.arrow.php)
 
 ### Biblioteca de funciones
 
