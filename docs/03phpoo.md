@@ -240,14 +240,14 @@ Son aquellas que tienen propiedades y/o métodos estáticos (también se conocen
 
 Se declaran con `static` y se referencian con `::`.
 
-* Si queremos acceder a un método estático, se antepone el nombre de la clase: `Producto::nuevoProducto()`.
-* Si desde un método queremos acceder a una propiedad estática de la misma clase, se utiliza la referencia `self`: `self::$numProductos`
+* Si queremos acceder a un método o atributo estático, o a una constante, se antepone el nombre de la clase: `Producto::nuevoProducto()` o `Producto::$numProductos`.
+* Si desde dentro de la clase queremos llamar a un método o atributo estático propio, o a una constante, se utiliza la referencia `self`: `self::nuevoProducto` o `self::$numProductos`.
 
 ``` php
 <?php
 class Producto {
     const IVA = 0.23;
-    private static $numProductos = 0; 
+    public static $numProductos = 0; 
 
     public static function nuevoProducto() {
         self::$numProductos++;
@@ -255,6 +255,7 @@ class Producto {
 }
 
 Producto::nuevoProducto();
+$nProductos = Producto::$numProductos;
 $impuesto = Producto::IVA;
 ```
 
@@ -289,7 +290,7 @@ Al trabajar con clases y objetos, existen un conjunto de funciones ya definidas 
 
 * `instanceof`: permite comprobar si un objeto es de una determinada clase
 * `get_class`: devuelve el nombre de la clase
-* `get_declared_class`: devuelve un array con los nombres de las clases definidas
+* `get_declared_class`: devuelve un array con los nombres de las clases definidas en el script actual
 * `class_alias`: crea un alias
 * `class_exists` / `method_exists` / `property_exists`: `true` si la clase / método / propiedad está definida
 * `get_class_methods` / `get_class_vars` / `get_object_vars`: Devuelve un array con los nombres de los métodos / propiedades de una clase / propiedades de un objeto que son accesibles desde dónde se hace la llamada.
