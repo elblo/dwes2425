@@ -47,11 +47,11 @@ Duración estimada: 76 horas
     * Clases y objetos
     * Namespaces
     * Excepciones
-4. Programación Web (12h)
+4. [Programación Web](04web.md) (12h)
     * Formularios.
     * Cookies.
     * Sesiones.
-5. Herramientas Web (16h)
+5. [Herramientas Web](05herramientas.md) (16h)
     * Gestión de librerías con *Composer*.
     * Gestión de logs con *Monolog*.
     * Documentación con *phpDocumentor*.

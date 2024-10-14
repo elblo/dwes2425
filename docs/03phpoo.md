@@ -1134,7 +1134,7 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
 
 ### Proyecto Videoclub (teoría asta interfaces)
 
-En los siguientes ejercicios vamos a simular un pequeño proyecto de un Videoclub (basado en la propuesta que hace el tutorial de desarrolloweb.com), el cual vamos a realizar mediante un desarrollo incremental y siguiendo la práctica de programación en parejas (*pair programming*).
+En los siguientes ejercicios vamos a simular un pequeño proyecto de un Videoclub, el cual vamos a realizar mediante un desarrollo incremental y siguiendo la práctica de programación en parejas (*pair programming*).
 
 Antes de nada, crea un repositorio privado en GitHub y sube el proyecto actual de *Videoclub*. Una vez creado, invita a tu compañero al repositorio como colaborador.
 
@@ -1153,10 +1153,10 @@ Cada clase debe ir en un archivo php separado. Para facilitar su implementación
     <figcaption>Creamos el Soporte</figcaption>
 </figure>
 
-320. Crea una clase para almacenar soportes (`Soporte.php`). Esta clase será la clase padre de los diferentes soportes con los que trabaje nuestro videoclub (cintas de vídeo, videojuegos, etc...):
+1.   Crea una clase para almacenar soportes (`Soporte.php`). Esta clase será la clase padre de los diferentes soportes con los que trabaje nuestro videoclub (cintas de vídeo, videojuegos, etc...):
 
     * Crea el constructor que inicialice sus propiedades. Fíjate que la clase no tiene métodos *setters*.
-    * Definir una constante mediante un propiedad privada y estática denominada `IVA con un valor del 21%
+    * Definir una constante mediante un propiedad privada denominada `IVA` con un valor del 21%.
     * Crear un archivo (`inicio.php`) para usar las clases y copia el siguiente fragmento:
 
 === "Código de prueba"
@@ -1187,7 +1187,7 @@ Cada clase debe ir en un archivo php separado. Para facilitar su implementación
     <figcaption>Añadimos Cinta de Video</figcaption>
 </figure>
 
-321. Crea la clase `CintaVideo` la cual hereda de `Soporte`. Añade el atributo `duracion` y sobreescribe tanto el contructor como el método `muestraResumen` (desde `CintaVideo` deberás llamar al método `muestraResumen` del padre).
+1.   Crea la clase `CintaVideo` la cual hereda de `Soporte`. Añade el atributo `duracion` y sobreescribe tanto el contructor como el método `muestraResumen` (desde `CintaVideo` deberás llamar al método `muestraResumen` del padre).
 
     Añade a `inicio.php` el código para probar la clase:
 
@@ -1297,15 +1297,15 @@ Llegados a este punto, nuestro modelo es similar al siguiente diagrama:
     <figcaption>Añadimos Cliente</figcaption>
 </figure>
 
-324. Crear la clase `Cliente`. El constructor recibirá el `nombre`, `numero` y `maxAlquilerConcurrente`, este último pudiendo ser opcional y tomando como valor por defecto 3. Tras ello, añade *getter/setter* únicamente a `numero`, y un *getter* a `numSoportesAlquilados` (este campo va a almacenar un contador del total de alquileres que ha realizado). El array de soportes alquilados contedrá clases que hereden de `Soporte`. Finalmente, añade el método `muestraResumen` que muestre el nombre y la cantidad de alquileres (tamaño del array `soportesAlquilados`).
+324. Crear la clase `Cliente`. El constructor recibirá el `nombre`, `numero` y `maxAlquilerConcurrente`, este último pudiendo ser opcional y tomando como valor por defecto 3. Tras ello, añade *getter/setter* únicamente a `numero`, y un *getter* a `numSoportesAlquilados` (este campo va a almacenar un contador del total de alquileres que ha realizado). El array de soportes alquilados contedrá instancias de clases que hereden de `Soporte`. Finalmente, añade el método `muestraResumen` que muestre el nombre y la cantidad de alquileres (tamaño del array `soportesAlquilados`).
 
 325. Dentro de `Cliente`, añade las siguiente operaciones:
     * `tieneAlquilado(Soporte $s): bool` → Recorre el array de soportes y comprueba si está el soporte
-    * `alquilar(Soporte $s): bool` -→ Debe comprobar si el soporte está alquilado y si no ha superado el cupo de alquileres. Al alquilar, incrementará el `numSoportesAlquilados` y almacenará el soporte en el array. Para cada caso debe mostrar un mensaje informando de lo ocurrido.
+    * `alquilar(Soporte $s): bool` → Debe comprobar si ya tiene el soporte alquilado y si no ha superado el cupo de alquileres. Al alquilar, incrementará el `numSoportesAlquilados` y almacenará el soporte en el array. Para cada caso debe mostrar un mensaje informando de lo ocurrido.
 
 326. Seguimos con `Cliente` para añadir las operaciones:
     * `devolver(int $numSoporte): bool` → Debe comprobar que el soporte estaba alquilado  y actualizar la cantidad de soportes alquilados. Para cada caso debe mostrar un mensaje informando de lo ocurrido
-    * `listarAlquileres(): void` → Informa de cuantos alquileres tiene el cliente y los muestra.
+    * `listaAlquileres(): void` → Informa de cuantos alquileres tiene el cliente y los muestra.
 
 Crea el archivo `inicio2.php` con el siguiente código fuente para probar la clase:
 
