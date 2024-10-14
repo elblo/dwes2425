@@ -1132,7 +1132,7 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
     * Modifica todas las clases que no son abstractas para que implementen el interfaz creado.
 
 
-### Proyecto Videoclub
+### Proyecto Videoclub (teoría asta interfaces)
 
 En los siguientes ejercicios vamos a simular un pequeño proyecto de un Videoclub (basado en la propuesta que hace el tutorial de desarrolloweb.com), el cual vamos a realizar mediante un desarrollo incremental y siguiendo la práctica de programación en parejas (*pair programming*).
 
@@ -1541,7 +1541,7 @@ Y para probar el proyecto, dentro `inicio3.php` colocaremos:
 
 329. Crea un interfaz `Resumible`, de manera que las clases que lo implementen deben ofrecer el método `muestraResumen()`. Modifica la clase `Soporte` y haz que implemente el interfaz. ¿Hace falta que también lo implementen los hijos?
 
-### Proyecto Videoclub 2.0
+### Proyecto Videoclub 2.0 (teoría hasta el final)
 
 Antes de comenzar con la segunda parte del videoclub, crea una etiqueta mediante `git tag` con el nombre `v0.329` y sube los cambios a GitHub.
 
