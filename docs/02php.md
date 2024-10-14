@@ -712,7 +712,7 @@ Las siguientes instrucciones no son específicas de los arrays pero se usan frec
     ```
 
 !!! info "Comparación de las funciones de ordenación"
-    Funciones como *sort* ordenan por valor perdiéndose la asociación que pudiera tener con la clave. Es importante tener claro estos conceptos. Consulta [aquí](https://www.php.net/manual/es/array.sorting.php) una comparativa de las funciones para ordenar arrays.
+    Funciones como *sort* ordenan por valor perdiéndose la asociación que pudiera tener con la clave. Es importante tener claro estos conceptos. Aquí tienes una [comparativa de las funciones para ordenar arrays](https://www.php.net/manual/es/array.sorting.php).
 
 #### Copia de arrays
 
