@@ -1132,7 +1132,7 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
     * Modifica todas las clases que no son abstractas para que implementen el interfaz creado.
 
 
-### Proyecto Videoclub (teoría asta interfaces)
+### Proyecto Videoclub (teoría hasta interfaces)
 
 En los siguientes ejercicios vamos a simular un pequeño proyecto de un Videoclub, el cual vamos a realizar mediante un desarrollo incremental y siguiendo la práctica de programación en parejas (*pair programming*).
 
@@ -1415,7 +1415,7 @@ Crea el archivo `inicio2.php` con el siguiente código fuente para probar la cla
 327. Llegado a este punto, vamos a relacionar los clientes y los soportes mediante la clase `Videoclub`. Así pues crea la clase que representa el gráfico, teniendo en cuenta que:
     * `productos` es un array de `Soporte`
     * `socios` es una array de `Cliente`
-    * Los métodos públicos de incluir algún soporte, crearán la clase y llamarán al método privado de `incluirProducto`, el cual es el encargado de introducirlo dentro del array.
+    * Los métodos públicos de incluir algún soporte, crearán la instancia de la clase correspondiente y llamarán al método privado de `incluirProducto`, el cual es el encargado de introducirlo dentro del array.
 
 El modelo completo quedará de la siguiente manera:
 
@@ -1450,14 +1450,14 @@ Y para probar el proyecto, dentro `inicio3.php` colocaremos:
     $vc->incluirSocio("Amancio Ortega"); 
     $vc->incluirSocio("Pablo Picasso", 2); 
 
-    $vc->alquilaSocioProducto(1,2); 
-    $vc->alquilaSocioProducto(1,3); 
+    $vc->alquilarSocioProducto(1,2); 
+    $vc->alquilarSocioProducto(1,3); 
     //alquilo otra vez el soporte 2 al socio 1. 
     // no debe dejarme porque ya lo tiene alquilado 
-    $vc->alquilaSocioProducto(1,2); 
+    $vc->alquilarSocioProducto(1,2); 
     //alquilo el soporte 6 al socio 1. 
     //no se puede porque el socio 1 tiene 2 alquileres como máximo 
-    $vc->alquilaSocioProducto(1,6); 
+    $vc->alquilarSocioProducto(1,6); 
 
     //listo los socios 
     $vc->listarSocios();
