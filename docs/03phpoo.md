@@ -1132,7 +1132,7 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
     * Modifica todas las clases que no son abstractas para que implementen el interfaz creado.
 
 
-### Proyecto Videoclub (teoría hasta interfaces)
+### Proyecto Videoclub 1.0 (teoría hasta interfaces)
 
 En los siguientes ejercicios vamos a simular un pequeño proyecto de un Videoclub, el cual vamos a realizar mediante un desarrollo incremental y siguiendo la práctica de programación en parejas (*pair programming*).
 
@@ -1153,7 +1153,7 @@ Cada clase debe ir en un archivo php separado. Para facilitar su implementación
     <figcaption>Creamos el Soporte</figcaption>
 </figure>
 
-1.   Crea una clase para almacenar soportes (`Soporte.php`). Esta clase será la clase padre de los diferentes soportes con los que trabaje nuestro videoclub (cintas de vídeo, videojuegos, etc...):
+320.   Crea una clase para almacenar soportes (`Soporte.php`). Esta clase será la clase padre de los diferentes soportes con los que trabaje nuestro videoclub (cintas de vídeo, videojuegos, etc...):
 
     * Crea el constructor que inicialice sus propiedades. Fíjate que la clase no tiene métodos *setters*.
     * Definir una constante mediante un propiedad privada denominada `IVA` con un valor del 21%.
@@ -1187,7 +1187,7 @@ Cada clase debe ir en un archivo php separado. Para facilitar su implementación
     <figcaption>Añadimos Cinta de Video</figcaption>
 </figure>
 
-1.   Crea la clase `CintaVideo` la cual hereda de `Soporte`. Añade el atributo `duracion` y sobreescribe tanto el contructor como el método `muestraResumen` (desde `CintaVideo` deberás llamar al método `muestraResumen` del padre).
+321.   Crea la clase `CintaVideo` la cual hereda de `Soporte`. Añade el atributo `duracion` y sobreescribe tanto el contructor como el método `muestraResumen` (desde `CintaVideo` deberás llamar al método `muestraResumen` del padre).
 
     Añade a `inicio.php` el código para probar la clase:
 
