@@ -1121,8 +1121,9 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
         ``` php
         <?php
         public function toJSON(): string {
+            $mapa = [];
             foreach ($this as $clave => $valor) {
-                $mapa->$clave = $valor;
+                $mapa[$clave] = $valor;
             }
             return json_encode($mapa);
         }
