@@ -1117,7 +1117,7 @@ Transforma `Persona` a una clase abstracta donde su método estático `toHtml(Pe
 
 314. `314EmpresaI.php`: Copia las clases del ejercicio anterior y modifícalas.
     * Crea un interfaz JSerializable, de manera que ofrezca los métodos:
-        * `toJSON(): string` → utiliza la función [`json_encode(mixed)`](https://www.php.net/manual/es/function.json-encode.php). Ten en cuenta que como tenemos las propiedades de los objetos privados, debes recorrer las propiedades y colocarlas en un mapa. Por ejemplo:
+        * `toJSON(): string` → utiliza la función [`json_encode(mixed)`](https://www.php.net/manual/es/function.json-encode.php). La idea es obtener la representación JSON de las propiedades de un objeto. Tendrás que recorrerarlas y colocarlas en un mapa que se le pasará a la función. Por ejemplo:
         ``` php
         <?php
         public function toJSON(): string {
