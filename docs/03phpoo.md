@@ -624,17 +624,17 @@ Ante cualquier duda, es conveniente consultar la [documentación oficial](https:
 
 Los más destacables son:
 
-* `__construct()`
-* `__destruct()` → se invoca al perder la referencia. Se utiliza para cerrar una conexión a la BD, cerrar un fichero, ...
-* `__toString()` → representación del objeto como cadena. Es decir, cuando hacemos `echo $objeto` se ejecuta automáticamente este método.
-* `__get(propiedad)`, `__set(propiedad, valor)` → Permitiría acceder a las propiedad privadas, aunque siempre es más legible/mantenible codificar los *getter/setter*.
-* `__isset(propiedad)`, `__unset(propiedad)` → Permite averiguar o quitar el valor a una propiedad.
-* `__sleep()`, `__wakeup()` → Se ejecutan al recuperar (*unserialize^*) o almacenar un objeto que se serializa (*serialize*), y se utilizan para permite definir qué propiedades se serializan.
-* `__call()`, `__callStatic()` → Se ejecutan al llamar a un método que no es público. Permiten sobrecargan métodos.
+* `__construct()` → Se llama automáticamente la crear una instancia de la clase con `new`.
+* `__destruct()` → Se invoca al perder la referencia. Se utiliza para cerrar una conexión a la BD, cerrar un fichero, ...
+* `__toString()` → Representación del objeto como cadena. Es decir, cuando hacemos `echo $objeto` se ejecuta automáticamente este método.
+* `__get(propiedad)`, `__set(propiedad, valor)` → Se ejecuta su código al acceder/modificar propiedades inaccesibles (protegidas o privadas) o inexistentes. Es más legible/mantenible codificar los *getter/setter*.
+* `__isset(propiedad)`, `__unset(propiedad)` → Se invocan cuando se ejecuta `isset` o `unset` sobre propiedades inaccesibles o inexistentes.
+* `__call()`, `__callStatic()` → Se ejecutan al llamar a un método inaccesible en el contexto de objeto o estático respectivamente.
+* `__sleep()`, `__wakeup()` → Se ejecutan antes de serializar un objeto (*serialize*) o se reconstruye (*unserialize*), y se utilizan para definir qué propiedades se serializan.
 
 ## 3.12 Espacio de nombres
 
-Desde PHP 5.3 y también conocidos como *Namespaces*, permiten organizar las clases/interfaces, funciones y/o constantes de forma similar a los paquetes en *Java*.
+Desde PHP 5.3 y también conocidos como *Namespaces*, permiten organizar las clases/interfaces, funciones y/o constantes de forma similar a los paquetes en *Java*. Están basados en el concepto similar a la organización de archivos en directorios que hacen los sistemas operativos: Sólo puede haber un archivo con el mismo nombre en un directorio y el acceso es ordenado estableciendo la ruta, evitando así conflictos de nombres.
 
 !!! tip "Recomendación"
     Un sólo namespace por archivo y crear una estructura de carpetas respectando los niveles/subniveles (igual que se hace en *Java*)
@@ -710,7 +710,7 @@ $p1 = new Producto();
 
 ### Organización
 
-Todo proyecto, conforme crece, necesita organizar su código fuente. Se plantea una organización en la que los archivos que interactuan con el navegador se colocan en el raíz, y las clases que definamos van dentro de un namespace (y dentro de su propia carpeta `src` o `app`).
+Todo proyecto, conforme crece, necesita organizar su código fuente. Se plantea una organización en la que los archivos que interactuan con el navegador se colocan en la raíz, y las clases que definamos van dentro de un namespace (y dentro de su propia carpeta `src` o `app`).
 
 <figure>
 <img src="imagenes/03/03organizacion.png">
@@ -720,8 +720,7 @@ Todo proyecto, conforme crece, necesita organizar su código fuente. Se plantea 
 !!! tip "Organización, includes y usos"
     * Colocaremos cada recurso en un fichero aparte.
     * En la primera línea indicaremos su *namespace* (si no está en el raíz).
-    * Si utilizamos otros recursos, haremos un `include_once` de esos recursos (clases, interfaces, etc...).
-        * Cada recurso debe incluir todos los otros recursos que referencie: la clase de la que hereda, interfaces que implementa, clases utilizadas/recibidas como parámetros, etc...
+    * Si utilizamos otros recursos, haremos un `include_once` de esos recursos (clases, interfaces, etc...). Cada recurso debe incluir todos los otros recursos que referencie: la clase de la que hereda, interfaces que implementa, clases utilizadas/recibidas como parámetros, etc...
     * Si los recursos están en un espacio de nombres diferente al que estamos, emplearemos `use` con la ruta completa para luego utilizar referencias sin cualificar.
 
 ### Autoload
@@ -739,7 +738,7 @@ spl_autoload_register( function( $nombreClase ) {
 ```
 
 !!! question "¿Por qué se llaman *autoload*?"
-    Porque antes se realizaba mediante el método mágico `__autoload()`, el cual está *deprecated* desde PHP 7.2
+    Porque antes se realizaba mediante el método mágico `__autoload()`, el cual está *obsoleto* desde PHP 7.2
 
 Y ¿cómo organizamos ahora nuestro código aprovechando el *autoload*?
 
@@ -761,14 +760,14 @@ spl_autoload_register( function( $nombreClase ) {
 ```
 
 !!! tip "Autoload y rutas erróneas"
-    En *Ubuntu* al hacer el *include* de la clase que recibe como parámetro, las barras de los namespace (`\`) son diferentes a las de las rutas (`/`). Por ello, es mejor que utilicemos el fichero autoload:
+    En *sistemas UNIX* al hacer el *include* de la clase que recibe como parámetro, las barras de los namespace (`\`) son diferentes a las de las rutas (`/`). Por ello, es mejor que utilicemos el fichero autoload:
 
     ``` php
     <?php
     spl_autoload_register( function( $nombreClase ) {
         $ruta = "app\\".$nombreClase.'.php';
         $ruta = str_replace("\\", "/", $ruta); // Sustituimos las barras
-        include_once $ruta';
+        include_once $ruta;
     } );
     ?>
     ```
@@ -789,9 +788,9 @@ Para la configuración de los errores podemos hacerlo de dos formas:
     * `error_reporting`: indica los niveles de errores a notificar
         * `error_reporting = E_ALL & ~E_NOTICE` -> Todos los errores menos los avisos en tiempo de ejecución.
     * `display_errors`: indica si mostrar o no los errores por pantalla. En entornos de producción es común ponerlo a `off`
-* mediante código con las siguientes funciones:
+* Mediante código con las siguientes funciones:
     * `error_reporting(codigo)` -> Controla qué errores notificar
-    * `set_error_handler(nombreManejador)` -> Indica que función se invocará cada vez que se encuentre un error. El manejador recibe como parámetros el nivel del error y el mensaje
+    * `set_error_handler(nombreManejador)` -> Indica qué función se invocará cada vez que se encuentre un error. El manejador recibe como parámetros el nivel del error y el mensaje
 
 A continuación tenemos un ejemplo mediante código:
 
@@ -843,7 +842,7 @@ try {
 }
 ```
 
-La clase `Exception` es la clase padre de todas las excepciones. Su constructor recibe `mensaje[,codigoError][,excepcionPrevia]`.
+La clase `Exception` es la clase padre de todas las excepciones. Su constructor recibe `mensaje[codigoError][excepcionPrevia]`.
 
 A partir de un objeto `Exception`, podemos acceder a los métodos `getMessage()`y `getCode()` para obtener el mensaje y el código de error de la excepción capturada.
 
@@ -1546,8 +1545,13 @@ Y para probar el proyecto, dentro `inicio3.php` colocaremos:
 
 Antes de comenzar con la segunda parte del videoclub, crea una etiqueta mediante `git tag` con el nombre `v0.329` y sube los cambios a GitHub.
 
-330. Modifica las operaciones de alquilar, tanto en `Cliente` como en `Videoclub`, para dar soporte al encadenamiento de métodos.
-Posteriormente, modifica el código de prueba para utilizar esta técnica.
+330. Modifica la operación de alquilar en `Videoclub`, para dar soporte al encadenamiento de métodos. 
+Posteriormente, modifica el código de prueba para utilizar esta técnica, de tal forma que quede así:
+
+``` php
+    $vc->alquilarSocioProducto(1,2)->alquilarSocioProducto(1,3)->alquilarSocioProducto(1,2)->alquilarSocioProducto(1,6);
+```
+
 331. Haciendo uso de *namespaces*:
     * Coloca todas las clases/interfaces en `Dwes\ProyectoVideoclub`
     * Cada clase debe hacer `include_once` de los recursos que emplea
