@@ -696,7 +696,7 @@ Por ejemplo, si queremos utilizar la clase `\Dwes\Ejemplos\Producto` desde un re
 
 ``` php
 <?php
-include_once("Dwes\Ejemplo\Producto.php");
+include_once("Dwes\Ejemplos\Producto.php");
 
 use const Dwes\Ejemplos\IVA;
 use \Dwes\Ejemplos\Producto;
