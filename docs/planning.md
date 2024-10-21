@@ -27,13 +27,12 @@
 - [X] 2.- (17) Clases estáticas. Herencia. Ejercicios 304-307
 - [X] 3.- (18) Herencia. Clases abstractas. Ejercicios 308-311
 - [X] 4.- (19) Interfaces. Ejercicios 312-314
-- [ ] 5.- (20) Proyecto Videoclub I. Ejercicios 320-323
-- [ ] 6.- (21) Proyecto Videoclub I. Ejercicios 324-328
-- [ ] 7.- (22) Métodos encadenados. Namespaces. Ejercicios 330-332
-- [ ] 8.- (23) Excepciones. Ejercicios 333-334
-- [ ] 9.- (24) Proyecto Videoclub II. Ejercicios 335-337
+- [X] 5.- (20) Proyecto Videoclub I. Ejercicios 320-323
+- [X] 6.- (21) Proyecto Videoclub I. Ejercicios 324-328
+- [X] 7.- (22) Métodos encadenados. Namespaces. Ejercicios 330-332
+- [X] 8.- (23) Excepciones. Ejercicios 333-334
+- [X] 9.- (24) Proyecto Videoclub II. Ejercicios 335-337
 
-<!--
 ## 4.- Programación Web (12h)
 
 - [ ] 1.- (25) Formularios. Ejercicios 401-403
@@ -43,11 +42,12 @@
 - [ ] 5.- (29) Proyecto Videoclub III. Ejercicios 420-423
 - [ ] 6.- (30) Proyecto Videoclub III. Ejercicios 424-426
 
+<!--
 ## 5.- Herramientas Web (16h)
 
 - [ ] 1.- (31) Composer. Introducción Monolog. Ejercicio 501
 - [ ] 2.- (32) Manejadores. Uso de logs con *Monolog*. Ejercicios 502 - 503
-- [ ] 3.- (33) Proyecto Videoclub IV. Ejercicios 511 - 515
+- [ ] 3.- (33) Proyecto Videoclub 4.0. Ejercicios 511 - 515
 - [ ] 4.- (34) Documentación con *phpDocumentor* . Ejercicios 521 - 522.
 - [ ] 5.- (35) Webscrapping. Ejercicios 531 - 533.
 - [ ] 6.- (36) Pruebas con *PhpUnit*. Ejercicios 541 - 545.

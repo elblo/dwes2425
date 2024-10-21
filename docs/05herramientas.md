@@ -880,7 +880,7 @@ Por ejemplo, si accedemos a la clase `CintaVideo` con la prueba que habíamos re
     * Añade una propiedad denominada `hora`, la cual se inicializa únicamente como parámetro del constructor. Si la `hora` es inferior a 0 o mayor de 24, debe escribir un log de *warning* con un mensaje apropiado.
     * Modifica los métodos `saludar` y `despedir` para hacerlo acorde a la propiedad `hora` (buenos días, buenas tardes, hasta mañana, etc...)
 
-### Proyecto Videoclub IV
+### Proyecto Videoclub 4.0
 
 511. Como ya tenemos *Composer* instalado:
     * Inicialízalo dentro de tu proyecto *Videoclub*
