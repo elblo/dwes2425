@@ -10,7 +10,7 @@
     | ------                    | -----                     |
     | 4. Desarrolla aplicaciones Web embebidas en lenguajes de marcas analizando e incorporando funcionalidades según especificaciones.     |  a) Se han identificado los mecanismos disponibles para el mantenimiento de la información que concierne a un cliente web concreto y se han señalado sus ventajas.<br /> b) Se han utilizado sesiones para mantener el estado de las aplicaciones Web. <br /> c) Se han utilizado *cookies* para almacenar información en el cliente Web y para recuperar su contenido. <br /> d) Se han identificado y caracterizado los mecanismos disponibles para la autentificación de usuarios. <br /> e) Se han escrito aplicaciones que integren mecanismos de autentificación de usuarios. <br /> f) Se han realizado adaptaciones a aplicaciones Web existentes como gestores de contenidos u otras. <br /> g) Se han utilizado herramientas y entornos para facilitar la programación, prueba y depuración del código. |
 
-## Variables de servidor
+## 4.1 Variables de servidor
 
 PHP almacena la información del servidor y de las peticiones HTTP en seis arrays globales:
 
@@ -61,7 +61,7 @@ Apache crea una clave para cada cabecera HTTP, en mayúsculas y sustituyendo los
 echo $_SERVER["HTTP_USER_AGENT"]."<br>"; // Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36
 ```
 
-## Formularios
+## 4.2 Formularios
 
 A la hora de enviar un formulario, debemos tener claro cuando usar GET o POST
 
@@ -233,7 +233,7 @@ Cada archivo cargado en `$_FILES` tiene:
 * `type`: tipo MIME
 * `error`: si hay error, contiene un mensaje. Si ok → 0.
 
-## Cabeceras de respuesta
+## 4.3 Cabeceras de respuesta
 
 Debe ser lo primero a devolver. Se devuelven mediante la función `header(cadena)`. Mediante las cabeceras podemos configurar el tipo de contenido, tiempo de expiración, redireccionar el navegador, especificar errores HTTP, etc.
 
@@ -269,7 +269,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 ```
 
-## Gestión del estado
+## 4.4 Gestión del estado
 
 HTTP es un protocolo *stateless*, sin estado. Por ello, se simula el estado mediante el uso de cookies, tokens o la sesión. El estado es necesario para procesos tales como el carrito de la compra, operaciones asociadas a un usuario, etc...
 El mecanismo de PHP para gestionar la sesión emplea cookies de forma interna.
@@ -396,7 +396,7 @@ echo "Otra vez, en el $instituto ";
 
     Más información en la [documentación oficial](https://www.php.net/manual/es/session.configuration.php).
 
-## Autentificación de usuarios
+## 4.5 Autentificación de usuarios
 
 Una sesión establece una relación anónima con un usuario particular, de manera que podemos saber si es el mismo usuario entre dos peticiones distintas. Si preparamos un sistema de login, podremos saber quien utiliza nuestra aplicación.
 
@@ -510,12 +510,12 @@ header("Location: index.php");
 !!! warning "Autenticación en producción"
     En la actualidad la autenticación de usuario no se realiza gestionando la sesión direcamente, sino que se realiza mediante algún framekwork que abstrae todo el proceso o la integración de mecanismos de autenticación tipo *OAuth*, como  estudiaremos en la última unidad mediante *Laravel*.
 
-## Referencias
+## 4.6 Referencias
 
 * [Cookies en PHP](https://www.php.net/manual/es/features.cookies.php)
 * [Manejo de sesiones en PHP](https://www.php.net/manual/es/book.session.php)
 
-## Actividades
+## 4.7 Actividades
 
 401. `401server.php`: igual que el ejemplo visto en los apuntes, muestra los valores de `$_SERVER` al ejecutar un script en tu ordenador.  
 Prueba a pasarle parámetros por GET (y a no pasarle ninguno).  
