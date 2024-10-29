@@ -21,6 +21,14 @@ PHP almacena la información del servidor y de las peticiones HTTP en seis array
 * `$_SERVER`: información sobre el servidor
 * `$_FILES`: información sobre los ficheros cargados via upload
 
+
+!!! info "URL y URI"
+    Antes de continuar es necesario aclarar las diferencias entre URL y URI. La [URL](https://developer.mozilla.org/es/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL) (Uniform Resource Locator) indica la localización donde se encuentran los recursos, mientras que la [URI](https://developer.mozilla.org/es/docs/Glossary/URI) (Uniform Resource Identifier) identifica a un recurso en sí.
+    <figure style="align: center;">
+        <img src="imagenes/04/04urluri.jpg">
+        <figcaption>Diferencias entre URL y URI</figcaption>
+    </figure>
+
 Si nos centramos en el array `$_SERVER` podemos consultar las siguientes propiedades:
 
 * `PHP_SELF`: nombre del script ejecutado, relativo al document root (p.ej: `/tienda/carrito.php`)
@@ -63,7 +71,7 @@ echo $_SERVER["HTTP_USER_AGENT"]."<br>"; // Mozilla/5.0 (Windows NT 10.0;�
 
 ## 4.2 Formularios
 
-A la hora de enviar un formulario, debemos tener claro cuando usar GET o POST
+A la hora de enviar un formulario, debemos tener claro cuando usar GET o POST:
 
 * GET: los parámetros se pasan en la URL
     * <2048 caracteres, sólo ASCII
