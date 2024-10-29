@@ -445,7 +445,9 @@ Otra forma más sencilla para lanzar de nuevo los contenedores y gestionarlos un
 
 En este curso vamos a emplear *Visual Studio Code* (<https://code.visualstudio.com>) como entorno de desarrollo (IDE). Existen otras alternativas, siendo [PhpStorm](https://www.jetbrains.com/es-es/phpstorm/) la más conocida pero siendo de pago. Otra posibilidad es utilizar [Eclipse](https://www.eclipse.org/pdt/), aunque es un entorno bastante pesado.
 
-*VSCode* es un editor de código fuente que se complementa mediante extensiones. Para facilitar el trabajo a lo largo del curso vamos a utilizar las siguientes extensiones:
+**VS Code** es un editor de código fuente que se complementa mediante extensiones para adaptarse a casi cualquier lenguaje y necesidad. Muy importante seguir [estos pasos](https://code.visualstudio.com/docs/languages/php) para configurarlo correctamente con PHP. Sobre todo, indicar en la variable `php.validate.executablePath` la *ruta del ejecutable de PHP* en el sistema. 
+
+Vamos a utilizar las siguientes extensiones con VS Code:
 
 * [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
 * [PHP Intelephense](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client)
