@@ -80,7 +80,7 @@ A la hora de enviar un formulario, debemos tener claro cuando usar GET o POST:
     * El navegador puede cachear las llamadas
 
 * POST: parámetros ocultos (no encriptados)
-    * Sin límite de datos, permite datos binarios.
+    * Sin límite de datos, permite datos binarios
     * No se pueden cachear
     * No idempotente → actualizar la BBDD
 
@@ -138,7 +138,7 @@ Existen elementos HTML que envían varios valores:
 * `select multiple`
 * `checkbox`
 
-Para recoger los datos, el nombre del elemento debe ser un array.
+Para recoger los datos, el nombre del elemento debe ser un array. Esto también funciona con otro tipo de inputs, como los de texto, para recoger así todos los valores en un mismo array.
 
 ``` html
 <select name="lenguajes[]" multiple="true">
@@ -167,7 +167,7 @@ foreach ($lenguajes as $lenguaje) {
 
 ### Volviendo a rellenar un formulario
 
-Un *sticky form* es un formulario que recuerda sus valores. Para ello, hemos de rellenar los atributos `value` de los elementos HTML con la información que contenían:
+Si no pasa la validación y el usuario tiene que volver a rellenar el formulario, lo ideal es mantener los campos correctos con la información que rellenó. Esta técnica recibe el nombre de *sticky form*: un formulario que recuerda sus valores. Para ello, hemos de rellenar los atributos `value` de los elementos HTML con la información que contenían:
 
 ``` html+php
 <?php
@@ -251,7 +251,7 @@ Debe ser lo primero a devolver. Se devuelven mediante la función `header(cadena
 exit(); 
 ```
 
-Se puede comprobar en las herramientas del desarrollador de los navegadores web mediante *Developer Tools --> Network --> Headers*.
+Se puede comprobar en las herramientas del desarrollador de los navegadores web mediante *Dev Tools --> Red --> clic en el nombre del archivo --> Encabezados*.
 
 Es muy común configurar las cabeceras para evitar consultas a la caché o provocar su renovación:
 
@@ -281,13 +281,13 @@ header("Pragma: no-cache");
 
 HTTP es un protocolo *stateless*, sin estado. Por ello, se simula el estado mediante el uso de cookies, tokens o la sesión. El estado es necesario para procesos tales como el carrito de la compra, operaciones asociadas a un usuario, etc...
 El mecanismo de PHP para gestionar la sesión emplea cookies de forma interna.
-Las cookies se almacenan en el navegador, y la sesión en el servidor web.
+*Las cookies se almacenan en el navegador del cliente, y la sesión en el servidor web*.
 
 ### Cookies
 
-Las cookies se almacenan en el array global `$_COOKIE`. Lo que coloquemos dentro del array, se guardará en el cliente. Hay que tener presente que el cliente puede no querer almacenarlas. 
+Las cookies se almacenan en el array global `$_COOKIE`. Lo que coloquemos dentro del array, **se guardará en el cliente**. Hay que tener presente que el cliente puede no querer almacenarlas. 
 
-Existe una limitació de 20 cookies por dominio y 300 en total en el navegador.
+Existe una limitación de 20 cookies por dominio y 300 en total en el navegador.
 
 En PHP, para crear una cookie se utiliza la función `setcookie`:
 
@@ -314,7 +314,7 @@ if (isset($_COOKIE['accesos'])) { 
 ```
 
 !!! tip "Inspeccionando las cookies"
-    Si queremos ver que contienen las cookies que tenemos almacenadas en el navegador, se puede comprobar su valor en *Dev Tools --> Application --> Storage*
+    Si queremos ver que contienen las cookies que tenemos almacenadas en el navegador, se puede comprobar su valor en *Dev Tools --> Aplicación --> Almacenamiento*
 
 El tiempo de vida de las cookies puede ser tan largo como el sitio web en el que residen. Ellas seguirán ahí, incluso si el navegador está cerrado o abierto.
 
@@ -347,8 +347,9 @@ La alternativa en el cliente para almacenar información en el navegador es el o
 
 ### Sesión
 
-La sesión añade la gestión del estado a HTTP, almacenando en este caso la información en el servidor.
-Cada visitante tiene un ID de sesión único, el cual por defecto se almacena en una cookie denominada `PHPSESSID`.
+La sesión añade la gestión del estado a HTTP, **almacenando la información en el servidor**.
+Cada visitante tiene un ID de sesión único, el cual por defecto se almacena en una cookie denominada `PHPSESSID` que se crea una vez se inicia la sesión mediante `session_start()`.
+
 Si el cliente no tiene las cookies activas, el ID se propaga en cada URL dentro del mismo dominio.
 Cada sesión tiene asociado un almacén de datos mediante el array global `$_SESSION`, en el cual podemos almacenar y recuperar información.
 
@@ -364,10 +365,10 @@ Las operaciones que podemos realizar con la sesión son:
 ``` php
 <?php
 session_start(); // carga la sesión
-session_id() // devuelve el id
+echo session_id(); // devuelve el id
 $_SESSION[clave] = valor; // inserción
 session_destroy(); // destruye la sesión
-unset($_SESSION[clave]; // borrado
+unset($_SESSION[clave]); // borrado
 ```
 
 Vamos a ver mediante un ejemplo como podemos insertar en un página datos en la sesión para posteriormente en otra página acceder a esos datos. Por ejemplo, en `sesion1.php` tendríamos
@@ -375,7 +376,7 @@ Vamos a ver mediante un ejemplo como podemos insertar en un página datos en la 
 ``` php
 <?php
 session_start(); // inicializamos
-$_SESSION["ies"] = "IES Severo Ochoa"; // asignación
+$_SESSION["ies"] = "IES Fernando III"; // asignación
 $instituto = $_SESSION["ies"]; // recuperación
 echo "Estamos en el $instituto ";
 ?>
@@ -398,7 +399,7 @@ echo "Otra vez, en el $instituto ";
 
     * `session.save_handler`: controlador que gestiona cómo se almacena (`files`)
     * `session.save_path`: ruta donde se almacenan los archivos con los datos (si tenemos un cluster, podríamos usar `/mnt/sessions` en todos los servidor de manera que apuntan a una carpeta compartida)
-    * `session.name`: nombre de la sesión (`PHSESSID`)
+    * `session.name`: nombre de la sesión (`PHPSESSID`)
     * `session.auto_start`: Se puede hacer que se autocargue con cada script. Por defecto está deshabilitado
     * `session.cookie_lifetime`: tiempo de vida por defecto
 
@@ -406,7 +407,7 @@ echo "Otra vez, en el $instituto ";
 
 ## 4.5 Autentificación de usuarios
 
-Una sesión establece una relación anónima con un usuario particular, de manera que podemos saber si es el mismo usuario entre dos peticiones distintas. Si preparamos un sistema de login, podremos saber quien utiliza nuestra aplicación.
+Una sesión establece una relación anónima con un usuario particular, de manera que podemos saber si es el mismo usuario entre dos peticiones distintas. Si preparamos un sistema de login, podremos saber quién utiliza nuestra aplicación.
 
 Para ello, preparemos un sencillo sistema de autenticación:
 
@@ -435,7 +436,7 @@ Vamos a ver en código cada paso del proceso. Comenzamos con el archivo `index.p
         <input type='submit' name='enviar' value='Enviar' />
     </div>
   </fieldset>
-  </form>
+</form>
 ```
 
 Al hacer *submit* nos lleva a `login.php`, el cual hace de controlador:
@@ -478,7 +479,8 @@ Dependiendo del usuario que se haya logueado, vamos a ir a una vista o a otra. P
     
     // Y comprobamos que el usuario se haya autentificado
     if (!isset($_SESSION['usuario'])) {
-       die("Error - debe <a href='index.php'>identificarse</a>.<br />");
+        // die, al igual que exit escribe su mensaje y ya no ejecuta nada más del script
+        die("Error - debe <a href='index.php'>identificarse</a>.<br />");
     }
 ?>
 <!DOCTYPE html>
@@ -525,6 +527,8 @@ header("Location: index.php");
 
 ## 4.7 Actividades
 
+### Variables de servidor
+
 401. `401server.php`: igual que el ejemplo visto en los apuntes, muestra los valores de `$_SERVER` al ejecutar un script en tu ordenador.  
 Prueba a pasarle parámetros por GET (y a no pasarle ninguno).  
 Prepara un formulario (`401post.html`) que haga un envío por POST y compruébalo de nuevo.  
@@ -544,7 +548,7 @@ Crea una página (`401enlace.html`) que tenga un enlace a `401server.php` y comp
      
     Muestra los valores cargados en una tabla-resumen.
 
-403. `403validacion.php`: A partir del formulario anterior, introduce validaciones en HTML mediante el atributo `required` de los campos (uso los tipos adecuados para cada campo), y en comprueba los tipos de los datos y que cumplen los valores esperados (por ejemplo, en los checkboxes que los valores recogidos forman parte de todos los posibles). Puedes probar a pasarle datos erroneos via URL y comprobar su comportamiento.  
+403. `403validacion.php`: A partir del formulario anterior, introduce validaciones en HTML mediante el atributo `required` de los campos (uso los tipos adecuados para cada campo), y comprueba que los tipos de los datos cumplen los valores esperados (por ejemplo, en los checkboxes que los valores recogidos forman parte de todos los posibles). Puedes probar a pasarle datos erroneos via URL y comprobar su comportamiento.  
 Tip: Investiga el uso de la función `filter_var`.
 
 404. `404subida.html` y `404subida.php`: Crea un formulario que permita subir un archivo al servidor.
@@ -556,7 +560,7 @@ En el caso de subir el tipo correcto, visualizar la imagen con el tamaño de anc
 ### Cookies y Sesión
 
 406. `406contadorVisitas.php`: Mediante el uso de cookies, informa al usuario de si es su primera visita, o si no lo es, muestre su valor (valor de un contador).
-Además, debes permitir que el usuario reinicialice su contador de visitas.
+Además, debes permitir que el usuario reinicie su contador de visitas.
 
 407. `407fondo.php`: Mediante el uso de cookies, crea una página con un desplegable con varios colores, de manera que el usuario pueda cambiar el color de fondo de la página (atributo `bgcolor`).
 Al cerrar la página, ésta debe recordar, al menos durante 24h, el color elegido y la próxima vez que se cargue la pagina, lo haga con el último color seleccionado.
@@ -579,7 +583,7 @@ En los siguientes ejercicios vamos a montar una estructura de inicio de sesión 
 410. `410index.php`: formulario de inicio de sesión
 411. `411login.php`: hace de controlador, por lo que debe comprobar los datos recibidos (solo permite la entrada de `usuario/usuario` y si todo es correcto, ceder el control a la vista del siguiente ejercicio. No contiene código HTML.
 412. `412peliculas.php`: vista que muestra como título "Listado de Películas", y una lista desordenada con tres películas.
-413. `413logout.php`: vacía la sesión y nos lleva de nuevo al formulario de inicio de sesión. No contiene código HTML
+413. `413logout.php`: vacía la sesión y nos lleva de nuevo al formulario de inicio de sesión. No contiene código HTML.
 414. `414series.php`: Añade un nueva vista similar a `412peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `412pelicuas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
 Comprueba que si se accede directamente a cualquiera de las vistas sin tener un usuario *logueado* via URL del navegador, no se muestra el listado.
 415. Modifica tanto el controlador como las vistas para que:
@@ -589,38 +593,32 @@ Comprueba que si se accede directamente a cualquiera de las vistas sin tener un 
 
 ### Proyecto Videoclub 3.0
 
-420. Para el Videoclub, vamos a crear una página `index.php` con un formulario que contenga un formulario de login/password.
-Se comprobarán los datos en `login.php`. Los posibles usuarios son admin/admin o usuario/usuario
+420. Para el Videoclub, vamos a crear una página `index.php` con un formulario que contenga un formulario de login/password. Se comprobarán los datos en `login.php`. Los posibles usuarios son admin/admin o usuario/usuario.
     * Si el usuario es correcto, en `main.php` mostrar un mensaje de bienvenida con el nombre del usuario, junto a un enlace para cerrar la sesión, que lo llevaría de nuevo al login.
     * Si el usuario es incorrecto, debe volver a cargar el formulario dando información al usuario de acceso incorrecto.
 
-421. Si el usuario es administrador, se cargarán en la sesión los datos de soportes y clientes del videoclub que teníamos en nuestras pruebas (no mediante `include` sino copiando los datos e insertándolos en un array asociativo, el cual colocaremos posteriormente en la sesión).
+421. Si el usuario es administrador, se cargarán en la sesión los datos de soportes y clientes del videoclub que teníamos en nuestras pruebas (no mediante `include` sino copiando los datos e insertándolos en un array asociativo, el cual colocaremos posteriormente en la sesión). En unidades posteriores los obtendremos de la base de datos. En `mainAdmin.php`, además de la bienvenida, debe mostrar:
+   * Listado de clientes
+   * Listado de soportes
 
-    En la siguiente unidad los obtendremos de la base de datos.
-    En `mainAdmin.php`, además de la bienvenida, debe mostrar:
-        * Listado de clientes
-        * Listado de soportes
+<figure style="float: right;">
+    <img src="imagenes/04/04p423.png" width="400">
+    <figcaption>Esquema navegación ejercicio 423</figcaption>
+</figure>
 
-    <figure style="float: right;">
-        <img src="imagenes/04/04p423.png" width="400">
-        <figcaption>Esquema navegación ejercicio 423</figcaption>
-    </figure>
-
-422. Vamos a modificar la clase `Cliente` para almacenar el `user` y la `password` de cada cliente.
+423. Vamos a modificar la clase `Cliente` para almacenar el `user` y la `password` de cada cliente.
 Tras codificar los cambios, modificar el listado de clientes de `mainAdmin.php` para añadir al listado el usuario.
 
-423. Si el usuario que accede no es administrador y coincide con alguno de los clientes que tenemos cargados tras el login, debe cargar `mainCliente.php` donde se mostrará un listado de los alquileres del cliente. Para ello, modificaremos la clase `Cliente` para ofrecer el método `getAlquileres() : array`, el cual llamaremos y luego recorreremos para mostrar el listado solicitado.
+424. Si el usuario que accede no es administrador y coincide con alguno de los clientes que tenemos cargados tras el login, debe cargar `mainCliente.php` donde se mostrará un listado de los alquileres del cliente. Para ello, modificaremos la clase `Cliente` para ofrecer el método `getAlquileres() : array`, el cual llamaremos y luego recorreremos para mostrar el listado solicitado.
 
 Ahora volvemos a la parte de administración
 
 424. Además de mostrar el listado de clientes, vamos a ofrecer la opción de dar de alta a un nuevo cliente en `formCreateCliente.php`.
 Los datos se enviarán mediante POST a `createCliente.php` que los introducirá en la sesión.
-Una vez creado el cliente, debe volver a cargar `mainAdmin.php` donde se podrá ver el cliente insertado.
-Si hay algún dato incorrecto, debe volver a cargar el formulario de alta.
+Una vez creado el cliente, debe volver a cargar `mainAdmin.php` donde se podrá ver el cliente insertado. Si hay algún dato incorrecto, debe volver a cargar el formulario de alta.
 
 425. Crea en `formUpdateCliente.php` un formulario que permita editar los datos de un cliente.
-Debes recoger los datos en `updateCliente.php`
-Los datos de cliente se deben poder modificar desde la propia página de un cliente, así como desde el listado del administrador.
+Debes recoger los datos en `updateCliente.php`. Los datos de cliente se deben poder modificar desde la propia página de un cliente, así como desde el listado del administrador.
 
 426. Desde el listado de clientes del administrador debes ofrecer la posibilidad de borrar un cliente.
 En el navegador, antes de redirigir al servidor, el usuario debe confirmar mediante JS que realmente desea eliminar al cliente.
