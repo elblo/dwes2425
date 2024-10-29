@@ -1574,13 +1574,13 @@ En `Videoclub`, modifica `alquilarSocioPelicula` para capturar todas las excepci
     * En `Videoclub`, crea dos nuevas propiedades y sus getters:
         * `numProductosAlquilados`
         * `numTotalAlquileres`
-336. Crea un nuevo método en `Videoclub` llamado `alquilarSocioProductos(int numSocio, array numerosProductos)`, el cual debe recibir un array con los productos a alquilar.  
+336. Crea un nuevo método en `Videoclub` llamado `alquilarSocioProductos(int numCliente, array numerosSoportes)`, el cual debe recibir un array con los números de productos a alquilar.  
 Antes de alquilarlos, debe comprobar que todos los soportes estén disponibles, de manera que si uno no lo está, no se le alquile ninguno.
 337. Crea dos nuevos métodos en `Videoclub`, y mediante la definición, deduce qué deben realizar:
-    * `devolverSocioProducto(int numSocio, int numeroProducto)`
-    * `devolverSocioProductos(int numSocio, array numerosProductos)`
+    * `devolverSocioProducto(int numCliente, int numeroSoporte)`
+    * `devolverSocioProductos(int numCliente, array numerosSoportes)`
 
     Deben soportar el encadenamiento de métodos.
-    Recuerda actualizar la propiedad `alquilado` de los diferentes soportes.
+    Recuerda actualizar la propiedad `alquilado` de Soporte.
 
 Cuando hayas realizado todos los ejercicios, crea una etiqueta mediante `git tag` con el nombre `v0.337` y sube los cambios a GitHub.
