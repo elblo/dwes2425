@@ -394,13 +394,13 @@ Dentro de la carpeta que contenga dicho archivo, hemos de crear una carpeta `src
 Cuando estemos listos, lanzaremos el servicio mediante:
 
 ``` console
-docker-compose up -d
+docker compose up -d
 ```
 
 Si queremos ver el contenido de los archivos de log del servicio utilizaremos:
 
 ``` console
-docker-compose logs -f
+docker compose logs -f
 ```
 
 Para copiar un archivo desde nuestro sistema al interior del contenedor:
