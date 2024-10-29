@@ -36,7 +36,7 @@ A través de ***XAMPP*** es muy sencillo, simplemente nos descargaríamos el pro
 Con ***Docker*** nos descargaremos [esta imagen de docker](recursos/plantilla-APCM.zip) y lanzamos 
 
 ``` bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Si todo ha salido bien y el contenedor está en marcha, podremos visitar la página de phpMyAdmin de la siguiente manera
