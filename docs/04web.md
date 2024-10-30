@@ -559,34 +559,36 @@ En el caso de subir el tipo correcto, visualizar la imagen con el tamaño de anc
 
 ### Cookies y Sesión
 
-406. `406contadorVisitas.php`: Mediante el uso de cookies, informa al usuario de si es su primera visita, o si no lo es, muestre su valor (valor de un contador).
+406. `406aceptarCookies.php`: Nada más aterrizar en la página informa al usuario que debe aceptar las cookies para acceder al contenido. Crea un enlace para ello que envíe a la misma página por GET la variable `aceptar` y cuando se reciba, crees la cookie. En el contenido muestra una imagen cualquiera en el caso de que exista la cookie.
+
+407. `407contadorVisitas.php`: Mediante el uso de cookies, informa al usuario de si es su primera visita, o si no lo es, muestre su valor (valor de un contador).
 Además, debes permitir que el usuario reinicie su contador de visitas.
 
-407. `407fondo.php`: Mediante el uso de cookies, crea una página con un desplegable con varios colores, de manera que el usuario pueda cambiar el color de fondo de la página (atributo `bgcolor`).
+408. `408fondo.php`: Mediante el uso de cookies, crea una página con un desplegable con varios colores, de manera que el usuario pueda cambiar el color de fondo de la página (atributo `bgcolor`).
 Al cerrar la página, ésta debe recordar, al menos durante 24h, el color elegido y la próxima vez que se cargue la pagina, lo haga con el último color seleccionado.
 
-408. `408fondoSesion1.php`: Modifica el ejercicio anterior para almacenar el color de fondo en la sesión y no emplear cookies. Además, debe contener un enlace al siguiente archivo.
-    `408fondoSesion2.php`: Debe mostrar el color y dar la posibilidad de:
+409. `409fondoSesion1.php`: Modifica el ejercicio anterior para almacenar el color de fondo en la sesión y no emplear cookies. Además, debe contener un enlace al siguiente archivo.
+    `409fondoSesion2.php`: Debe mostrar el color y dar la posibilidad de:
     * volver a la página anterior mediante un enlace
     * y mediante otro enlace, vaciar la sesión y volver a la página anterior.
 
-409. Haciendo uso de la sesión, vamos a dividir el formulario del ejercicio `402formulario.php` en 2 subformularios:
+410. Haciendo uso de la sesión, vamos a dividir el formulario del ejercicio `402formulario.php` en 2 subformularios:
 
-    * `409formulario1.php` envía los datos (nombre y apellidos, email, url y sexo) a `409formulario2.php`.
-    * `409formulario2.php` lee los datos y los mete en la sesión. A continuación, muestra el resto de campos del formulario a rellenar (convivientes, aficiones y menú). Envía estos datos a `409formulario3.php`.
-    * `409formulario3.php` recoge los datos enviados en el paso anterior y junto a los que ya estaban en la sesión, se muestran todos los datos en una tabla/lista desordenada.
+    * `410formulario1.php` envía los datos (nombre y apellidos, email, url y sexo) a `410formulario2.php`.
+    * `410formulario2.php` lee los datos y los mete en la sesión. A continuación, muestra el resto de campos del formulario a rellenar (convivientes, aficiones y menú). Envía estos datos a `410formulario3.php`.
+    * `410formulario3.php` recoge los datos enviados en el paso anterior y junto a los que ya estaban en la sesión, se muestran todos los datos en una tabla/lista desordenada.
 
 ### Autenticación
 
 En los siguientes ejercicios vamos a montar una estructura de inicio de sesión similar a la vista en los apuntes.
 
-410. `410index.php`: formulario de inicio de sesión
-411. `411login.php`: hace de controlador, por lo que debe comprobar los datos recibidos (solo permite la entrada de `usuario/usuario` y si todo es correcto, ceder el control a la vista del siguiente ejercicio. No contiene código HTML.
-412. `412peliculas.php`: vista que muestra como título "Listado de Películas", y una lista desordenada con tres películas.
-413. `413logout.php`: vacía la sesión y nos lleva de nuevo al formulario de inicio de sesión. No contiene código HTML.
-414. `414series.php`: Añade un nueva vista similar a `412peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `412pelicuas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
+411. `411index.php`: formulario de inicio de sesión
+412. `412login.php`: hace de controlador, por lo que debe comprobar los datos recibidos (solo permite la entrada de `usuario/usuario` y si todo es correcto, ceder el control a la vista del siguiente ejercicio. No contiene código HTML.
+413. `413peliculas.php`: vista que muestra como título "Listado de Películas", y una lista desordenada con tres películas.
+414. `414logout.php`: vacía la sesión y nos lleva de nuevo al formulario de inicio de sesión. No contiene código HTML.
+415. `415series.php`: Añade un nueva vista similar a `413peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `413pelicuas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
 Comprueba que si se accede directamente a cualquiera de las vistas sin tener un usuario *logueado* via URL del navegador, no se muestra el listado.
-415. Modifica tanto el controlador como las vistas para que:
+416. Modifica tanto el controlador como las vistas para que:
     * los datos los obtenga el controlador (almacena en la sesión un array de películas y otro de series)
     * coloque los datos en la sesión
     * En las vistas, los datos se recuperan de la sesión y se *pintan* en la lista desordenada recorriendo el array correspondiente.
@@ -606,10 +608,10 @@ Comprueba que si se accede directamente a cualquiera de las vistas sin tener un 
     <figcaption>Esquema navegación ejercicio 423</figcaption>
 </figure>
 
-423. Vamos a modificar la clase `Cliente` para almacenar el `user` y la `password` de cada cliente.
+422. Vamos a modificar la clase `Cliente` para almacenar el `user` y la `password` de cada cliente.
 Tras codificar los cambios, modificar el listado de clientes de `mainAdmin.php` para añadir al listado el usuario.
 
-424. Si el usuario que accede no es administrador y coincide con alguno de los clientes que tenemos cargados tras el login, debe cargar `mainCliente.php` donde se mostrará un listado de los alquileres del cliente. Para ello, modificaremos la clase `Cliente` para ofrecer el método `getAlquileres() : array`, el cual llamaremos y luego recorreremos para mostrar el listado solicitado.
+423. Si el usuario que accede no es administrador y coincide con alguno de los clientes que tenemos cargados tras el login, debe cargar `mainCliente.php` donde se mostrará un listado de los alquileres del cliente. Para ello, modificaremos la clase `Cliente` para ofrecer el método `getAlquileres() : array`, el cual llamaremos y luego recorreremos para mostrar el listado solicitado.
 
 Ahora volvemos a la parte de administración
 
