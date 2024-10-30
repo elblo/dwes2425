@@ -1568,7 +1568,7 @@ Posteriormente crea los siguientes hijos (deben heredar de `VideoclubException`)
     * `SoporteNoEncontradoException`
     * `ClienteNoEncontradoException`
 334. En `Cliente`, modifica los métodos `alquilar` y `devolver`, para que hagan uso de las nuevas excepciones (lanzándolas cuando sea necesario) y funcionen como métodos encadenados. Destacar que estos métodos, no se capturar estás excepciones, sólo se lanzan.
-En `Videoclub`, modifica `alquilarSocioPelicula` para capturar todas las excepciones que ahora lanza `Cliente` e informar al usuario en consecuencia.
+En `Videoclub`, modifica `alquilarSocioProducto` para capturar todas las excepciones que ahora lanza `Cliente` e informar al usuario en consecuencia.
 335. Vamos a modificar el proyecto para que el videoclub sepa qué productos están o no alquilados:
     * En `Soporte`, crea una propiedad pública cuyo nombre sea `alquilado` que inicialmente estará a `false`. Cuando se alquile, se pondrá a `true`. Al devolver, la volveremos a poner a `false`.
     * En `Videoclub`, crea dos nuevas propiedades y sus getters:
