@@ -218,6 +218,10 @@ Configuración en `php.ini`
 * `memory_limit`: 128M
 * `max_execution_time`: tiempo de ejecución de un script (no tiene en cuenta el upload)
 
+
+!!! info "Consultar las directivas del php.ini"
+    Mediante la función [init_get](https://www.php.net/manual/en/function.ini-get.php) podemos obtener el valor de cuaqluier directiva del fichero `php.ini`. Por ejemplo, para consultar cuál es el directorio temporal al que se suben los archivos bastaría con: `echo init_get("upload_tmp_dir");`.
+
 Para cargar los archivos, accedemos al array `$_FILES`:
 
 ``` php
@@ -240,6 +244,9 @@ Cada archivo cargado en `$_FILES` tiene:
 * `size`: tamaño en bytes
 * `type`: tipo MIME
 * `error`: si hay error, contiene un mensaje. Si ok → 0.
+
+!!! info "Obtener extensión del fichero"
+    Mediante la función [pathinfo](https://www.php.net/manual/en/function.pathinfo.php) se obtiene un array con información del fichero. Entre ellos, la extensión del mismo.
 
 ## 4.3 Cabeceras de respuesta
 
