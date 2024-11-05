@@ -47,9 +47,9 @@ composer -V
 
 ### Primeros pasos
 
-Cuando creemos un proyecto por primera vez, hemos de inicializar el repositorio. Para ello, ejecutaremos el comando `composer init` donde:
+Cuando creemos un proyecto por primera vez, hemos de inicializar el repositorio. Para ello, en el directorio del proyecto ejecutaremos el comando `composer init` donde:
 
-* Configuramos el nombre del paquete, descripción, autor (nombre <email>), tipo de paquete (project), etc...
+* Configuramos el nombre del paquete, descripción, autor (formato: nombre <email>), tipo de paquete (project), etc...
 * Definimos las dependencias del proyecto (`require`) y las de desarrollo (`require-dev`) de manera interactiva.
     * En las de desarrollo se indica aquellas que no se instalarán en el entorno de producción, por ejemplo, las librerías de pruebas.
 
@@ -58,19 +58,20 @@ Tras su configuración, se creará automáticamente el archivo `composer.json` c
 ``` json
 {
     "name": "dwes/log",
-    "description": "Pruebas con Monolog",
+    "description": "Pruebas de Monolog",
     "type": "project",
     "require": {
-        "monolog/monolog": "^2.1"
+        "monolog/monolog": "^3.7"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "Aitor Medrano",
-            "email": "a.medrano@edu.gva.es"
+            "name": "Eladio Blanco",
+            "email": "eladio.blanco@fernando3martos.com"
         }
     ]
 }
+
 ```
 
 A la hora de indicar cada librería introduciremos:
@@ -124,9 +125,11 @@ Si queremos que Composer también se encargue de cargar de forma automática nue
 
 ``` json
 "autoload": {
-    "psr-4": {"Dwes\\": "app/Dwes"}
+    "psr-4": {"Dwes\\": "app/"}
 },
 ```
+
+PSR-4 es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica el namespace de nuestra aplicación y el directorio dónde serán alojadas las clases. Así, para usar los namespaces dentro de nuestros archivos php basta con referenciarlos de la siguiente forma: `use Dwes\Clase;`.
 
 Posteriormente, hemos de volver a generar el *autoload* de *Composer* mediante la opción `dump-autoload` (o `du`):
 
@@ -169,7 +172,7 @@ Caída completa de la web, base de datos no disponible, etc... Además, se suele
 
 ### Hola Monolog
 
-Por ejemplo, en el archivo `pruebaLog.php` que colocaríamos en el raíz, primero incluimos el *autoload*, importamos las clases a utilizar para finalmente usar los métodos de *Monolog*:
+Por ejemplo, en el archivo `pruebaLog.php` que colocaríamos en la raíz, primero incluimos el *autoload*, importamos las clases a utilizar para finalmente usar los métodos de *Monolog* y consultar la salida de los logs en el archivo `logs/milog.log` que se crea automáticamente:
 
 ``` php
 <?php
