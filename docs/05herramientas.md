@@ -12,14 +12,14 @@
 
 En esta unidad vamos a estudiar algunas de las herramientas más utilizadas en PHP.
 
-## Composer
+## 5.1 Composer
 
 <figure style="float: right;">
     <img src="imagenes/05/logo-composer.png" width="200">
     <figcaption>Logo Composer</figcaption>
 </figure>
 
-Herramienta por excelencia en PHP para la gestión de librerías y dependencias, de manera que instala y las actualiza asegurando que todo el equipo de desarrollo tiene el mismo entorno y versiones. Además, ofrece *autoloading* de nuestro código, de manera que no tengamos que hacerlo nosotros "a mano".
+Herramienta por excelencia en PHP para la **gestión de librerías y dependencias**, de manera que instala y las actualiza asegurando que todo el equipo de desarrollo tiene el mismo entorno y versiones. Además, ofrece *autoloading* de nuestro código, de manera que no tengamos que hacerlo nosotros "a mano".
 
 Está escrito en PHP, y podéis consultar toda su documentación en [https://getcomposer.org/](https://getcomposer.org/).
 
@@ -45,7 +45,7 @@ Es importante que dentro del contenedor comprobemos que tenemos la v2:
 composer -V
 ```
 
-### Primeros pasos
+### Inicializar proyecto
 
 Cuando creemos un proyecto por primera vez, hemos de inicializar el repositorio. Para ello, en el directorio del proyecto ejecutaremos el comando `composer init` donde:
 
@@ -137,14 +137,54 @@ Posteriormente, hemos de volver a generar el *autoload* de *Composer* mediante l
 composer dump-autoload
 ```
 
-## Monolog
+## 5.2 Resend
 
-Vamos a probar *Composer* añadiendo la librería de [*Monolog*](https://github.com/Seldaek/monolog) a nuestro proyecto. Se trata de un librería para la gestión de logs de nuestras aplicaciones, soportando diferentes niveles (info, warning, etc...), salidas (ficheros, sockets, BBDD, Web Services, email, etc) y formatos (texto plano, HTML, JSON, etc...).
+Vamos a probar *Composer* añadiendo la librería de [*Resend*](https://resend.com/docs/send-with-php) a nuestro proyecto. Se trata de una **API para enviar correos electrónicos** en multitud de lenguajes.
 
-Para ello, incluiremos la librería en nuestro proyecto con:
+Para ello, incluiremos la librería en nuestro proyecto y actualizamos:
+
+``` bash
+composer require resend/resend-php
+composer update
+```
+
+!!! info "Prerrequisitos: Crear API key y verificar dominio"
+    Es importante seguir estas [instrucciones](https://resend.com/docs/send-with-php) previas para crear la **API key** propia que utilizaremos en el proyecto y opcionalmente **verificar el dominio** si queremos enviar correos con nuestra dirección de correo como remitente.
+
+Y una vez tengamos la API key, con este código de prueba enviaríamos un correo:
+
+``` php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+$resend = Resend::client('NUESTRA API KEY');
+
+$resend->emails->send([
+  'from' => 'Eladio Dev <onboarding@resend.dev>', // No tocar este correo si no tenemos el domino verificado
+  'to' => ['eladio.blanco@fernando3martos.com'],
+  'subject' => 'Envío desde Resend',
+  'html' => '<strong>Funciona!</strong>',
+]);
+```
+
+### Alternativas
+
+Otras alternativas para el envío de correos electrónicos son:
+* Utilizar directamente la función `mail()` de PHP (necesario servidor SMTP configurado).
+* Usar la librería [PHPMailer](https://github.com/PHPMailer/PHPMailer) para enviar correos desde servidor SMTP propio o externo como Gmail.
+* Para pruebas, usar herramientas como [Mailtrap](https://mailtrap.io/), que permite interceptar los correos para ver cómo se verían en la bandeja de entrada sin enviarlos de verdad. 
+* ...
+
+## 5.3 Monolog
+
+De nuevo, mediante *Composer* toca añadir la librería [*Monolog*](https://github.com/Seldaek/monolog) a nuestro proyecto. Se trata de un **librería para la gestión de logs** de nuestras aplicaciones, soportando diferentes niveles (info, warning, etc...), salidas (ficheros, sockets, BBDD, Web Services, email, etc) y formatos (texto plano, HTML, JSON, etc...).
+
+Para ello, incluiremos la librería en nuestro proyecto y actualizamos:
 
 ``` bash
 composer require monolog/monolog
+composer update
 ```
 
 Monolog 2 requiere al menos PHP 7.2, cumple con el estandar de logging PSR-3, y es la librería empleada por *Laravel* y *Symfony* para la gestión de logs.
@@ -170,7 +210,7 @@ A continuación mostramos los diferentes niveles de menos a más restrictivo:
 Caída completa de la web, base de datos no disponible, etc... Además, se suelen enviar mensajes por email.
 * *emergency - 600*: Es el error más grave e indica que todo el sistema está inutilizable.
 
-### Hola Monolog
+### Prueba Monolog
 
 Por ejemplo, en el archivo `pruebaLog.php` que colocaríamos en la raíz, primero incluimos el *autoload*, importamos las clases a utilizar para finalmente usar los métodos de *Monolog* y consultar la salida de los logs en el archivo `logs/milog.log` que se crea automáticamente:
 
@@ -179,10 +219,11 @@ Por ejemplo, en el archivo `pruebaLog.php` que colocaríamos en la raíz, primer
 include __DIR__ ."/vendor/autoload.php";
 
 use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Handler\StreamHandler;
 
 $log = new Logger("MiLogger");
-$log->pushHandler(new StreamHandler("logs/milog.log", Logger::DEBUG));
+$log->pushHandler(new StreamHandler("logs/milog.log", Level::Debug));
 
 $log->debug("Esto es un mensaje de DEBUG");
 $log->info("Esto es un mensaje de INFO");
@@ -202,7 +243,7 @@ $log->warning("Producto no encontrado", ["datos" => $producto]);
 
 ### Funcionamiento
 
-Cada instancia `Logger` tiene un nombre de canal y una pila de manejadores (*handler*).
+Cada instancia `Logger` tiene un nombre de canal (MiLogger en el ejemplo anterior) y una pila de manejadores (*handler*).
 Cada mensaje que mandamos al log atraviesa la pila de manejadores, y cada uno decide si debe registrar la información, y si se da el caso, finalizar la propagación.
 Por ejemplo, un `StreamHandler` en el fondo de la pila que lo escriba todo en disco, y en el tope añade un `MailHandler` que envíe un mail sólo cuando haya un error.
 
@@ -213,10 +254,10 @@ Luego se *van ejecutando* conforme a la pila.
 
 Los manejadores más utilizados son:
 
-* `StreamHandler(ruta, nivel)`
-* `RotatingFileHandler(ruta, maxFiles, nivel)`
-* `NativeMailerHandler(para, asunto, desde, nivel)`
-* `FirePHPHandler(nivel)`
+* `StreamHandler(ruta, nivel)`: Escribe los logs en un "stream" (flujo) específico, como un archivo en el sistema de archivos o la salida estándar (php://stdout) o la de error (php://stderr).
+* `RotatingFileHandler(ruta, maxFiles, nivel)`: Guarda los registros en archivos que se rotan automáticamente según un intervalo de tiempo, por ejemplo, diario.
+* `NativeMailerHandler(para, asunto, desde, nivel)`: Envía los mensajes de log a una dirección de correo electrónico usando la función mail() de PHP (necesario servidor SMTP configurado).
+* `FirePHPHandler(nivel)`: Envía los logs a la consola de FirePHP (extensión del navegador) a través de las cabeceras HTTP que intercepta. Útil para desarrollo.
 
 Si queremos que los mensajes de la aplicación salgan por el log del servidor, 
 en nuestro caso el archivo `error.log` de *Apache* utilizaremos como ruta la salida de error:
@@ -224,17 +265,17 @@ en nuestro caso el archivo `error.log` de *Apache* utilizaremos como ruta la sal
 ``` php
 <?php
 // error.log
-$log->pushHandler(new StreamHandler("php://stderr", Logger::DEBUG));
+$log->pushHandler(new StreamHandler("php://stderr", Level::Debug));
 ```
 
 !!! tip "FirePHP"
-    Por ejemplo, mediante `FirePHPHandler`, podemos utilizar `FirePHP`, la cual es una herramienta para hacer debug en la consola de *Firefox*.
+    Por ejemplo, mediante `FirePHPHandler`, podemos utilizar [FirePHP](https://chromewebstore.google.com/detail/firephp-official/ikfbpappjhegehjflebknjbhdocbgkdi), la cual es una herramienta para hacer debug en la consola de *Firefox* o *Chrome*.
     Tras instalar la extensión en Firefox, habilitar las opciones y configurar el *Handler*, podemos ver los mensajes coloreados con sus datos:
 
     ``` php
     <?php
     $log = new Logger("MiFirePHPLogger");
-    $log->pushHandler(new FirePHPHandler(Logger::INFO));
+    $log->pushHandler(new FirePHPHandler(Level::Info));
 
     $datos = ["real" => "Bruce Wayne", "personaje" => "Batman"];
     $log->debug("Esto es un mensaje de DEBUG", $datos);
@@ -250,19 +291,19 @@ $log->pushHandler(new StreamHandler("php://stderr", Logger::DEBUG));
 
 ### Canales
 
-Se les asigna al crear el `Logger`. En grandes aplicaciones, se crea un canal por cada subsistema: ventas, contabilidad, almacén.
-No es una buena práctica usar el nombre de la clase como canal, esto se hace con un *procesador*.
+Se les asigna al crear el `Logger`. En grandes aplicaciones, se crea un canal por cada subsistema para identificar el origen de los logs: ventas, contabilidad, almacén. No es una buena práctica usar el nombre de la clase como canal, esto se hace con un *procesador*.
 
-Para su uso, es recomiendo asignar el log a una propiedad privada a Logger, y posteriormente, en el constructor de la clase, asignar el canal, manejadores y formato.
+Es recomendable utilizar el log como una propiedad privada de la clase que nos interese, asignando el canal, manejadores y formato en el propio constructor de la clase.
 
 ``` php
 <?php
+// Propiedad log privada de la clase configurada con el canal 'MiApp'
 $this->log = new Logger("MiApp");
-$this->log->pushHandler(new StreamHandler("logs/milog.log", Logger::DEBUG));
-$this->log->pushHandler(new FirePHPHandler(Logger::DEBUG));
+$this->log->pushHandler(new StreamHandler("logs/milog.log", Level::Debug));
+$this->log->pushHandler(new FirePHPHandler(Level::Debug));
 ```
 
-Y dentro de los métodos para escribir en el log:
+Y dentro de los métodos de la clase, para escribir en el log haríamos algo así:
 
 ``` php
 <?php
@@ -271,27 +312,71 @@ $this->log->warning("Producto no encontrado", [$producto]);
 
 ### Procesadores
 
-Los procesadores permiten añadir información a los mensajes. Para ello, se apilan después de cada manejador mediante el método `pushProcessor($procesador)`.
+Los procesadores son componentes que permiten modificar o agregar información adicional a cada mensaje de log antes de que este sea enviado a su destino final por el handler. Para ello, se apilan después de cada manejador mediante el método `pushProcessor($procesador)`.
 
 Algunos procesadores conocidos son `IntrospectionProcessor` (muestran la linea, fichero, clase y metodo desde el que se invoca el log), `WebProcessor` (añade la URI, método e IP) o `GitProcessor` (añade la rama y el commit).
+
+Se pueden combinar entre sí para mostrar la información de cada uno de ellos en cada log.
 
 === "PHP"
 
     ``` php
     <?php
+    use Monolog\Logger;
+    use Monolog\Level;
+    use Monolog\Handler\StreamHandler;
+    use Monolog\Handler\FirePHPHandler;
+    use Monolog\Processor\IntrospectionProcessor;
+    use Monolog\Processor\WebProcessor;
+
+    // Crear logger con canal "MiLogger"
     $log = new Logger("MiLogger");
-    $log->pushHandler(new RotatingFileHandler("logs/milog.log", 0, Logger::DEBUG));
+
+    // Manejadores de logs
+    $log->pushHandler(new StreamHandler("logs/milog.log", Level::Debug));
+    $log->pushHandler(new FirePHPHandler(Level::Info));
+
+    // Procesadores para añadir/modificar información de los logs
     $log->pushProcessor(new IntrospectionProcessor());
-    $log->pushHandler(new StreamHandler("php://stderr", Logger::WARNING));
-    // no usa Introspection pq lo hemos apilado después, le asigno otro
     $log->pushProcessor(new WebProcessor());
+
+    // Mensaje de log
+    $log->debug("Esto es un mensaje de DEBUG");
     ```
 
 === "Consola en formato texto"
 
     ``` log
-    [2020-11-26T13:35:31.076138+01:00] MiLogger.DEBUG: Esto es un mensaje de DEBUG [] {"file":"C:\\xampp\\htdocs\\log\\procesador.php","line":12,"class":null,"function":null}
-    [2020-11-26T13:35:31.078344+01:00] MiLogger.INFO: Esto es un mensaje de INFO [] {"file":"C:\\xampp\\htdocs\\log\\procesador.php","line":13,"class":null,"function":null}
+    [2024-11-05T18:59:32.512183+01:00] MiLogger.DEBUG: Esto es un mensaje de DEBUG [] {"url":"/t05/01composer/pruebaLog.php","ip":"192.168.65.1","http_method":"GET","server":"localhost","referrer":"http://localhost/t05/01composer/pruebaLog.php","file":"/var/www/html/t05/01composer/pruebaLog.php","line":19,"class":null,"callType":null,"function":null}
+    ```
+
+También es posible añadir un procesador como una función. En el siguiente ejemplo se añade la IP del usuario:
+
+=== "PHP"
+
+    ``` php
+    <?php
+    // Crear logger con canal "MiLogger"
+    $log = new Logger("MiLogger");
+
+    // Manejadores de logs
+    $log->pushHandler(new StreamHandler("logs/milog.log", Level::Debug));
+    $log->pushHandler(new FirePHPHandler(Level::Info));
+
+    // Procesadores para añadir/modificar información de los logs como función
+    $log->pushProcessor(function ($record) {
+        $record['extra']['user_ip'] = $_SERVER['REMOTE_ADDR'] ?? 'N/A';
+        return $record;
+    });
+
+    // Mensaje de log
+    $log->debug("Esto es un mensaje de DEBUG");
+    ```
+
+=== "Consola en formato texto"
+
+    ``` log
+    [2024-11-05T19:06:52.582058+01:00] MiLogger.DEBUG: Esto es un mensaje de DEBUG [] {"user_ip":"192.168.65.1"}
     ```
 
 ### Formateadores
@@ -303,7 +388,7 @@ Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizad
     ``` php
     <?php
     $log = new Logger("MiLogger");
-    $rfh = new RotatingFileHandler("logs/milog.log", Logger::DEBUG);
+    $rfh = new RotatingFileHandler("logs/milog.log", Level::Debug);
     $rfh->setFormatter(new JsonFormatter());
     $log->pushHandler($rfh);
     ```
@@ -320,7 +405,7 @@ Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizad
 
 ### Uso de Factorías
 
-En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)).
+En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)) encapsulando así la creación del Logger en dicho método. De esta forma se simplifican futuros mantenimientos de código si cambiamos el sistema de logs. Sólo habrá que tocar en este método y no en cada clase que use los logs.
 
 Para el siguiente ejemplo, vamos a suponer que creamos la factoría en el *namespace* `Dwes\Ejemplos\Util`.
 
@@ -335,7 +420,7 @@ class LogFactory {
 
     public static function getLogger(string $canal = "miApp") : Logger {
         $log = new Logger($canal);
-        $log->pushHandler(new StreamHandler("logs/miApp.log", Logger::DEBUG));
+        $log->pushHandler(new StreamHandler("logs/miApp.log", Level::Debug));
 
         return $log;
     }
@@ -356,7 +441,7 @@ class LogFactory {
 
     public static function getLogger(string $canal = "miApp") : LoggerInterface {
         $log = new Logger($canal);
-        $log->pushHandler(new StreamHandler("log/miApp.log", Logger::DEBUG));
+        $log->pushHandler(new StreamHandler("log/miApp.log", Level::Debug));
 
         return $log;
     }
@@ -389,7 +474,7 @@ class Cliente {
 }
 ```
 
-## Documentación con *phpDocumentor*
+## 5.4 Documentación con *phpDocumentor*
 
 [phpDocumentor](https://www.phpdoc.org/) es la herramienta *de facto* para documentar el código PHP. Es similar en propósito y funcionamiento a *Javadoc*.
 
@@ -511,7 +596,7 @@ Si generamos la documentación y abrimos con un navegador el archivo `docs/api/i
     <figcaption>phpDocumentor de Cliente</figcaption>
 </figure>
 
-## *Web Scraping*
+## 5.5 *Web Scraping*
 
 Consiste en navegar a una página web y extraer información automáticamente, a partir del código HTML generado, y organizar la información pública disponible en Internet.
 
@@ -617,7 +702,7 @@ $precioTotal = array_sum($precios);
 echo $precioTotal;
 ```
 
-## Pruebas con PHPUnit
+## 5.6 Pruebas con PHPUnit
 
 El curso pasado, dentro del módulo de *Entornos de Desarrollo*, estudiamos la importancia de la realización de pruebas, así como las pruebas unitarias mediante [JUnit](https://junit.org/junit5/).
 
@@ -855,14 +940,14 @@ Por ejemplo, si accedemos a la clase `CintaVideo` con la prueba que habíamos re
     * Preparando las pruebas con `setUpBeforeClass()` y `tearDownAfterClass()`
     * Objetos y pruebas *Mock* (dobles) con `createMock()`
 
-## Referencias
+## 5.7 Referencias
 
 * [Tutorial de Composer](https://desarrolloweb.com/manuales/tutorial-composer.html)
 * [Web Scraping with PHP – How to Crawl Web Pages Using Open Source Tools](https://www.freecodecamp.org/news/web-scraping-with-php-crawl-web-pages/)
 * [PHP Monolog](https://zetcode.com/php/monolog/)
 * [Unit Testing con PHPUnit — Parte 1](https://medium.com/@emilianozublena/unit-testing-con-phpunit-parte-1-148c6d73e822), de Emiliano Zublena.
 
-## Actividades
+## 5.8 Actividades
 
 ### Monolog
 
