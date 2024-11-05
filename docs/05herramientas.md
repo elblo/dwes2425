@@ -172,8 +172,9 @@ $resend->emails->send([
 
 Otras alternativas para el envío de correos electrónicos son:
 * Utilizar directamente la función `mail()` de PHP (necesario servidor SMTP configurado).
-* Usar la librería [PHPMailer](https://github.com/PHPMailer/PHPMailer) para enviar correos desde servidor SMTP propio o externo como Gmail.
-* Para pruebas, usar herramientas como [Mailtrap](https://mailtrap.io/), que permite interceptar los correos para ver cómo se verían en la bandeja de entrada sin enviarlos de verdad. 
+* Usar librerías como [PHPMailer](https://github.com/PHPMailer/PHPMailer), [Swift Mailer](https://swiftmailer.symfony.com/docs/introduction.html) o [Simfony Mailer](https://symfony.com/doc/current/mailer.html) para enviar correos desde servidor SMTP propio o externo como Gmail. Ideales para proyectos pequeños.
+* Usar servicios en la nube como [SendGrid](https://sendgrid.com/en-us), [Mailgun](https://www.mailgun.com/es/), o [Amazon SES](https://aws.amazon.com/es/ses/) para envíos masivos o producción.
+* Para pruebas, usar herramientas como [Mailtrap](https://mailtrap.io/), que permiten interceptar los correos para ver cómo se verían en la bandeja de entrada sin enviarlos de verdad. 
 * ...
 
 ## 5.3 Monolog
@@ -949,21 +950,39 @@ Por ejemplo, si accedemos a la clase `CintaVideo` con la prueba que habíamos re
 
 ## 5.8 Actividades
 
+### Resend
+
+501. Crea un nuevo proyecto con *Composer* llamado `Correos`:
+    * Incluye como librería la última versión de Resend.
+    * Regístrate en su web y obtén tu API key para utilizar en el proyecto.
+    * Crea un archivo `01_mail_script.php` en la raíz del proyecto con el código justo para enviar un correo de prueba.
+    * Crea un archivo `02_mail_form.php` en la raíz del proyecto con un formulario que pida destinatario, asunto y cuerpo del mensaje a enviar. El mismo script PHP se encargará de recibir los datos del formulario y enviar el correo. No olvides validar en el lado del servidor.
+
+502. Siguiendo con el proyecto `Correos`:
+    * Crea la clase `Dwes\Correos\MailResend`. Asegúrate de configurar correctamente el `composer.json` para que el autoload cargue también nuestras clases dentro del directorio `app`.
+    * Define una propiedad privada nombrada `resend` e inicialízala mediante el método `client` en el constructor.
+    * Crea un método `sendEmail` al que le pases el destinatario, asunto y cuerpo del mensaje a enviar. Debe enviar el correo haciendo uso de la propiedad privada `resend`.
+    * Crea un archivo `03_mail_script_class.php` en la raíz del proyecto que haga uso de la clase `MailResend` para enviar un correo de prueba.
+    * Crea un archivo `04_mail_form_class.php` en la raíz del proyecto que haga uso de la clase `MailResend` para enviar un correo con los datos recogidos del formulario.  
+
+503. Investiga una de las soluciones alternativas propuestas para el envío de correos y realiza los mismos pasos de los ejercicios anteriores con la nueva librería en el mismo proyecto `Correos`: Crea la clase `Dwes\Correos\MailLIBRERIA` con el método `sendMail` y pruébalo en los archivos `05_mail_script_class2.php` y `06_mail_form_class2.php`.
+
 ### Monolog
 
-501. Crea un nuevo proyecto con *Composer* llamado `Monologos`:
+505. Crea un nuevo proyecto con *Composer* llamado `Monologos`:
     * Incluye como librería la última versión de Monolog.
     * Crea la clase `Dwes\Monologos\HolaMonolog`.
-    * Define una propiedad privada nombrada `miLog` para guardar el log.
+    * Define una propiedad privada nombrada `resend` para guardar el log.
     * Define en el constructor un `RotatingFileHandler` que escriba en la carpeta `logs` del proyecto, y que almacene los mensajes a partir de *debug*.
     * Crea los métodos `saludar` y `despedir` que hagan un log de tipo *info* con la acción correspondiente.
 
-502. Siguiendo con el proyecto `Monologos`:
+506. Siguiendo con el proyecto `Monologos`:
     * Crea un archivo llamado `inicio.php` que permita probar `HolaMonolog`.
     * Comprueba que los mensajes aparecen en el *log*.
     * Cambia el nivel para que el manejador solo muestre los mensajes a partir de *warning*.
     * Vuelve a ejectuar `inicio.php` y comprueba el archivo de log.
-503. Modifica la clase `HolaMonolog`:
+  
+507. Modifica la clase `HolaMonolog`:
     * En el constructor, añade a la pila un manejador que escriba a la salida de error conjunto al procesador de introspección, mostrando mensajes desde el nivel *debug*.
     * Añade una propiedad denominada `hora`, la cual se inicializa únicamente como parámetro del constructor. Si la `hora` es inferior a 0 o mayor de 24, debe escribir un log de *warning* con un mensaje apropiado.
     * Modifica los métodos `saludar` y `despedir` para hacerlo acorde a la propiedad `hora` (buenos días, buenas tardes, hasta mañana, etc...)
@@ -972,23 +991,25 @@ Por ejemplo, si accedemos a la clase `CintaVideo` con la prueba que habíamos re
 
 511. Como ya tenemos *Composer* instalado:
     * Inicialízalo dentro de tu proyecto *Videoclub*
-    * Incluye *Monolog* y *PhpUnit*, cada una en su lugar adecuado.
+    * Incluye *Resend*, *Monolog* y *PhpUnit*, cada una en su lugar adecuado.
     * Añade el *autoload* al archivo `composer.json`, y haz los cambios necesarios en las clases para utilizar el *autoload* de *Composer*.
     * Sube los cambios a *GitHub* y crea la etiqueta `v0.511`.
 
-512. Modifica la clase `Cliente` para introducir un `Logger` de *Monolog*.
+512. Modifica `createCliente.php` para que una vez reciba los datos del formulario de registro y los valide, envíe un correo de confirmación antes de crear realmente el usuario y almacenarlo en la sesión. El correo contendrá un enlace con la información del usuario y un campo específico del tipo: `.../createCliente.php?validado=1&nombre=...`. Así se podrá comprobar que llega desde el correo para para proceder a crear el cliente y volver a cargar `mainAdmin.php` donde se podrá ver el cliente insertado.
+
+513. Modifica la clase `Cliente` para introducir un `Logger` de *Monolog*.
     * Añade el log como una propiedad de la clase e inicialízalo en el constructor, con el nombre del canal `VideoclubLogger`.
     * Se debe almacenar en `logs/videoclub.log` mostrando todos los mensajes desde *debug*.
     * Antes de lanzar cualquier excepción, debe escribir un log de tipo *warning*.
     * Sustituir los `echo` que haya en el código, que ahora pasarán por el log con el nivel info, a excepción del método `muestraResumen` que seguirá haciendo `echo`.
 
-513. Vuelve a hacer lo mismo que en el ejercicio anterior, pero ahora con la clase `Videoclub`. Además:
+514. Vuelve a hacer lo mismo que en el ejercicio anterior, pero ahora con la clase `Videoclub`. Además:
     * Siempre que se llame a un método del log, se le pasará como segundo parámetro la información que dispongamos.
     * Ejecuta el archivo de prueba y comprueba que el log se rellena correctamente.
 
-514. Vamos a refactorizar el código común de inicialización de *Monolog* que tenemos repetidos en los constructores a una factoría de *Monolog*, la cual colocaremos en `\Dwes\Videoclub\Util\LogFactory`. Comprueba que sigue funcionando correctamente.
+515. Vamos a refactorizar el código común de inicialización de *Monolog* que tenemos repetidos en los constructores a una factoría de *Monolog*, la cual colocaremos en `\Dwes\Videoclub\Util\LogFactory`. Comprueba que sigue funcionando correctamente.
 
-515. Modifica la factoría para que devuelva `LogInterface` y comprueba que sigue funcionando. Sube los cambios a GitHub con la etiqueta `v0.515`.
+516. Modifica la factoría para que devuelva `LogInterface` y comprueba que sigue funcionando. Sube los cambios a GitHub con la etiqueta `v0.516`.
 
 ### phpDocumentor
 
@@ -1026,7 +1047,7 @@ Ahora debe lanzar una excepción de tipo `InvalidArgumentException` (como la exc
 
 545. Comenta la última prueba realizada (la comprobación de las excepciones) y realiza un informe de cobertura de pruebas. Analiza los resultados obtenidos. Elimina los últimos comentarios sobre la última prueba y vuelve a generar y analizar el informe de cobertura.
 
-### Proyecto Videoclub V
+### Proyecto Videoclub 5.0
 
 El objetivo de los siguientes ejercicios es conseguir de manera incremental una cobertura de pruebas superior al 95%.
 
