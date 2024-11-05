@@ -220,7 +220,9 @@ Configuración en `php.ini`
 
 
 !!! info "Consultar las directivas del php.ini"
-    Mediante la función [init_get](https://www.php.net/manual/en/function.ini-get.php) podemos obtener el valor de cuaqluier directiva del fichero `php.ini`. Por ejemplo, para consultar cuál es el directorio temporal al que se suben los archivos bastaría con: `echo init_get("upload_tmp_dir");`.
+    Mediante la función [ini_get](https://www.php.net/manual/en/function.ini-get.php) podemos obtener el valor de cualquiera directiva del fichero `php.ini`. Por ejemplo, para consultar cuál es el directorio temporal al que se suben los archivos bastaría con: `echo ini_get("upload_tmp_dir");`.
+
+    Y mediante [ini_set](https://www.php.net/manual/en/function.ini-set.php) podemos modificarlas para que tenga efecto su nuevo valor durante la ejecución del script actual. Después volverán al valor del fichero `php.ini`. Por ejemplo: `ini_set("upload_tmp_dir", "/uploads")`.
 
 Para cargar los archivos, accedemos al array `$_FILES`:
 
