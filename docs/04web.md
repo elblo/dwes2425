@@ -378,7 +378,11 @@ echo session_id(); // devuelve el id
 $_SESSION[clave] = valor; // inserción
 session_destroy(); // destruye la sesión
 unset($_SESSION[clave]); // borrado
+session_unset(); // borra todas las variables de la sesión
 ```
+
+!!! info "Destruir la sesión y sus variables"
+    Al hacer `session_destroy()` se destruye toda la información asociada con la sesión actual, pero no destruye ninguna de las variables globales asociadas con la sesión, ni destruye la cookie de sesión. Para liberar todas las variables de la sesión, utilizar antes `session_unset()`.
 
 Vamos a ver mediante un ejemplo como podemos insertar en un página datos en la sesión para posteriormente en otra página acceder a esos datos. Por ejemplo, en `sesion1.php` tendríamos
 
