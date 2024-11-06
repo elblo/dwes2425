@@ -525,6 +525,7 @@ Finalmente, necesitamos la opción de cerrar la sesión que colocamos en `logout
 session_start();
 
 // Y la destruimos
+session_unset();
 session_destroy();
 header("Location: index.php");
 ?>
