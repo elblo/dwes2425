@@ -578,7 +578,7 @@ En el caso de subir el tipo correcto, visualizar la imagen con el tamaño de anc
 407. `407contadorVisitas.php`: Mediante el uso de cookies, informa al usuario de si es su primera visita, o si no lo es, muestre su valor (valor de un contador).
 Además, debes permitir que el usuario reinicie su contador de visitas.
 
-408. `408fondo.php`: Mediante el uso de cookies, crea una página con un desplegable con varios colores, de manera que el usuario pueda cambiar el color de fondo de la página (atributo `bgcolor`).
+408. `408fondo.php`: Mediante el uso de cookies, crea una página con un desplegable con varios colores, de manera que el usuario pueda cambiar el color de fondo de la página (utiliza estilos CSS en la misma página).
 Al cerrar la página, ésta debe recordar, al menos durante 24h, el color elegido y la próxima vez que se cargue la pagina, lo haga con el último color seleccionado.
 
 409. `409fondoSesion1.php`: Modifica el ejercicio anterior para almacenar el color de fondo en la sesión y no emplear cookies. Además, debe contener un enlace al siguiente archivo.
@@ -600,7 +600,7 @@ En los siguientes ejercicios vamos a montar una estructura de inicio de sesión 
 412. `412login.php`: hace de controlador, por lo que debe comprobar los datos recibidos (solo permite la entrada de `usuario/usuario` y si todo es correcto, ceder el control a la vista del siguiente ejercicio. No contiene código HTML.
 413. `413peliculas.php`: vista que muestra como título "Listado de Películas", y una lista desordenada con tres películas.
 414. `414logout.php`: vacía la sesión y nos lleva de nuevo al formulario de inicio de sesión. No contiene código HTML.
-415. `415series.php`: Añade un nueva vista similar a `413peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `413pelicuas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
+415. `415series.php`: Añade un nueva vista similar a `413peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `413peliculas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
 Comprueba que si se accede directamente a cualquiera de las vistas sin tener un usuario *logueado* via URL del navegador, no se muestra el listado.
 416. Modifica tanto el controlador como las vistas para que:
     * los datos los obtenga el controlador (almacena en la sesión un array de películas y otro de series)
