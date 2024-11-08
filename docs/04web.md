@@ -568,13 +568,13 @@ El código inyectado envía la cookie de sesión a una URL controlada por el ata
 
 Contramedidas:
 
-  - Escapar y sanear entradas: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
+- Escapar y sanear entradas: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
 
     ```php
     $comentario = htmlspecialchars($_POST['comentario'], ENT_QUOTES, 'UTF-8');
     ```
 
-  - Política de Seguridad de Contenidos (CSP): Implementa CSP para restringir el origen de scripts.
+- Política de Seguridad de Contenidos (CSP): Implementa CSP para restringir el origen de scripts.
 
     ```http
     Content-Security-Policy: script-src 'self';
@@ -587,8 +587,9 @@ Si el sitio no utiliza HTTPS, un atacante puede interceptar el tráfico y captur
 Ejemplo: El atacante usa herramientas como Wireshark para capturar cookies en una red pública.
 
 Contramedidas:
-  - Usar HTTPS: Asegura que todas las conexiones sean a través de HTTPS.
-  - Configurar cookies como `Secure`:
+
+- Usar HTTPS: Asegura que todas las conexiones sean a través de HTTPS.
+- Configurar cookies como `Secure`:
 
     ```php
     session_set_cookie_params(['secure' => true]);
@@ -600,8 +601,9 @@ El atacante engaña al usuario para que acceda a un enlace malicioso y revela su
 Ejemplo: El atacante envía un enlace de phishing simulando la página de inicio de sesión.
 
 Contramedidas:
-  - Educación sobre phishing: Enseña a los usuarios a identificar sitios y correos fraudulentos.
-  - Autenticación de dos factores (2FA): Añade una capa extra de seguridad.
+
+- Educación sobre phishing: Enseña a los usuarios a identificar sitios y correos fraudulentos.
+- Autenticación de dos factores (2FA): Añade una capa extra de seguridad.
 
     ```php
     // Ejemplo usando una biblioteca de 2FA como Google Authenticator
@@ -618,7 +620,8 @@ Ejemplo: Un enlace malicioso ejecuta una solicitud usando la sesión activa del 
 ```
 
 Contramedidas:
-  - Uso de tokens CSRF:
+
+- Uso de tokens CSRF:
 
     ```php
     // Generar token
@@ -631,7 +634,7 @@ Contramedidas:
     }
     ```
 
-  - Configurar cookies con `SameSite`:
+- Configurar cookies con `SameSite`:
 
     ```php
     session_set_cookie_params(['samesite' => 'Strict']);
