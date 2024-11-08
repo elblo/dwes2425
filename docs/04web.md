@@ -534,6 +534,21 @@ header("Location: index.php");
 !!! warning "Autenticación en producción"
     En la actualidad la autenticación de usuario no se realiza gestionando la sesión direcamente, sino que se realiza mediante algún framekwork que abstrae todo el proceso o la integración de mecanismos de autenticación tipo *OAuth*, como  estudiaremos en la última unidad mediante *Laravel*.
 
+### Mecanismos de Autenticación de usuarios
+
+| **Mecanismo de Autenticación**             | **Descripción**                                                                                                           | **Implementación**                                                                                         | **Seguridad**                                                   |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| **Sesiones**                               | Utiliza sesiones del servidor para almacenar la información del usuario después de iniciar sesión.                        | Usa `$_SESSION` para almacenar y verificar los datos del usuario.                                           | Configura cookies con `HttpOnly` y `Secure`.                   |
+| **Cookies (Recordar sesión)**              | Permite al usuario permanecer conectado mediante un token almacenado en una cookie.                                       | Guarda un token hash en la cookie y verifica con la base de datos.                                          | Usa cookies seguras y renueva el token regularmente.           |
+| **JWT (JSON Web Token)**                   | Utiliza tokens sin estado para autenticar usuarios, ideal para APIs REST.                                                 | Usa la biblioteca `firebase/php-jwt` para crear y validar tokens.                                           | Configura tiempos de expiración cortos y almacena tokens de refresco. |
+| **OAuth (Redes sociales)**                 | Permite iniciar sesión con cuentas de Google, Facebook, GitHub, etc.                                                      | Usa bibliotecas como `PHPoAuthLib` o las APIs de las redes sociales.                                        | Valida siempre los datos recibidos del proveedor de OAuth.     |
+| **Autenticación de dos factores (2FA)**    | Requiere una contraseña y un código adicional (enviado al correo o teléfono).                                             | Usa bibliotecas como `Google Authenticator` para generar códigos TOTP.                                      | Proporciona alta seguridad, aunque requiere más gestión.       |
+| **Enlaces mágicos (Magic Links)**          | El usuario recibe un enlace de un solo uso por correo electrónico para iniciar sesión.                                    | Genera un token de un solo uso y envíalo por correo.                                                        | Expira rápidamente y se usa solo una vez.                      |
+| **IP y User-Agent**                        | Autentica al usuario teniendo en cuenta la IP y el User-Agent del navegador.                                              | Usa `$_SERVER['REMOTE_ADDR']` y `$_SERVER['HTTP_USER_AGENT']`.                                              | Puede mejorar la seguridad, pero es menos confiable.           |
+| **Biométrica**                             | Utiliza datos biométricos como huellas digitales o reconocimiento facial.                                                 | Se implementa generalmente en aplicaciones móviles, con PHP manejando los datos en el backend.              | Altamente seguro, pero depende del soporte del dispositivo.    |
+| **CAPTCHA**                                | Protege el formulario de inicio de sesión de bots y ataques de fuerza bruta.                                              | Usa `Google reCAPTCHA` para validar la autenticidad del usuario.                                            | Buena medida adicional para formularios públicos.              |
+
+
 ## 4.6 Referencias
 
 * [Cookies en PHP](https://www.php.net/manual/es/features.cookies.php)
