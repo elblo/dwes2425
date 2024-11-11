@@ -42,11 +42,11 @@
 - [ ] 5.- (29) Proyecto Videoclub III. Ejercicios 420-423
 - [ ] 6.- (30) Proyecto Videoclub III. Ejercicios 424-426
 
-<!--
+
 ## 5.- Herramientas Web (16h)
 
-- [ ] 1.- (31) Composer. Introducción Monolog. Ejercicio 501
-- [ ] 2.- (32) Manejadores. Uso de logs con *Monolog*. Ejercicios 502 - 503
+- [ ] 1.- (31) Resend. Introducción Monolog. Ejercicio 501-503
+- [ ] 2.- (32) Manejadores. Uso de logs con *Monolog*. Ejercicios 505 - 507
 - [ ] 3.- (33) Proyecto Videoclub 4.0. Ejercicios 511 - 515
 - [ ] 4.- (34) Documentación con *phpDocumentor* . Ejercicios 521 - 522.
 - [ ] 5.- (35) Webscrapping. Ejercicios 531 - 533.
@@ -54,6 +54,7 @@
 - [ ] 7.- (37) Proyecto Videoclub V. Ejercicios 551 - 554.
 - [ ] 8.- (38) Prueba escrita
 
+<!--
 ## 6.- Acceso a Datos (24h)
 
 - [ ] 1.- (39) SQL. Ejercicios 601 - 

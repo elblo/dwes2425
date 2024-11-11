@@ -53,6 +53,7 @@ Duración estimada: 76 horas
     * Sesiones.
 5. [Herramientas Web](05herramientas.md) (16h)
     * Gestión de librerías con *Composer*.
+    * Envío de correos con *Resend*.
     * Gestión de logs con *Monolog*.
     * Documentación con *phpDocumentor*.
     * Web scraping con *Goutte*.
