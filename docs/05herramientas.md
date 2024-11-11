@@ -495,7 +495,7 @@ Así pues, es un herramienta que facilita la documentación del código PHP, cre
 
 Se basa en el uso de anotaciones sobre los docblocks. Para ponerlo en marcha, en nuestro caso nos decantaremos por utilizar la imagen que ya existe de Docker.
 
-### Instalación como binario
+### Instalación como binario (más sencillo)
 
 Otra opción es seguir los pasos que recomienda la [documentación oficial](https://www.phpdoc.org) para instalarlo como un ejecutable, que son descargar el archivo `phpDocumentor.phar` y darles permisos de ejecución:
 
@@ -505,6 +505,8 @@ chmod +x phpDocumentor.phar
 mv phpDocumentor.phar /usr/local/bin/phpdoc
 phpdoc --version
 ```
+
+Si no disponemos de wget, descargar manualmente el .phar y mover al directorio correspondiente.
 
 Una vez instalado, desde el raíz del proyecto, suponiendo que tenemos nuestro código dentro de `app` y que queremos la documentación dentro de `docs/api` ejecutamos:
 
@@ -537,9 +539,9 @@ Un *docblock* es el bloque de código que se coloca encima de un recurso. Su for
 ``` php
 <?php
 /**
-* *Sumario*, una sola línea
+* Resumen en una sola línea
 *
-* *Descripción* que puede utilizar varias líneas
+* Descripción que puede utilizar varias líneas
 * y que ofrece detalles del elemento o referencias
 * para ampliar la información
 *
@@ -548,14 +550,14 @@ Un *docblock* es el bloque de código que se coloca encima de un recurso. Su for
 *
 * @return void
 */
-function miFuncion(tipo $miArgumento)
-{
+function miFuncion(tipo $miArgumento){
+    // Código de la función
 }
 ```
 
 ### Documentando el código
 
-En todos los elementos, ademas del sumario y/o descripción, pondremos:
+En todos los elementos, ademas del resumen y/o descripción, pondremos:
 
 * En las clases:
     * `@author` nombre <email>
