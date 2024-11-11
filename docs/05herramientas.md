@@ -119,7 +119,7 @@ Para utilizarlo, en la cabecera de nuestro archivos pondremos:
 require 'vendor/autoload.php';
 ```
 
-En nuestro caso, de momento sólo lo podremos en los archivos donde probamos las clases
+En nuestro caso, de momento sólo lo pondremos en los archivos donde probamos las clases
 
 Si queremos que Composer también se encargue de cargar de forma automática nuestras clases de dominio, dentro del archivo `composer.json`, definiremos la propiedad `autoload`:
 
@@ -129,24 +129,24 @@ Si queremos que Composer también se encargue de cargar de forma automática nue
 },
 ```
 
-PSR-4 es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica que cualquier clase definida bajo el **namespace App** buscará en el **directorio app/**. Por ejemplo, `App\Clases\Cliente` se corresponde con el archivo `app/Clases/Cliente.php`.
+Y desde el directorio del `composer.json` lanzamos sel siguiente comando para volver a generar el *autoload*:
 
-En `Cliente.php` tendríamos: 
+``` bash
+composer dump-autoload
+```
+
+*PSR-4* es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica que cualquier clase definida bajo el **namespace App** se buscará en el **directorio app/**. Por ejemplo, `App\Clases\Cliente` se corresponde con el archivo `app/Clases/Cliente.php`.
+
+En `Cliente.php` tendríamos que definir su namespace: 
 
 ``` php 
 namespace App\Clases;
 ```
 
-Y en el `index.php` fuera del directorio app en la raíz del proyecto podríamos usar nuestra clase así:
+Y en el `index.php` en la raíz del proyecto podríamos usar la clase así:
 
 ``` php 
 use App\Clases\Cliente;
-```
-
-Posteriormente, hemos de volver a generar el *autoload* de *Composer* mediante la opción `dump-autoload` (o `du`):
-
-``` bash
-composer dump-autoload
 ```
 
 ## 5.2 Resend
@@ -188,7 +188,6 @@ Otras alternativas para el envío de correos electrónicos son:
 * Usar librerías como [PHPMailer](https://github.com/PHPMailer/PHPMailer), [Swift Mailer](https://swiftmailer.symfony.com/docs/introduction.html) o [Simfony Mailer](https://symfony.com/doc/current/mailer.html) para enviar correos desde servidor SMTP propio o externo como Gmail. Ideales para proyectos pequeños.
 * Usar servicios en la nube como [SendGrid](https://sendgrid.com/en-us), [Mailgun](https://www.mailgun.com/es/), o [Amazon SES](https://aws.amazon.com/es/ses/) para envíos masivos o producción.
 * Para pruebas, usar herramientas como [Mailtrap](https://mailtrap.io/), que permiten interceptar los correos para ver cómo se verían en la bandeja de entrada sin enviarlos de verdad. 
-* ...
 
 ## 5.3 Monolog
 
