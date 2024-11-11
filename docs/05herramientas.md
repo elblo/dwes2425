@@ -125,11 +125,23 @@ Si queremos que Composer también se encargue de cargar de forma automática nue
 
 ``` json
 "autoload": {
-    "psr-4": {"Dwes\\": "app/"}
+    "psr-4": {"App\\": "app/"}
 },
 ```
 
-PSR-4 es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica el namespace de nuestra aplicación y el directorio dónde serán alojadas las clases. Así, para usar los namespaces dentro de nuestros archivos php basta con referenciarlos de la siguiente forma: `use Dwes\Clase;`.
+PSR-4 es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica que cualquier clase definida bajo el **namespace App** buscará en el **directorio app/**. Por ejemplo, `App\Clases\Cliente` se corresponde con el archivo `app/Clases/Cliente.php`.
+
+En `Cliente.php` tendríamos: 
+
+``` php 
+namespace App\Clases;
+```
+
+Y en el `index.php` fuera del directorio app en la raíz del proyecto podríamos usar nuestra clase así:
+
+``` php 
+use App\Clases\Cliente;
+```
 
 Posteriormente, hemos de volver a generar el *autoload* de *Composer* mediante la opción `dump-autoload` (o `du`):
 
@@ -171,6 +183,7 @@ $resend->emails->send([
 ### Alternativas
 
 Otras alternativas para el envío de correos electrónicos son:
+
 * Utilizar directamente la función `mail()` de PHP (necesario servidor SMTP configurado).
 * Usar librerías como [PHPMailer](https://github.com/PHPMailer/PHPMailer), [Swift Mailer](https://swiftmailer.symfony.com/docs/introduction.html) o [Simfony Mailer](https://symfony.com/doc/current/mailer.html) para enviar correos desde servidor SMTP propio o externo como Gmail. Ideales para proyectos pequeños.
 * Usar servicios en la nube como [SendGrid](https://sendgrid.com/en-us), [Mailgun](https://www.mailgun.com/es/), o [Amazon SES](https://aws.amazon.com/es/ses/) para envíos masivos o producción.
