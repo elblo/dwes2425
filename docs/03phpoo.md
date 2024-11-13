@@ -760,7 +760,7 @@ spl_autoload_register( function( $nombreClase ) {
 ```
 
 !!! tip "Autoload y rutas erróneas"
-    En *sistemas UNIX* al hacer el *include* de la clase que recibe como parámetro, las barras de los namespace (`\`) son diferentes a las de las rutas (`/`). Por ello, es mejor que utilicemos el fichero autoload:
+    En *sistemas UNIX* (Docker incluido) al hacer el *include* de la clase que recibe como parámetro, las barras de los namespace (`\`) son diferentes a las de las rutas (`/`). Por ello, es mejor que utilicemos el fichero autoload:
 
     ``` php
     <?php
