@@ -200,7 +200,7 @@ composer require monolog/monolog
 composer update
 ```
 
-Monolog 2 requiere al menos PHP 7.2, cumple con el estandar de logging PSR-3, y es la librería empleada por *Laravel* y *Symfony* para la gestión de logs.
+Monolog 2 requiere al menos PHP 7.2, cumple con el estandar de logging PSR, y es la librería empleada por *Laravel* y *Symfony* para la gestión de logs.
 
 !!! info "Cuando usar un log"
     * Seguir las acciones/movimientos de los usuarios
@@ -257,7 +257,7 @@ $log->warning("Producto no encontrado", ["datos" => $producto]);
 ### Funcionamiento
 
 Cada instancia `Logger` tiene un nombre de canal (MiLogger en el ejemplo anterior) y una pila de manejadores (*handler*).
-Cada mensaje que mandamos al log atraviesa la pila de manejadores, y cada uno decide si debe registrar la información, y si se da el caso, finalizar la propagación.
+Cada mensaje que mandamos al log atraviesa la pila de manejadores, y cada uno decide si debe registrar la información si cumple o supera el nivel mínimo que se haya especificado, y si se da el caso, finalizar la propagación.
 Por ejemplo, un `StreamHandler` en el fondo de la pila que lo escriba todo en disco, y en el tope añade un `MailHandler` que envíe un mail sólo cuando haya un error.
 
 ### Manejadores
@@ -268,7 +268,7 @@ Luego se *van ejecutando* conforme a la pila.
 Los manejadores más utilizados son:
 
 * `StreamHandler(ruta, nivel)`: Escribe los logs en un "stream" (flujo) específico, como un archivo en el sistema de archivos o la salida estándar (php://stdout) o la de error (php://stderr).
-* `RotatingFileHandler(ruta, maxFiles, nivel)`: Guarda los registros en archivos que se rotan automáticamente según un intervalo de tiempo, por ejemplo, diario.
+* `RotatingFileHandler(ruta, maxFiles, nivel)`: Guarda los registros en archivos que se rotan automáticamente según un intervalo de tiempo (por defecto diario).
 * `NativeMailerHandler(para, asunto, desde, nivel)`: Envía los mensajes de log a una dirección de correo electrónico usando la función mail() de PHP (necesario servidor SMTP configurado).
 * `FirePHPHandler(nivel)`: Envía los logs a la consola de FirePHP (extensión del navegador) a través de las cabeceras HTTP que intercepta. Útil para desarrollo.
 
@@ -394,14 +394,14 @@ También es posible añadir un procesador como una función. En el siguiente eje
 
 ### Formateadores
 
-Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizados son `LineFormatter`, `HtmlFormatter` o `JsonFormatter`.
+Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizados son `LineFormatter`, `HtmlFormatter` o `JsonFormatter`. En el ejemplo siguiente se usa un manejador de archivos rotativo que empezará escribiendo los mensajes en 'milog-AAAA-MM-DD.log' y continuará con los 6 siguientes días antes de volver a empezar por el primer archivo. Antes de añadir el manejador, se le confiugra un formateador para que devuelva los mensajes en formato JSON.
 
 === "PHP"
 
     ``` php
     <?php
     $log = new Logger("MiLogger");
-    $rfh = new RotatingFileHandler("logs/milog.log", Level::Debug);
+    $rfh = new RotatingFileHandler("logs/milog.log", 7, Level::Debug);
     $rfh->setFormatter(new JsonFormatter());
     $log->pushHandler($rfh);
     ```
