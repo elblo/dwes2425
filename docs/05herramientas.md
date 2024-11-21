@@ -424,7 +424,7 @@ Para el siguiente ejemplo, vamos a suponer que creamos la factoría en el *names
 
 ``` php
 <?php
-namespace Dwes\Ejemplos\Util
+namespace Dwes\Ejemplos\Util;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -444,7 +444,7 @@ Si en vez de devolver un `Monolog\Logger` utilizamos el interfaz de PSR, si en e
 
 ``` php
 <?php
-namespace Dwes\Ejemplos\Util
+namespace Dwes\Ejemplos\Util;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
