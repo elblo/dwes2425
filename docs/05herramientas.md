@@ -135,7 +135,7 @@ Y desde el directorio del `composer.json` lanzamos sel siguiente comando para vo
 composer dump-autoload
 ```
 
-*PSR-4* es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica que cualquier clase definida bajo el **namespace App** se buscará en el **directorio app/**. Por ejemplo, `App\Clases\Cliente` se corresponde con el archivo `app/Clases/Cliente.php`.
+[PSR-4](https://mpijierro.medium.com/psr-est%C3%A1ndares-en-php-ccde7d9014e6) es una especificación para la auto carga de clases desde la ruta de los archivos. En el ejemplo anterior se indica que cualquier clase definida bajo el **namespace App** se buscará en el **directorio app/**. Por ejemplo, `App\Clases\Cliente` se corresponde con el archivo `app/Clases/Cliente.php`.
 
 En `Cliente.php` tendríamos que definir su namespace: 
 
@@ -200,7 +200,7 @@ composer require monolog/monolog
 composer update
 ```
 
-Monolog 2 requiere al menos PHP 7.2, cumple con el estandar de logging PSR, y es la librería empleada por *Laravel* y *Symfony* para la gestión de logs.
+Monolog 2 requiere al menos PHP 7.2, cumple con el estandar de logging [PSR-3](https://mpijierro.medium.com/psr-est%C3%A1ndares-en-php-ccde7d9014e6), y es la librería empleada por *Laravel* y *Symfony* para la gestión de logs.
 
 !!! info "Cuando usar un log"
     * Seguir las acciones/movimientos de los usuarios
@@ -418,73 +418,69 @@ Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizad
 
 ### Uso de Factorías
 
-En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)) encapsulando así la creación del Logger en dicho método. De esta forma se simplifican futuros mantenimientos de código si cambiamos el sistema de logs. Sólo habrá que tocar en este método y no en cada clase que use los logs.
+En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)) encapsulando así la creación del Logger en dicho método. De esta forma se simplifican futuros mantenimientos de código si cambiamos el sistema de logs. Sólo habrá que modificar la factoría con la nueva librería de logs a utilizar en lugar de ir modificando cada una de las clases que usen los logs.
 
-Para el siguiente ejemplo, vamos a suponer que creamos la factoría en el *namespace* `Dwes\Ejemplos\Util`.
-
-``` php
-<?php
-namespace Dwes\Ejemplos\Util;
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-class LogFactory {
-
-    public static function getLogger(string $canal = "miApp") : Logger {
-        $log = new Logger($canal);
-        $log->pushHandler(new StreamHandler("logs/miApp.log", Level::Debug));
-
-        return $log;
-    }
-}
-```
-
-Si en vez de devolver un `Monolog\Logger` utilizamos el interfaz de PSR, si en el futuro cambiamos la implementación del log, no tendremos que modificar nuestro codigo. Así pues, la factoría ahora devolverá `Psr\Log\LoggerInterface`:
+Para el siguiente ejemplo, vamos a crear la factoría en el *namespace* `Dwes\Util` y vamos a hacer que en vez de que devuelva un `Monolog\Logger`, devuelva una interfaz [PSR-3](https://mpijierro.medium.com/psr-est%C3%A1ndares-en-php-ccde7d9014e6) `Psr\Log\LoggerInterface`. De esta forma, si en el futuro cambiamos la implementación del log con otra librería que no sea Monolog pero que siga, no tendremos que modificar nuestro codigo:
 
 ``` php
 <?php
-namespace Dwes\Ejemplos\Util;
+namespace Dwes\Util;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Level;
 use Psr\Log\LoggerInterface;
 
 class LogFactory {
 
-    public static function getLogger(string $canal = "miApp") : LoggerInterface {
+    public static function createLogger(string $canal = "miApp", string $logFile) : LoggerInterface {
+        // Toda la relación con la clase Monolog queda encapsulada aquí
         $log = new Logger($canal);
-        $log->pushHandler(new StreamHandler("log/miApp.log", Level::Debug));
+        $log->pushHandler(new StreamHandler($logFile, Level::Debug));
 
         return $log;
     }
 }
 ```
 
-Finalmente, para utilizar la factoría, sólo cambiamos el código que teníamos en el constructor de las clases que usan el log, quedando algo asi:
+En todas las clases que usaban directamente Monolog, ahora llamamos a la factoría:
 
 ``` php
 <?php
+namespace Dwes\Model;
 
-namespace Dwes\Ejemplos\Model;
-
-use Dwes\Ejemplos\Util\LogFactory;
-use Monolog\Logger;
+use Dwes\Util\LogFactory;
+use Psr\Log\LoggerInterface;
 
 class Cliente {
 
     private $codigo; 
+    private LoggerInterface $log;
 
-    private Logger $log;
-
-    function __construct($codigo){ 
+    function __construct($codigo) { 
         $this->codigo=$codigo; 
-
-        $this->log = LogFactory::getLogger();
+        $this->log = LogFactory::createLogger("clienteChannel", "logs/cliente.log");
     }
 
-    /// ... resto del código
+    public function realizarAccion(string $accion): void {
+        // Código de la acción...
+        // y evento que guardamos en el log
+        $this->log->info("El cliente $this->codigo está realizando la acción: $accion");
+    }
 }
+```
+
+Y para completar el ejemplo, desde el `index.php` así quedaría el uso de `Cliente`:
+
+``` php
+<?php
+include __DIR__ ."/vendor/autoload.php";
+
+// PRUEBA DE LA FACTORÍA
+use Dwes\Model\Cliente;
+
+$cliente = new Cliente(100);
+$cliente->realizarAccion("Inicio de sesión");
 ```
 
 ## 5.4 Documentación con *phpDocumentor*
