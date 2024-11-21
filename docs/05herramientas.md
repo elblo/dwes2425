@@ -418,9 +418,9 @@ Se asocian a los manejadores con `setFormatter`. Los formateadores más utilizad
 
 ### Uso de Factorías
 
-En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)) encapsulando así la creación del Logger en dicho método. De esta forma se simplifican futuros mantenimientos de código si cambiamos el sistema de logs. Sólo habrá que modificar la factoría con la nueva librería de logs a utilizar en lugar de ir modificando cada una de las clases que usen los logs.
+En vez de instanciar un log en cada clase, es conveniente crear una factoría (por ejemplo, siguiendo la idea del patrón de diseño [*Factory Method*](https://refactoring.guru/es/design-patterns/factory-method)) encapsulando así la creación del Logger en dicho método. De esta forma, si en el futuro cambiamos la implementación del log con otra librería que no sea Monolog, no tendremos que modificar nuestro codigo.
 
-Para el siguiente ejemplo, vamos a crear la factoría en el *namespace* `Dwes\Util` y vamos a hacer que en vez de que devuelva un `Monolog\Logger`, devuelva una interfaz [PSR-3](https://mpijierro.medium.com/psr-est%C3%A1ndares-en-php-ccde7d9014e6) `Psr\Log\LoggerInterface`. De esta forma, si en el futuro cambiamos la implementación del log con otra librería que no sea Monolog pero que siga, no tendremos que modificar nuestro codigo:
+Para el siguiente ejemplo, vamos a crear la factoría en el *namespace* `Dwes\Util` y vamos a hacer que en vez de que devuelva un `Monolog\Logger`, devuelva un objeto que impolementa una interfaz [PSR-3](https://mpijierro.medium.com/psr-est%C3%A1ndares-en-php-ccde7d9014e6) `Psr\Log\LoggerInterface`:
 
 ``` php
 <?php
