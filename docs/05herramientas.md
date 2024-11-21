@@ -483,6 +483,9 @@ $cliente = new Cliente(100);
 $cliente->realizarAccion("Inicio de sesión");
 ```
 
+!!! info "Uso de interfaz como atributo de clase"
+    En PHP, cuando se declara un atributo con un tipo basado en una interfaz (como `Psr\Log\LoggerInterface`), no se especifica que deba contener directamente una instancia de esa interfaz (lo cual sería imposible, porque las interfaces no pueden instanciarse). En cambio, especifica que *el atributo debe contener una instancia de una clase que implemente esa interfaz*, como `Monolog\Logger`.
+
 ## 5.4 Documentación con *phpDocumentor*
 
 [phpDocumentor](https://www.phpdoc.org/) es la herramienta *de facto* para documentar el código PHP. Es similar en propósito y funcionamiento a *Javadoc*.
