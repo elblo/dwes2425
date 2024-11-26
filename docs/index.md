@@ -58,6 +58,10 @@ Duración estimada: 76 horas
     * Documentación con *phpDocumentor*.
     * Web scraping con *Goutte*.
     * Pruebas con *PhpUnit*.
+6. [Acceso a datos](06accesoDatos.md) (28h)
+    * *SQL*
+    * *PDO*
+    * Ficheros CSV y PDF.
 
 ### Segunda evaluación
 

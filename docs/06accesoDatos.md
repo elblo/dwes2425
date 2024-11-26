@@ -100,19 +100,11 @@ Veámoslo en un ejemplo real
     <img src="imagenes/06/06-bbdd-estructura.png">
 </div>
 
-## CholloSevero
-
-Como muy bien habéis elegido, a lo largo de esta unidad vamos a trabajar con una base de datos que iremos confeccionando conforme avancemos, donde almacenaremos la información relacionada con ofertas que publiquen los usuarios y los listaremos en función de varios filtros; nuevos, más votados, más vistos, más comentados entre otros, al más puro estilo ***[Chollometro](https://www.chollometro.com)***.
-
-<div class="center img-large">
-    <img src="imagenes/06/06-chollometro.gif">
-</div>
-
 ## 6.3 SQL
 
-Este lenguaje de consulta estructurada (*Structured Query Language*) es el que vamos a utilizar para realizar las consultas a nuestras bases de datos para mostrar el contenido en las distintas interfaces web que creemos a lo largo de la unidad. Si quieres saber más detalles visita [Wiki SQL](https://es.wikipedia.org/wiki/SQL)
+Este lenguaje de consulta estructurada (*Structured Query Language*) es el que vamos a utilizar para realizar las consultas a nuestras bases de datos para mostrar el contenido en las distintas interfaces web que creemos a lo largo de la unidad. Si quieres saber más detalles visita [Wiki SQL](https://es.wikipedia.org/wiki/SQL).
 
-Ejemplo de una sentencia SQL donde seleccionamos todas las filas y columnas de nuestra tabla llamada **'pais'**
+Ejemplo de una sentencia SQL donde seleccionamos todas las filas y columnas de nuestra tabla llamada **'pais'**.
 
 ``` sql
 SELECT * FROM pais
@@ -154,7 +146,7 @@ Este software funciona bajo Apache y PHP y es más que nada una interfaz web par
 El sistema generará el código SQL para crear todo lo que le hemos puesto y creará la base de datos con las tablas que le hayamos metido.
 
 ``` sql
-CREATE TABLE `persona`. ( `id` INT NOT NULL AUTO_INCREMENT , `nombre` TINYTEXT NOT NULL , `apellidos` TEXT NOT NULL , `telefono` TINYTEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `persona` ( `id` INT NOT NULL AUTO_INCREMENT , `nombre` TINYTEXT NOT NULL , `apellidos` TEXT NOT NULL , `telefono` TINYTEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 ```
 
 ### Opciones en phpMyAdmin
@@ -175,143 +167,77 @@ Cuando seleccionamos una base de datos de la lista, el sistema nos muestra varia
 
 No vamos a profundizar en el resto de opciones pero, en la pestaña **Más** existe la opción ***Diseñador*** para poder editar las relaciones entre tablas de una manera gráfica (pinchando y arrastrando) que veremos más adelante.
 
-## 6.5 MySQLi
+## 6.5 PHP Data Objects (PDO)
 
-PHP hace uso de esta extensión mejorada para poder comunicarse con las bases de datos, ya sean MySQL (4.1 o superior) o MariaDB.
+La clase **PDO** de PHP se utiliza para conectarse a una base de datos y ejecutar consultas SQL de forma segura. Cuando construyes una instancia de PDO, puedes pasarle distintos atributos en el constructor y opciones para configurar el comportamiento de la conexión. 
 
-Cualquier consulta que queramos hacer a una base de datos necesitaremos hacer uso de la extensión mysqli()
+### Constructor de la clase PDO
 
-Veamos como conectarnos con una base de datos a través del código PHP
+El constructor de la clase PDO acepta tres parámetros obligatorios y un array de opciones opcional:
+
 
 ``` php
 <?php
-    // ▒▒▒▒▒▒▒▒ pruebas.php ▒▒▒▒▒▒▒▒
-
-    // "SERVIDOR", "USUARIO", "CONTRASEÑA", "BASE DE DATOS"
-    $conexion = mysqli_connect("d939ebf6a741","tuUsuario","1234","pruebas");
-
-    // COMPROBAMOS LA CONEXIÓN
-    if(mysqli_connect_errno()) {
-        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
-    }
-
-    echo "<h1>Bienvenid@ a MySQL !!</h1>";
-?>
+    $pdo = new PDO(string $dsn, string $username, string $password, array $options);
 ```
 
-- `servidor`: El servidor donde se encuentra la base de datos que queremos usar suele ser **localhost**, pero en nuestro caso, al utilizar Docker será el nombre de la imagen <span class="warning">***mysql:8.0***</span> que aparece al dejar el ratón encima en el Visual Studio Code
+- **$dsn (Data Source Name)**: Es una cadena que especifica el tipo de base de datos y la información necesaria para conectarse a ella. Formado por el tipo de la base de datos y configuración. Ejemplos:
+    - "mysql:host=localhost;dbname=testdb" (para MySQL).
+    - "pgsql:host=localhost;port=5432;dbname=testdb" (para PostgreSQL).
+    - "sqlite:/path/to/database.db" (para SQLite).
+- **$username**: El nombre de usuario para la conexión a la base de datos.
+- **$password**: La contraseña asociada al nombre de usuario.
+- **$options** (opcional): Un array de opciones para definir el comportamiento de la conexión. Éstos son algunos de los valores más comunes que se pueden definir en este array:
+    - *PDO::ATTR_ERRMODE*: Controla cómo se gestionan los errores. Algunos valores comunes son:
+        - *PDO::ERRMODE_SILENT*: Los errores no generan ningún mensaje.
+        - *PDO::ERRMODE_WARNING*: Los errores generan un aviso.
+        - *PDO::ERRMODE_EXCEPTION*: Los errores generan una excepción, que es lo más recomendable para controlar errores.
+    - *PDO::ATTR_DEFAULT_FETCH_MODE*: Define el modo de recuperación de datos por defecto, como:
+        - *PDO::FETCH_ASSOC*: Devuelve los datos como un array asociativo.
+        - *PDO::FETCH_OBJ*: Devuelve los datos como un objeto.
+        - *PDO::FETCH_BOTH*: Devuelve los datos como un array asociativo y numérico.
+    - *PDO::ATTR_PERSISTENT*: Habilita conexiones persistentes. Una conexión persistente puede mejorar el rendimiento manteniendo la conexión activa por múltiples peticiones en lugar de crear una nueva cada vez.
+    - *PDO::ATTR_TIMEOUT*: Define un tiempo límite para la conexión en segundos.
 
-<div class="center img-large">
-    <img src="imagenes/06/06-mysql-servidor-docker.gif">
-</div>
+Con PDO podemos capturar las excepciones <span class="alert">**PDOException**</span> con try catch para gestionar los errores que se produzcan por la conexión.
 
-- `usuarioDB`: El usuario de la base de datos
-- `passwordDB`: La contraseña para ese usuario de la base de datos
-- `baseDeDatos`: Nombre de la base de datos que queramos usar
-
-Si todo ha salido bien habréis visto un mensaje diciendo <span class="success">***Bienvenid@ a MySQL !!***</span>
-
-### Recuperando datos de una BD
-
-Ahora que ya sabemos cómo conectarnos a una base de datos alojada en nuestro servidor, lo que necesitamos saber es cómo recuperar datos almacenados en la base de datos.
-
-Durante la instalación de la imagen de Docker, se ha creado una tabla llamada **Pruebas** que contiene varios registros de distintas personas.
-
-Vamos a recuperar esos datos para ver de qué forma se hace con PHP.
-
-``` php
-<?php
-    // ▒▒▒▒▒▒▒▒ pruebas.php ▒▒▒▒▒▒▒▒
-
-    $conexion = mysqli_connect("d939ebf6a741", "lupa", "1234", "pruebas");
-
-    // COMPROBAMOS LA CONEXIÓN
-    if (mysqli_connect_errno()) {
-        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
-    }
-
-    // CONSULTA A LA BASE DE DATOS
-    $consulta = "SELECT * FROM `Person`";
-    $listaUsuarios = mysqli_query($conexion, $consulta);
-
-    // COMPROBAMOS SI EL SERVIDOR NOS HA DEVUELTO RESULTADOS
-    if($listaUsuarios) {
-
-        // RECORREMOS CADA RESULTADO QUE NOS DEVUELVE EL SERVIDOR
-        foreach ($listaUsuarios as $usuario) {
-            echo "
-                $usuario[id]
-                $usuario[name]
-                <br>
-            ";
-        }
-    }
-?>
-```
-
-Si todo ha salido bien, por pantalla verás el siguiente listado
-
-    ▒▒▒▒▒▒▒▒ http://localhost/pruebas.php ▒▒▒▒▒▒▒▒
-
-    1 William
-    2 Marc
-    3 John
-    4 Antonio Moreno
-
-## 6.6 PHP Data Objects :: PDO
-
-De la misma manera que hemos visto con mysqli, PHP Data Objects (o PDO) es un driver de PHP que se utiliza para trabajar bajo una interfaz de objetos con la base de datos. A día de hoy es lo que más se utiliza para manejar información desde una base de datos, ya sea relacional o no relacional.
-
-De igual manera que pasaba con los objetos en PHP nativos, en la interfaz de MySQL la cosa cambia la hora de conectarnos con una base de datos.
-
-``` php
-<?php
-    $conexion = new PDO('mysql:host=localhost; dbname=dwes', 'dwes', 'abc123');
-```
-
-Además, con PDO podemos usar las excepciones con try catch para gestionar los errores que se produzcan en nuestra aplicación, para ello, como hacíamos antes, debemos encapsular el código entre bloques try / catch.
+#### Ejemplo de conexión a una BDD
 
 ``` php
 <?php
 
-    $dsn = 'mysql:dbname=prueba;host=127.0.0.1';
+    $dsn = 'mysql:host=127.0.0.1;dbname=prueba';
     $usuario = 'usuario';
     $contraseña = 'contraseña';
+    $opciones = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Le indicamos que en caso de errores lance excepciones
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Configurar el modo de obtención de resultados (mediante arrays asociativos)
+        PDO::ATTR_EMULATE_PREPARES   => false,                  // Desactiva las consultas preparadas emuladas, haciendo las consultas más seguras contra inyecciones SQL.
+    ];
 
     try {
-        $mbd = new PDO($dsn, $usuario, $contraseña);
-        $mbd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $mbd = new PDO($dsn, $usuario, $contraseña. $opciones);
+        echo "Conexión exitosa a la base de datos.";
     } catch (PDOException $e) {
         echo 'Falló la conexión: ' . $e->getMessage();
     }
 ```
-En primer lugar, creamos la conexión con la base de datos a través del constructor PDO pasándole la información de la base de datos.
-
-En segundo lugar, establecemos los parámetros para manejar las excepciones, en este caso hemos utilizado:
-
-- `PDO::ATTR_ERRMODE` indicándole a PHP que queremos un reporte de errores.
-- `PDO::ERRMODE_EXCEPTION` con este atributo obligamos a que lance excepciones, además de ser la opción más humana y legible que hay a la hora de controlar errores.
-
-Cualquier error que se lance a través de PDO, el sistema lanzará una <span class="alert">**PDOException**</span>.
 
 ### Fichero de configuración de la BD
 
-De la misma manera que creamos nuestro archivo de funciones `funciones-php` y albergamos todas las funciones que se usan de manera global en la aplicación, podemos establecer un archivo de constantes donde definamos los parámetros de conexión con la base de datos.
+De la misma forma que podemos tener un archivo de funciones `funciones.php` con todas las funciones que se usan de manera global en la aplicación, podemos crear un archivo de constantes donde definamos los parámetros de conexión con la base de datos.
 
 ```php
 <?php
+    //  ▒▒▒▒▒▒▒▒ config/database.inc.php ▒▒▒▒▒▒▒▒
 
-    //  ▒▒▒▒▒▒▒▒ conexion.php ▒▒▒▒▒▒▒▒
-
-    constDSN = "mysql:host=localhost;dbname=dwes";
-    constUSUARIO = "dwes";
-    constPASSWORD = "abc123";
+    const DSN = "mysql:host=localhost;dbname=dwes";
+    const USUARIO = "dwes";
+    const PASSWORD = "abc123";
 
     /*  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 
-        ▒▒▒▒▒▒▒▒ NO SUBAS ESTE ARCHIVO A git ▒▒▒▒▒
+        ▒▒▒▒▒▒▒▒ NO SUBAS ESTE ARCHIVO A git ▒▒▒▒▒▒▒▒
 
         ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ */
 
@@ -321,12 +247,13 @@ Este archivo contiene información <span class="alert">**muy sensible**</span> a
 
 ### Sentencias preparadas
 
-Se trata de sentencias que se establecen como si fueran plantillas de la SQL que vamos a lanzar, aceptando parámetros que son establecidos a posteriori de la declaración de la sentencia preparada.
+Se trata de sentencias que se establecen como si fueran plantillas de SQL que vamos a lanzar, aceptando parámetros que son establecidos a posteriori de la declaración de la sentencia preparada.
 
-Las sentencias preparadas evitan la injección de SQL (SQL Injection) y mejoran el rendimiento de nuestras aplicaciónes o páginas web.
+Las sentencias preparadas **evitan la injección de SQL** (SQL Injection) y mejoran el rendimiento de nuestras aplicaciónes o páginas web.
 
 ``` php
 <?php
+    // Sentencia preparada
     $sql = "INSERT INTO Clientes VALUES (?, ?, ?, ?)";
 ```
 
@@ -336,7 +263,7 @@ Una vez tenemos la plantilla de nuestra consulta, debemos seguir con la preparac
 
 - `prepare:` prepara la sentencián antes de ser ejecutada
 - `bind`: el tipo de unión (bind) de dato que puede ser mediante ' ? ' o ' :parametro '
-- `execute` se ejecuta la consulta uniendo la plantilla con las bariables o parámetros que hemos establecido.
+- `execute` se ejecuta la consulta uniendo la plantilla con las variables o parámetros que hemos establecido.
 
 ### Ejemplo parámetros
 
@@ -344,33 +271,38 @@ Una vez tenemos la plantilla de nuestra consulta, debemos seguir con la preparac
 <?php
     //  ▒▒▒▒▒▒▒▒ Borrando con parámetros ▒▒▒▒▒▒▒▒
 
-    include "config/database.inc.php";
+    include "config/database.inc.php"; // Aquí están las constantes DSN, USUARIO y PASSWORD
+  
+    $opciones = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       
+        PDO::ATTR_EMULATE_PREPARES   => false,                  
+    ];
 
     $conexion = null;
 
     try { 
-        $cantidad = $_GET["cantidad"];
+        $id = $_GET["id_alumno"];
 
-        $conexion = new PDO(DSN, USUARIO, PASSWORD);
-        $conexion -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conexion = new PDO(DSN, USUARIO, PASSWORD, $opciones);
 
-        $sql = "DELETE FROM stock WHERE unidades = ?";
-        $sentencia = $conexion -> prepare($sql);
+        $sql = "DELETE FROM alumnos WHERE id = ?";    
+        $sentencia = $conexion->prepare($sql);
 
-        $isOk = $sentencia -> execute([$cantidad]);
-        $cantidadAfectada = $sentencia -> rowCount();
-
+        $isOk = $sentencia->execute([$id]);
+        
+        $cantidadAfectada = $sentencia->rowCount();
         echo $cantidadAfectada;
     } catch (PDOException $e) {
         echo $e -> getMessage();
     }
 
-    $conexion = null
+    $conexion = null;
 ```
 
 ### Ejemplo bindParam
 
-Muy parecido a utilizar parámetros pero esta vez la variable está dentro de la sentencia SQL, en este caso la hemos llamado `:cant`
+Muy parecido a utilizar parámetros pero esta vez la variable está dentro de la sentencia SQL, en este caso la hemos llamado `:id`
 
 ```php
 <?php
@@ -379,20 +311,17 @@ Muy parecido a utilizar parámetros pero esta vez la variable está dentro de la
     $conexion=null;
 
     try {
-        $cantidad = $_GET["cantidad"] ?? 0;
+        $id = $_GET["id_alumno"];
 
-        $conexion = new PDO(DSN, USUARIO, PASSWORD);
-        $conexion -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conexion = new PDO(DSN, USUARIO, PASSWORD, $opciones);
 
-        $sql = "DELETE FROM stock WHERE unidades = :cant";
+        $sql = "DELETE FROM alumnos WHERE id = :id";  
+        $sentencia = $conexion->prepare($sql);
 
-        $sentencia = $conexion -> prepare($sql);
-        $sentencia -> bindParam(":cant", $cantidad);
-        
-        $isOk = $sentencia -> execute();
-        
-        $cantidadAfectada = $sentencia -> rowCount();
-        
+        $sentencia->bindParam(":id", $id);
+        $isOk = $sentencia->execute();
+ 
+        $cantidadAfectada = $sentencia->rowCount();        
         echo $cantidadAfectada;
     } catch (PDOException $e) {
         echo $e -> getMessage();
@@ -408,52 +337,49 @@ Utilizaremos `bindValue()` cuando tengamos que insertar datos sólo una vez, en 
 ```php
 <?php
     // se asignan nombre a los parámetros
-    $sql = "DELETE FROM stock WHERE unidades = :cant";
-    $sentencia = $conexion -> prepare($sql);
+    $sql = "DELETE FROM alumnos WHERE id = :id";
+    $sentencia = $conexion->prepare($sql);
 
-    // bindParam enlaza por referencia
-    $cantidad = 0;
+    // bindParam enlaza por REFERENCIA
+    $id = 0;
+    $sentencia -> bindParam(":id", $id);
+    $id = 1;
+    // se elimina con id = 1
+    $isOk = $sentencia->execute();
 
-    $sentencia -> bindParam(":cant", $cantidad);
-    $cantidad = 1;
-
-    // se eliminan con cant = 1
-    $isOk = $sentencia -> execute();
-
-    // bindValue enlaza por valor
-    $cantidad = 0;
-
-    $sentencia -> bindValue(":cant", $cantidad);
-    $cantidad = 1;
-
-    // se eliminan con cant = 0
+    // bindValue enlaza por VALOR
+    $id = 0;
+    $sentencia -> bindValue(":id", $id);
+    $id = 1;
+    // se elimina con id = 0
     $isOk = $sentencia->execute();
 ```
 
 Para más información y uso de las variables PDO [consulta el manual de PHP](https://www.php.net/manual/es/pdo.constants.php).
 
-### Insertando registros
+### Insertar registros
 
-A la hora de insertar registros en una base de datos, debemos tener en cuenta que en la tabla puede haber valores autoincrementados. Para salvaguardar ésto, lo que debemos hacer es dejar ese cambpo autoincrementado vacío, pero a la hora de hacer la conexión, debemos recuperarlo con el método `lastInsertId()`.
+A la hora de insertar registros en una base de datos, debemos tener en cuenta que en la tabla puede haber valores autoincrementados. En ese caso, dejaremos ese campo autoincrementado vacío y si necesitamos recuperarlo después del a inserción, lo haremos con el método de la conexión `lastInsertId()`.
 
 ``` php
 <?php
     $nombre = $_GET["nombre"] ?? "SUCURSAL X";
     $telefono = $_GET["telefono"] ?? "636123456";
 
+    // No indicamos el campo id por que es autoincrement
     $sql="INSERT INTO tienda(nombre, tlf) VALUES (:nombre, :telefono)";
 
     $sentencia = $conexion -> prepare($sql);
     $sentencia -> bindParam(":nombre", $nombre);
     $sentencia -> bindParam(":telefono", $telefono);
 
-    $isOk = $sentencia -> execute();
-    $idGenerado = $conexion -> lastInsertId();
+    $isOk = $sentencia->execute();
+    $idGenerado = $conexion->lastInsertId();
 
     echo $idGenerado;
 ```
 
-### Consultando registros
+### Consultar registros
 
 A la hora de recuperar los resultados de una consulta, bastará con invocar al método `PDOStatement::fetch` para listar las filas generadas por la consulta.
 
@@ -473,22 +399,23 @@ Pero debemos elegir el tipo de dato que queremos recibir entre los 3 que hay dis
 
     include "config/database.inc.php";
 
+    $opciones = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ];
+
     $conexion = null;
 
     try{
-        $conexion = new PDO(DSN, USUARIO, PASSWORD);
-        $conexion -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conexion = new PDO(DSN, USUARIO, PASSWORD, $opciones);
 
-        $sql = "select * from tienda";
+        $sql = "SELECT * FROM tienda";
 
         $sentencia = $conexion -> prepare($sql);
-        $sentencia -> setFetchMode(PDO::FETCH_ASSOC);
-        $sentencia -> execute();
+        $sentencia->execute();
         
-        while($fila = $sentencia -> fetch()){
-            echo "Codigo:" . $fila["cod"] . "<br />";
-            echo "Nombre:" . $fila["nombre"] . "<br />";
-            echo "Teléfono:" . $fila["tlf"] . "<br />";
+        while($fila = $sentencia->fetch()){
+            echo "<p>Codigo: " . $fila["cod"] . ", Nombre: " . $fila["nombre"] . ", teléfono: " . $fila["tlf"] . "</p>";
         }
 
     }catch(PDOException $e) {
@@ -498,7 +425,7 @@ Pero debemos elegir el tipo de dato que queremos recibir entre los 3 que hay dis
     $conexion = null;
 ```
 
-Recuperando datos con una matriz como resultado de nuestra consulta
+Recuperando datos con una matriz mediante `fetchAll()` como resultado de nuestra consulta:
 
 ``` php
 <?php
@@ -506,15 +433,13 @@ Recuperando datos con una matriz como resultado de nuestra consulta
 
     $sql="SELECT * FROM tienda";
 
-    $sentencia = $conexion -> prepare($sql);
-    $sentencia -> setFetchMode(PDO::FETCH_ASSOC);
-    $sentencia -> execute();
+    $sentencia = $conexion->prepare($sql);
+    $sentencia->execute();
 
-    $tiendas = $sentencia -> fetchAll();
+    $tiendas = $sentencia->fetchAll();
 
-    foreach($tiendasas$tienda) {
-        echo"Codigo:" . $tienda["cod"] . "<br />";
-        echo"Nombre:" . $tienda["nombre"] . "<br />";
+    foreach($tiendas as $tienda) {
+         echo "<p>Codigo: " . $tienda["cod"] . ", Nombre: " . $tienda["nombre"] . ", teléfono: " . $tienda["tlf"] . "</p>";
     }
 ```
 Pero si lo que queremos es leer datos con forma de objeto utilizando `PDO::FETCH_OBJ`, debemos crear un objeto con propiedades públicas con el mismo nombre que las columnas de la tabla que vayamos a consultar.
@@ -523,22 +448,28 @@ Pero si lo que queremos es leer datos con forma de objeto utilizando `PDO::FETCH
 <?php
     //  ▒▒▒▒▒▒▒▒ consulta con formato de objeto ▒▒▒▒▒▒▒▒
 
-    $sql="SELECT * FROM tienda";
+    $opciones = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+    ];
 
-    $sentencia = $conexion -> prepare($sql);
-    $sentencia -> setFetchMode(PDO::FETCH_OBJ);
+    // ...
+
+    $sql = "SELECT * FROM tienda";
+
+    $sentencia = $conexion->prepare($sql);
     $sentencia -> execute();
 
-    while($t = $sentencia -> fetch()) {
-        echo"Codigo:" . $t -> cod . "<br />";
-        echo"Nombre:" . $t -> nombre . "<br />";
-        echo"Teléfono:" . $t -> tlf . "<br />";
+    while($t = $sentencia->fetch()) {
+        echo"Codigo:" . $t->cod . "<br />";
+        echo"Nombre:" . $t->nombre . "<br />";
+        echo"Teléfono:" . $t->tlf . "<br />";
     }
 ```
 
 ### Consultas con modelos
 
-Llevamos tiempo creando clases en PHP y las consultas también admiten este tipo de datos mediante el uso de `PDO::FETCH_CLASS`
+Llevamos tiempo creando clases en PHP y las consultas también admiten este tipo de datos mediante el uso de `PDO::FETCH_CLASS`.
 
 Si usamos este método, debemos tener en cuenta que los nombres de los atributos privados deben coincidir con los nombres de las columnas de la tabla que vayamos a manejar.
 
@@ -548,10 +479,10 @@ Así pues, si por lo que sea cambiamos la estructura de la tabla <span class="al
 <?php
     //  ▒▒▒▒▒▒▒▒ clase Tienda ▒▒▒▒▒▒▒▒
 
-    classTienda {
+    class Tienda {
         private int $cod;
         private string $nombre;
-        private ? string $tlf;
+        private string $tlf;
         
         public function getCodigo() : int {
             return $this -> cod;
@@ -574,14 +505,15 @@ Así pues, si por lo que sea cambiamos la estructura de la tabla <span class="al
     $sql = "SELECT * FROM tienda";
     $sentencia = $conexion -> prepare($sql);
 
-    // Aquí 'Tienda' es el nombre de nuestra clase
-    $sentencia -> setFetchMode(PDO::FETCH_CLASS, "Tienda");
-    $sentencia -> execute();
+    // Aquí 'Tienda' es el nombre de nuestra clase y esta opción no se puede 
+    // establecer en el array de opciones, se tiene que hacer aquí en la sentencia
+    $sentencia->setFetchMode(PDO::FETCH_CLASS, "Tienda");
+    $sentencia->execute();
 
-    while($t = $sentencia -> fetch()) {
-        echo "Codigo: " . $t -> getCodigo() . "<br />";
-        echo "Nombre: " . $t -> getNombre() . "<br />";
-        echo "Teléfono: " . $t -> getTelefono() . "<br />";
+    while($t = $sentencia->fetch()) {
+        echo "Codigo: " . $t->getCodigo() . "<br />";
+        echo "Nombre: " . $t->getNombre() . "<br />";
+        echo "Teléfono: " . $t->getTelefono() . "<br />";
         
         var_dump($t);
     }
@@ -599,7 +531,7 @@ Pero ¿qué pasa si nuestras clases tienen constructor? pues que debemos indicar
     $sentencia -> setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class);
     $sentencia -> execute();
 
-    $tiendas = $sentencia -> fetchAll();
+    $tiendas = $sentencia->fetchAll();
 ```
 
 ### Consultas con LIKE
@@ -610,21 +542,22 @@ Para utilizar el comodín LIKE u otros comodines, debemos asociarlo al dato y NU
 <?php
     //  ▒▒▒▒▒▒▒▒ Utilizando comodines :: LIKE ▒▒▒▒▒▒▒▒
 
-    $sql = "SELECT * FROM tienda where nombre like :nombre or tlf like :tlf";
+    $sql = "SELECT * FROM tienda WHERE nombre LIKE :nombre OR tlf LIKE :tlf";
 
-    $sentencia = $conexion -> prepare($sql);
-    $sentencia -> setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class);
+    $sentencia = $conexion->prepare($sql);
+    $sentencia->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class);
 
-    $cadBuscar = "%" . $busqueda . "%";
+    // Suponemos que 'busqueda' es lo que recibimos de un campo de búsqueda 
+    $cadBuscar = "%" . $_POST['busqueda'] . "%";
 
-    $sentencia -> execute(["nombre" => $cadBuscar,"tlf" => $cadBuscar]);
+    $sentencia->execute(["nombre" => $cadBuscar, "tlf" => $cadBuscar]);
 
-    $result = $sentencia -> fetchAll();
+    $result = $sentencia->fetchAll();
 ```
 
 Tenéis una lista de ejemplos muy completa en la [documentación oficial](https://phpdelusions.net/pdo/objects).
 
-## 6.7 Login & Password
+## 6.6 Login & Password
 
 <div class="center img-medium">
     <img src="imagenes/06/06-login-password.gif">
@@ -680,7 +613,7 @@ Ahora que tenemos el usuario codificado y guardado en la base de datos, vamos a 
     }
 ```
 
-## 6.8 Acceso a ficheros
+## 6.7 Acceso a ficheros
 
 Gracias a la funcion fopen() desde PHP podemos abrir archivos que se encuentren en nuestros servidor o una URL.
 
@@ -895,9 +828,9 @@ $pdf->Output();
 </div>
 
 
-## 6.9 Actividades
+## 6.8 Actividades
 
-### MySQLi
+### MySQLi REDACTAR DE NUEVO!!!
 
 601. Crea una nueva base de datos con el nombre `lol` y cotejamiento de datos `utf8mb4_unicode_ci`.
 
@@ -965,19 +898,25 @@ $pdf->Output();
 610. Vuelve a cargar el archivo `606campeones.php` y renómbralo a `610campeones.php` pero en vez de mostrar la tabla por pantalla, genera un archivo CSV `610campeones.csv` y otro `610campeonesCSV.php` donde saques por pantalla el contenido del archivo `610campeones.csv`.
 
 
-### Proyecto CholloSevero
+### Proyecto FernanChollo
 
-615. Estructura el proyecto y piensa en las tablas y bases de datos que necesitéis para crear el proyecto. Crea los UML necesarios con nombres como `615UMLnombreTabla` metiendo todos los campos que se necesiten así como las relaciones que creas necesarias. Establece un sistema de archivos para el proyecto, teniendo en cuenta que van a haber imágenes, css, funciones php, constantes e incluso javaScript (pero algo básico) para controlar los eventos del usuario a lo largo de la interfaz.
+Desarrolla una app al estilo de ***[Chollometro](https://www.chollometro.com)*** en la que los usuarios publican chollos que encuentran por internet y se listan en función de varios filtros: nuevos, más votados, más vistos, más comentados...
 
-616. Crea un sistema de login/password con los roles `administrador` y `usuario`. De momento que se validen los usuarios correctamente utilizando encriptación en la contraseña.
+<div class="center img-large">
+    <img src="imagenes/06/06-chollometro.gif">
+</div>
+
+620. Estructura el proyecto y piensa en las tablas y bases de datos que necesitéis para crear el proyecto. Crea los UML necesarios con nombres como `615UMLnombreTabla` metiendo todos los campos que se necesiten así como las relaciones que creas necesarias. Establece un sistema de archivos para el proyecto, teniendo en cuenta que van a haber imágenes, css, funciones php, constantes e incluso javaScript (pero algo básico) para controlar los eventos del usuario a lo largo de la interfaz.
+
+621. Crea un sistema de login/password con los roles `administrador` y `usuario`. De momento que se validen los usuarios correctamente utilizando encriptación en la contraseña.
 
 - `Administrador`: Puede ver todos los usuarios registrados así como los administradores y los chollos creados en la base de datos.
 
 - `Usuario`: Puede ver sus propios chollos, editarlos y borrarlos, además de crear nuevos.
 
-617. Crea la vista para poner nuevos chollos y recuerda <span class="alert">***sólo pueden entrar a esta vista usuarios registrados o administradores***</span>.
+622. Crea la vista para poner nuevos chollos y recuerda <span class="alert">***sólo pueden entrar a esta vista usuarios registrados o administradores***</span>.
 
-618. Crea la vista donde se muestren todos los chollos creados. Esta vista puede verla cualquier usuario, registrado o no en el sistema. Ten en cuenta que esta vista será la vista general de la web así que puedes llamarla `index.php` donde después aplicaremos filtros por $_GET.
+623. Crea la vista donde se muestren todos los chollos creados. Esta vista puede verla cualquier usuario, registrado o no en el sistema. Ten en cuenta que esta vista será la vista general de la web así que puedes llamarla `index.php` donde después aplicaremos filtros por $_GET.
 
 <!--
 

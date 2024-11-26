@@ -35,41 +35,41 @@
 
 ## 4.- Programación Web (12h)
 
-- [ ] 1.- (25) Formularios. Ejercicios 401-403
-- [ ] 2.- (26) Upload. Cookies. Ejercicios 404-406
-- [ ] 3.- (27) Cookies. Sesión. Ejercicios 407-409
-- [ ] 4.- (28) Gestión de usuarios. Ejercicios 410-415
-- [ ] 5.- (29) Proyecto Videoclub III. Ejercicios 420-423
-- [ ] 6.- (30) Proyecto Videoclub III. Ejercicios 424-426
+- [X] 1.- (25) Formularios. Ejercicios 401-403
+- [X] 2.- (26) Upload. Cookies. Ejercicios 404-406
+- [X] 3.- (27) Cookies. Sesión. Ejercicios 407-409
+- [X] 4.- (28) Gestión de usuarios. Ejercicios 410-415
+- [X] 5.- (29) Proyecto Videoclub III. Ejercicios 420-423
+- [X] 6.- (30) Proyecto Videoclub III. Ejercicios 424-426
 
 
 ## 5.- Herramientas Web (16h)
 
-- [ ] 1.- (31) Resend. Introducción Monolog. Ejercicio 501-503
-- [ ] 2.- (32) Manejadores. Uso de logs con *Monolog*. Ejercicios 505 - 507
-- [ ] 3.- (33) Proyecto Videoclub 4.0. Ejercicios 511 - 515
+- [X] 1.- (31) Resend. Introducción Monolog. Ejercicio 501-503
+- [X] 2.- (32) Manejadores. Uso de logs con *Monolog*. Ejercicios 505 - 507
+- [X] 3.- (33) Proyecto Videoclub 4.0. Ejercicios 511 - 515
 - [ ] 4.- (34) Documentación con *phpDocumentor* . Ejercicios 521 - 522.
 - [ ] 5.- (35) Webscrapping. Ejercicios 531 - 533.
 - [ ] 6.- (36) Pruebas con *PhpUnit*. Ejercicios 541 - 545.
 - [ ] 7.- (37) Proyecto Videoclub V. Ejercicios 551 - 554.
 - [ ] 8.- (38) Prueba escrita
 
-<!--
 ## 6.- Acceso a Datos (24h)
 
-- [ ] 1.- (39) SQL. Ejercicios 601 - 
-- [ ] 2.- (40) PDO. Ejercicios -
-- [ ] 3.- (41) . Ejercicios -
-- [ ] 4.- (42) . Ejercicios -
-- [ ] 5.- (43) CSV. Ejercicios -
-- [ ] 6.- (44) PDF. Ejercicios -
-- [ ] 7.- (45) Eloquent. Ejercicios -
-- [ ] 8.- (46) Migraciones. . Ejercicios -
-- [ ] 9.- (47) . Ejercicios -
-- [ ] 10.- (48) ORM. Ejercicios -
-- [ ] 11.- (49) . Ejercicios -
-- [ ] 12.- (50) . Ejercicios - 
+- [ ] 1.- (39) SQL. Ejercicios
+- [ ] 2.- (40) PDO. Ejercicios 
+- [ ] 3.- (41) . Ejercicios 
+- [ ] 4.- (42) . Ejercicios 
+- [ ] 5.- (43) CSV. Ejercicios 
+- [ ] 6.- (44) PDF. Ejercicios 
+- [ ] 7.- (45) Eloquent. Ejercicios 
+- [ ] 8.- (46) Migraciones. . Ejercicios 
+- [ ] 9.- (47) . Ejercicios 
+- [ ] 10.- (48) ORM. Ejercicios 
+- [ ] 11.- (49) . Ejercicios 
+- [ ] 12.- (50) . Ejercicios 
 
+<!--
 ## 7.- Frameworks PHP (32h)
 
 - [ ] 1.- (51) Introducción a Laravel -
