@@ -121,11 +121,11 @@ require 'vendor/autoload.php';
 
 En nuestro caso, de momento sólo lo pondremos en los archivos donde probamos las clases
 
-Si queremos que Composer también se encargue de cargar de forma automática nuestras clases de dominio, dentro del archivo `composer.json`, definiremos la propiedad `autoload`:
+Si queremos que Composer también se encargue de cargar de forma automática nuestras clases de dominio (o cualquier código que esté en otra carpeta diferente a `vendor`), dentro del archivo `composer.json`, definiremos la propiedad `autoload`:
 
 ``` json
 "autoload": {
-    "psr-4": {"App\\": "app/"}
+    "psr-4": {"App\\": "app/"} // App\\ es OPCIONAL (si queremos tener un namespace base)
 },
 ```
 

@@ -30,7 +30,7 @@ A través de las distintas capas o niveles, de las cuales 2 de ellas ya conocemo
     <img src="imagenes/06/06-bbdd-arquitectura-3-niveles.png">
 </div>
 
-## Instalación
+## 6.1 Instalación
 A través de ***XAMPP*** es muy sencillo, simplemente nos descargaríamos el programa y lo activaríamos. Para descargar XAMPP [pulsa aquí](https://www.apachefriends.org/es/download.html).
 
 Con ***Docker*** nos descargaremos [esta imagen de docker](recursos/plantilla-APCM.zip) y lanzamos 
@@ -56,7 +56,7 @@ usuario: root
 contraseña: 1234
 ```
 
-## Estructura de una base de datos
+## 6.2 Estructura de una base de datos
 
 Sabemos que una base de datos tiene muchos campos con sus nombres y valores, pero además sabemos que la base de datos debe tener un nombre. por tanto tendríamos la siguiente estructura para una base de datos:
 
@@ -108,7 +108,7 @@ Como muy bien habéis elegido, a lo largo de esta unidad vamos a trabajar con un
     <img src="imagenes/06/06-chollometro.gif">
 </div>
 
-## SQL
+## 6.3 SQL
 
 Este lenguaje de consulta estructurada (*Structured Query Language*) es el que vamos a utilizar para realizar las consultas a nuestras bases de datos para mostrar el contenido en las distintas interfaces web que creemos a lo largo de la unidad. Si quieres saber más detalles visita [Wiki SQL](https://es.wikipedia.org/wiki/SQL)
 
@@ -129,7 +129,7 @@ Las sentencias SQL también las podemos usar dentro de nuestro código php, de t
 ?>
 ```
 
-## phpMyAdmin
+## 6.4 phpMyAdmin
 
 <div class="center img-medium">
     <img src="imagenes/06/06-bbdd-phpMyAdmin-logo.png">
@@ -175,7 +175,7 @@ Cuando seleccionamos una base de datos de la lista, el sistema nos muestra varia
 
 No vamos a profundizar en el resto de opciones pero, en la pestaña **Más** existe la opción ***Diseñador*** para poder editar las relaciones entre tablas de una manera gráfica (pinchando y arrastrando) que veremos más adelante.
 
-## MySQLi
+## 6.5 MySQLi
 
 PHP hace uso de esta extensión mejorada para poder comunicarse con las bases de datos, ya sean MySQL (4.1 o superior) o MariaDB.
 
@@ -260,7 +260,7 @@ Si todo ha salido bien, por pantalla verás el siguiente listado
     3 John
     4 Antonio Moreno
 
-## PHP Data Objects :: PDO
+## 6.6 PHP Data Objects :: PDO
 
 De la misma manera que hemos visto con mysqli, PHP Data Objects (o PDO) es un driver de PHP que se utiliza para trabajar bajo una interfaz de objetos con la base de datos. A día de hoy es lo que más se utiliza para manejar información desde una base de datos, ya sea relacional o no relacional.
 
@@ -624,7 +624,7 @@ Para utilizar el comodín LIKE u otros comodines, debemos asociarlo al dato y NU
 
 Tenéis una lista de ejemplos muy completa en la [documentación oficial](https://phpdelusions.net/pdo/objects).
 
-## Login & Password
+## 6.7 Login & Password
 
 <div class="center img-medium">
     <img src="imagenes/06/06-login-password.gif">
@@ -680,7 +680,7 @@ Ahora que tenemos el usuario codificado y guardado en la base de datos, vamos a 
     }
 ```
 
-## Acceso a ficheros
+## 6.8 Acceso a ficheros
 
 Gracias a la funcion fopen() desde PHP podemos abrir archivos que se encuentren en nuestros servidor o una URL.
 
@@ -895,7 +895,7 @@ $pdf->Output();
 </div>
 
 
-## Actividades
+## 6.9 Actividades
 
 ### MySQLi
 
