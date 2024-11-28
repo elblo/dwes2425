@@ -830,7 +830,7 @@ $pdf->Output();
 
 ## 6.8 Actividades
 
-### MySQLi REDACTAR DE NUEVO!!!
+### CRUD campeones
 
 601. Crea una nueva base de datos con el nombre `lol` y cotejamiento de datos `utf8mb4_unicode_ci`.
 
@@ -844,15 +844,15 @@ $pdf->Output();
 
     Acuérdate que [*] significa que es clave primaria y no olvides poner el tipo de datos de cada uno de los campos.
 
-603. Rellena la tabla `campeon` con, al menos 5 registros, con los datos que tú quieras o si lo prefieres, puedes basarte en la [página oficial del juego](https://www.leagueoflegends.com/es-es/champions) pero <span class="alert">**¡¡ NO TE PONGAS A JUGAR !!**</span>
+603. Vas a añadir la funcionalidad de insertar un nuevo campeon. Crea un botón Añadir que redirigirá usuario al archivo `603insertando.php` donde se mostrará un formulario con los datos a rellenar y con los que se creará el registro correspondiente en la tabla `campeon`. Crea al menos 5 registros de prueba, con los datos que tú quieras o si lo prefieres, puedes basarte en la [página oficial del juego](https://www.leagueoflegends.com/es-es/champions) pero <span class="alert">**¡¡ NO TE PONGAS A JUGAR !!**</span>
 
-604. Crea el archivo `604campeones.php` donde listes todos los campeones del LOL que has metido en tu base de datos. Acuérdate que para ello deberas hacer una conexión con la base de datos y un `foreach` para cada campeón que tengas albergado en la tabla `campeon`.
+604. Crea el archivo `604campeones.php` donde listes todos los campeones del LOL que has metido en tu base de datos. Acuérdate que para ello deberas hacer una conexión con la base de datos y un `foreach` para cada campeón que tengas albergado en la tabla `campeon`. Modifica el formulario de insertar anterior, para que una vez se inserte el nuevo registro, se rediriga al listado para ver los cambios.
 
-605. Modifica el archivo `604campeones.php` y guárdalo como `606campeones.php` pero pon al lado de cada uno de los campeones listados un botón para `editar` y otro para `borrar`. Cada uno de esos botones hará la correspondiente función dependiendo del id del campeón seleccionado.
+605. Modifica el archivo `604campeones.php` y guárdalo como `605campeones.php` pero pon al lado de cada uno de los campeones listados un botón para `editar` y otro para `borrar`. Cada uno de esos botones hará la correspondiente función dependiendo del id del campeón seleccionado.
 
-- Al pinchar en editar, el usuario será redirigido al archivo `605editando.php` donde mostrará un formulario con los campos rellenos por los datos del campeón seleccionado. Al darle al botón de `guardar` los datos se guardarán en la base de datos y el usuario será redirigido a la lista de campones para poder ver los cambios.
+- Al pinchar en editar, el usuario será redirigido al archivo `605editando.php` donde mostrará un formulario con los campos rellenos por los datos del campeón seleccionado. Al darle al botón de `guardar` los datos se guardarán en la base de datos y el usuario será redirigido a la lista de campeones para poder ver los cambios.
 
-- Al pinchar en borrar, el usuario será preguntado a través de un mensaje de JavaScript (prompt) si está seguro de que quiere borrar al campeón seleccionado. En el mensaje de confirmación debe aparecer el **nombre del campeón seleccionado**. Si el usuario pincha en `Aceptar` el campeón será eliminado de la base de datos y el usuario será redirigido nuevamente al listado de campeones para comprobar que, efectivamente dicho campeón se ha eliminado de la lista.
+- Al pinchar en borrar, al usuario se le preguntará a través de un mensaje de JavaScript (prompt) si está seguro de que quiere borrar al campeón seleccionado. En el mensaje de confirmación debe aparecer el **nombre del campeón seleccionado**. Si el usuario pincha en `Aceptar` el campeón será eliminado de la base de datos y el usuario será redirigido nuevamente al listado de campeones para comprobar que, efectivamente dicho campeón se ha eliminado de la lista.
 
 ### Filtros y comodines
 
@@ -862,10 +862,10 @@ $pdf->Output();
 
 - Ten en cuenta que cada icono debe llevar consigo un enlace al listado que contenga parámetros en la URL que satisfagan las opciones seleccionadas así que haced uso de $_GET para poder capturarlos y escribid las consultas SQL que sean necesarias para hacer cada uno de los filtros.
 
-- Puedes usar [Font Awesome](https://fontawesome.com) para los iconos pero es algo opcional
+- Puedes usar [Font Awesome](https://fontawesome.com) para los iconos pero es algo opcional.
 
 
-### PDO
+### Login
 
 607. Aprovecha lo que hiciste de los ejercicios 601 al 604 pero esta vez utilizando `PDO::FETCH_ASSOC`.
 
@@ -891,11 +891,13 @@ $pdf->Output();
 
 - Si todo ha ido bien, muestra un mensaje por pantalla diciendo `El usuario XXX ha sido introducido en el sistema con la contraseña YYY`.
 
+609. Haz las modificaciones necesarias para que cada usuario registrado en el sistema pueda tener su propio listado de campeones y con la misma funcionalidad de añadir, editar y eliminar los que considere. Deberás empezar por un sistema de login en el que se pida el usuario y la contraseña...
+
 ### Ficheros
 
-609. Métete en [loremipsum.com](https://www.lipsum.com/) y genera un texto de 3 párrafos. Copia el texto generado y guárdalo en un archivo nuevo llamado `609loremIpsum.txt`. Genera un archivo php llamado `609loremIpsum.php` y muestra por pantalla el texto del archivo txt que acabas de crear, su tamaño en **Kilobytes** , la fecha de su última modificación y el ID de usuario que creó el archivo.
+610. Métete en [loremipsum.com](https://www.lipsum.com/) y genera un texto de 3 párrafos. Copia el texto generado y guárdalo en un archivo nuevo llamado `610loremIpsum.txt`. Genera un archivo php llamado `610loremIpsum.php` y muestra por pantalla el texto del archivo txt que acabas de crear, su tamaño en **Kilobytes** , la fecha de su última modificación y el ID de usuario que creó el archivo.
 
-610. Vuelve a cargar el archivo `606campeones.php` y renómbralo a `610campeones.php` pero en vez de mostrar la tabla por pantalla, genera un archivo CSV `610campeones.csv` y otro `610campeonesCSV.php` donde saques por pantalla el contenido del archivo `610campeones.csv`.
+611. Vuelve a cargar el archivo `606campeones.php` y renómbralo a `611campeones.php` pero en vez de mostrar la tabla por pantalla, genera un archivo CSV `611campeones.csv` y otro `611campeonesCSV.php` donde saques por pantalla el contenido del archivo `611campeones.csv`.
 
 
 ### Proyecto FernanChollo
@@ -906,7 +908,7 @@ Desarrolla una app al estilo de ***[Chollometro](https://www.chollometro.com)***
     <img src="imagenes/06/06-chollometro.gif">
 </div>
 
-620. Estructura el proyecto y piensa en las tablas y bases de datos que necesitéis para crear el proyecto. Crea los UML necesarios con nombres como `615UMLnombreTabla` metiendo todos los campos que se necesiten así como las relaciones que creas necesarias. Establece un sistema de archivos para el proyecto, teniendo en cuenta que van a haber imágenes, css, funciones php, constantes e incluso javaScript (pero algo básico) para controlar los eventos del usuario a lo largo de la interfaz.
+620. Estructura el proyecto y piensa en las tablas y bases de datos que necesitéis para crear el proyecto. Crea los diagramas E/R necesarios con nombres como `620ERnombreTabla` metiendo todos los campos que se necesiten así como las relaciones que creas necesarias. Establece un sistema de archivos para el proyecto, teniendo en cuenta que van a haber imágenes, css, funciones php, constantes e incluso javaScript (pero algo básico) para controlar los eventos del usuario a lo largo de la interfaz.
 
 621. Crea un sistema de login/password con los roles `administrador` y `usuario`. De momento que se validen los usuarios correctamente utilizando encriptación en la contraseña.
 
