@@ -507,7 +507,7 @@ Así pues, si por lo que sea cambiamos la estructura de la tabla <span class="al
 
     // Aquí 'Tienda' es el nombre de nuestra clase y esta opción no se puede 
     // establecer en el array de opciones, se tiene que hacer aquí en la sentencia
-    $sentencia->setFetchMode(PDO::FETCH_CLASS, "Tienda");
+    $sentencia->setFetchMode(PDO::FETCH_CLASS, Tienda::class); 
     $sentencia->execute();
 
     while($t = $sentencia->fetch()) {
@@ -519,7 +519,10 @@ Así pues, si por lo que sea cambiamos la estructura de la tabla <span class="al
     }
 ```
 
-Pero ¿qué pasa si nuestras clases tienen constructor? pues que debemos indicarle, al método FECTH, que rellene las propiedades después de llamar al constructor y para ello hacemos uso de `PDO::FETCH_PROPS_LATE`.
+!!! info "Uso de ::class"
+    En el ejemplo anterior `Tienda::class` es la manera sencilla y segura de obtener el nombre completamente cualificado de la clase como una cadena de texto. En el ejemplo, también funcionaría con la cadena "Tienda".
+
+Pero ¿qué pasa si nuestras clases tienen constructor? pues que debemos indicarle, al método FECTH, que rellene las propiedades después de llamar al constructor y para ello hacemos uso de `PDO::FETCH_PROPS_LATE` indicando la clase y los atributos por defecto con los que se llamará al constructor antes de que se sobreescriban con los que vengan de la base de datos.
 
 ``` php
 <?php
@@ -528,11 +531,30 @@ Pero ¿qué pasa si nuestras clases tienen constructor? pues que debemos indicar
     $sql = "SELECT * FROM tienda";
 
     $sentencia = $conexion -> prepare($sql);
-    $sentencia -> setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class);
+    $sentencia -> setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class, [5, 'DefaultName', 'DefaultTlf']);
     $sentencia -> execute();
 
     $tiendas = $sentencia->fetchAll();
 ```
+
+!!! info "Clase con constructor personalizado"
+    Como acabamos de ver, con la opción `PDO::FETCH_PROPS_LATE` debemos indicar un array con los argumentos con los que se llamará al constructor. Si en el constructor definimos parámetros opcionales, no será necesario pasarlos en el array. E incluso si todos fueran opcionales, nos ahorraríamos pasar por completo el array.
+
+    ``` php
+    <?php
+    //  ▒▒▒▒▒▒▒▒ clase Tienda ▒▒▒▒▒▒▒▒
+
+    class Tienda {
+        // Constructor con parámetros opcionales
+        public function __construct(
+            private int $id=0,
+            private string $nombre='aa',
+            private string $tlf='dd'
+        ){} 
+        
+        // ...
+    }
+    ```
 
 ### Consultas con LIKE
 
@@ -547,7 +569,7 @@ Para utilizar el comodín LIKE u otros comodines, debemos asociarlo al dato y NU
     $sentencia = $conexion->prepare($sql);
     $sentencia->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Tienda::class);
 
-    // Suponemos que 'busqueda' es lo que recibimos de un campo de búsqueda 
+    // Suponemos que 'busqueda' es lo que recibimos de un input de texto del formulario
     $cadBuscar = "%" . $_POST['busqueda'] . "%";
 
     $sentencia->execute(["nombre" => $cadBuscar, "tlf" => $cadBuscar]);
@@ -567,12 +589,12 @@ Para manejar un sistema completo de login y password con contraseñas cifradas, 
 
 Necesitamos pues:
 
-- `password_hash()` para almacenar la contraseña en la base de datos a la hora de hacer el INSERT
-    - `PASSWORD_DEFAULT` almacenamos la contraseña usando el método de encriptación bcrypt
+- `password_hash()` se utiliza para crear un hash de la contraseña que se pueda almacenar de manera segura en la base de datos (al hacer el INSERT).
+    - `PASSWORD_DEFAULT` opción flexible que utiliza el algoritmo de hashing recomendado por PHP en ese momento. A día de hoy con PHP 8.4 es `bcrypt`.
 
-    - `PASSWORD_BCRYPT` almacenamos la contraseña usando el algoritmo CRYPT_BLOWFISH compatible con crypt()
+    - `PASSWORD_BCRYPT` utiliza explícitamente el algoritmo de hashing `bcrypt`.
 
-- `password_verify()` para verificar el usuario y la contraseña
+- `password_verify()` permite verificar el hash comparándolo con la contraseña pasada.
 
 ``` php
 <?php
@@ -587,11 +609,11 @@ Necesitamos pues:
 
     $isOk = $sentencia -> execute([
         "usuario" => $usu,
-        "password" => password_hash($pas,PASSWORD_DEFAULT)
+        "password" => password_hash($pas, PASSWORD_DEFAULT)
     ]);
 ```
 
-Ahora que tenemos el usuario codificado y guardado en la base de datos, vamos a recuperarlo para poder loguearlo correctamente.
+Ahora que tenemos el hash del password guardado en la base de datos, vamos a recuperarlo para poder loguearlo correctamente.
 
 ``` php
 <?php
@@ -612,6 +634,10 @@ Ahora que tenemos el usuario codificado y guardado en la base de datos, vamos a 
         echo"KO";
     }
 ```
+
+!!! warning "Almacenar el password"
+    Nunca almacenes el password del usuario en claro en la base de datos. Utiliza siempre resúmenes hash. Guardar las contraseñas completas podría violar regulaciones específicas sobre la protección de datos personales y exponerte a sanciones legales si ocurre una brecha de seguridad.
+
 
 ## 6.7 Acceso a ficheros
 
