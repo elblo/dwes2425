@@ -216,7 +216,7 @@ Con PDO podemos capturar las excepciones <span class="alert">**PDOException**</s
     ];
 
     try {
-        $mbd = new PDO($dsn, $usuario, $contraseña. $opciones);
+        $mbd = new PDO($dsn, $usuario, $contraseña, $opciones);
         echo "Conexión exitosa a la base de datos.";
     } catch (PDOException $e) {
         echo 'Falló la conexión: ' . $e->getMessage();
@@ -442,7 +442,7 @@ Recuperando datos con una matriz mediante `fetchAll()` como resultado de nuestra
          echo "<p>Codigo: " . $tienda["cod"] . ", Nombre: " . $tienda["nombre"] . ", teléfono: " . $tienda["tlf"] . "</p>";
     }
 ```
-Pero si lo que queremos es leer datos con forma de objeto utilizando `PDO::FETCH_OBJ`, debemos crear un objeto con propiedades públicas con el mismo nombre que las columnas de la tabla que vayamos a consultar.
+Pero si lo que queremos es leer datos con forma de objeto utilizaremos `PDO::FETCH_OBJ`. 
 
 ``` php
 <?php
