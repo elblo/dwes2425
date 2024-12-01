@@ -585,7 +585,7 @@ Tenéis una lista de ejemplos muy completa en la [documentación oficial](https:
     <img src="imagenes/06/06-login-password.gif">
 </div>
 
-Para manejar un sistema completo de login y password con contraseñas cifradas, necesitamos un método que cifre esos strings que el usuario introduce como contraseña; tanto en el formulario de registro como en el del login, ya que al codificar una contraseña, después tenemos que decodificarla para comprobar que ambas contrasñeas (la que instroduce el usuario en el login y la que tenemos en la base de datos) coincidan.
+Para manejar un sistema completo de login y password con contraseñas cifradas, necesitamos un método que cifre esos strings que el usuario introduce como contraseña; tanto en el formulario de registro como en el del login, ya que al codificar una contraseña, después tenemos que comprobar que coincide con la que tenemos almacenada en la base de datos.
 
 Necesitamos pues:
 
