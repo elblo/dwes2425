@@ -681,11 +681,18 @@ Para poder **leer** un archivo necesitamos usar la función fread() de PHP
 $file = "miarchivo.txt";
 $fp = fopen($file, "r");
 
+// Leemos el contenido del fichero a la cadena $contens
 // filesize() nos devuelve el tamaño del archivo en cuestión
 $contents = fread($fp, filesize($file));
 
+// Hacemos split a array de las cadenas por el salto de línea final
+$lineas = explode("\n", $contents);
+foreach($lineas as $linea){
+    echo "<p>$linea</p>";
+}
+
 // Cerramos la conexión con el archivo
-fclose();
+fclose($fp);
 ```
 
 Si lo que queremos es **escribir** en un archivo, deberemos hacer uso de la función fwrite()
@@ -704,7 +711,7 @@ fclose($fp);
 
 ### Información de un fichero
 
-Con PHP y su método stat() podemos obtener información sobre los archivos que le indiquemos. Este método devuelve hasta un total de 12 elementos con ifnormación acerca de nuestro archivo.
+Con PHP y su método stat() podemos obtener información sobre los archivos que le indiquemos. Este método devuelve hasta un total de 12 elementos con información acerca de nuestro archivo.
 
     0	dev	        número de dispositivo
     1	ino	        número de i-nodo
@@ -766,7 +773,7 @@ Veamos un ejemplo de Hello World convertido a PDF
 ```php
 <?php
 
-ob_end_clean();
+ob_end_clean(); // Elimina el contenido del búfer de salida que se enviará al navegador
 require('fpdf/fpdf.php');
   
 // Instanciamos la clase
