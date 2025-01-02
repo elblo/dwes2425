@@ -391,60 +391,72 @@ Podemos definir rutas con el método resource para CRUDs:
 
 Este método genera automáticamente las rutas para acciones como index, create, store, show, edit, update y destroy.
 
-!!! info "Más info"
-  Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/11.x/routing) que contiene numerosos ejemplos.
+!!! info "Ampliar sobre rutas"
+    Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/11.x/routing) que contiene numerosos ejemplos.
 
 ## 7.6 Vistas
 
 Las vistas son la forma de presentar el resultado (una pantalla de nuestro sitio web) de forma visual al usuario. Laravel permite estructurar esta parte de la aplicación utilizando **vistas simples** o **plantillas Blade**, una herramienta potente para modularizar y reutilizar el código de nuestras vistas.
 
+### ¿Qué son las vistas?
 
+Las vistas se definen en la carpeta *resources/views* y están diseñadas para separar la parte visual de la lógica de la aplicación. Esta separación mejora la estructura del proyecto y facilita el mantenimiento del código.
 
+Las vistas no deben contener lógica de negocio ni realizar consultas a bases de datos. Sólo deben recibir datos de los controladores y presentarlos al usuario.
+
+### Mostrar una vista
+
+Para mostrar una vista, podemos utilizar la función *view()* desde una ruta o controlador.
 
 ```php
 <?php
-
-
-```
-
-
-```php
-<?php
-
-// Ruta por defecto para cargar la vista welcome cuando el usuario introduce simplemente el dominio
-
 Route::get('/', function () {
-    return view('welcome');
+  return view('welcome');
 });
 ```
 
-En el ejemplo de arriba vamos a cargar la vista llamada `welcome` que hace referencia a la vista `resources/views/welcome.blade.php`
+### Pasar datos a una vista
 
+Es habitual pasar datos a las vistas desde una ruta o controlador.
 
-Además, podemos pasarle variables a nuestra URL para luego utilzarlas en nuestros archivos de plantillas o en archivos `.php` haciendo uso de un array asociativo. Veamos un ejemplo con la forma reducida para ahorrarnos código
+1. Con *with*:
 
 ```php
 <?php
-
-Route::view('datos', 'usuarios', ['id' => 5446]);
+Route::get('/', function () {
+  $nombre = 'Juan';
+  return view('welcome')->with('nombre', $nombre);
+});
 ```
 
-... y el archivo `resources/views/usuarios.php` debe tener algo parecido a ésto
+2. Con un *array asociativo*:
 
-```html
-<!-- Estructura típica de un archivo HTML5 -->
-
-<p>Usuario con id: <?= $id ?></p>
-
-<!-- ... -->
+```php
+<?php
+  return view('welcome', ['nombre' => $nombre]);
 ```
 
-***Con las plantillas de Laravel `blade.php` veremos cómo simplificar aún más nuestro código.***
+3. Con la función *compact*. La función compact genera un array asociativo utilizando los nombres de las variables que se pasan como argumentos:
 
+```php
+<?php
+  return view('welcome', compact('nombre'));
+```
 
+4. Utilizando la función *Route::view*:
 
+```php
+<?php
+  Route::view('/', 'welcome', ['nombre' => 'Juan']);
+```
 
-## Plantillas o Templates
+En la vista, podemos utilizar Blade para mostrar estos datos:
+
+```php
+  Bienvenido/a, {{ $nombre }}
+```
+
+## Plantillas Blade
 
 A través de las plantillas de Laravel vamos a escribir menos código PHP y vamos a tener nuestros archivos mejor organizados.
 
@@ -452,7 +464,7 @@ A través de las plantillas de Laravel vamos a escribir menos código PHP y vamo
 
 De esta manera sabemos inmediatamente que se trata de una plantilla de Laravel y que forma parte de una vista que se mostrará en el navegador.
 
-### Directivas
+#### Directivas
 
 Laravel tiene un gran número de directivas que podemos utilizar para ahorrarnos mucho código repetitivo entre otras funciones.
 
@@ -462,7 +474,7 @@ Digamos que las directivas son pequeñas funciones ya escritas que aceptan pará
 - `@section` y `@endsection` bloque de código dinámico
 - `@extends` importa el contenido de una plantilla ya creada
 
-### Separando código
+#### Separando código
 
 Veamos un ejemplo de cómo hacer uso del poder de Laravel para crear plantillas y no repetir código.
 
@@ -543,7 +555,7 @@ Route::view('fotos', 'fotos') -> name('galeria');
 
 De esta manera podremos hacer uso del menú de navegación que hemos puesto en nuestra plantilla y gracias a los alias `noticias` y `galeria`, la URL será más amigable.
 
-### Estructuras de control
+#### Estructuras de control
 
 Como en todo buen lenguaje de programación, en Laravel también tenemos estructuras de control.
 
@@ -552,9 +564,9 @@ En Blade (plantillas de Laravel) siempre que iniciemos un bloque de estructura d
 - `@foreach` ~ `@endforeach` lo usamos para recorrer arrays
 - `@if` ~ `@endif` para comprobar condiciones lógicas
 - `@switch` ~ `@endswitch` en función del valor de una variable ejecutar un código
-  - `@case` define la casuística del switch
-  - `@break` rompe la ejecución del código en curso
-  - `@default` si ninguna casuística se cumple
+    - `@case` define la casuística del switch
+    - `@break` rompe la ejecución del código en curso
+    - `@default` si ninguna casuística se cumple
 
 ```php
 <?php
@@ -566,19 +578,23 @@ $equipo = ['María', 'Alfredo', 'William', 'Verónica'];
 @endforeach
 ```
 
-Acordaros que podemos pasar variables a través de las rutas como si fueran parámetros. Pero en este caso, vamos a ver otra directiva más; el uso de `@compact`.
+Como se ha visto en el punto anterior, podemos pasar variables a través de las rutas como si fueran parámetros:
 
 ```php
 <?php
 
-// Uso de @compact
+// Uso de compact
 $equipo = ['María', 'Alfredo', 'William', 'Verónica'];
 
 // Route::view('nosotros', ['equipo' => 'equipo']);
-Route::view('nosotros', @compact('equipo'));
+Route::view('nosotros', compact('equipo'));
 ```
 
-## Controladores
+!!! info "Ampliar sobre vistas"
+    Para más información acerca de las vistas, incluso la reciente posibilidad de crearlas mediante React o Vue gracias a Inertia, seguir la [documentación oficial de vistas](https://laravel.com/docs/11.x/views).
+
+
+## 7.7 Controladores
 
 Los controladores son el lugar perfecto para definir la lógica de negocio de nuestra aplicación o sitio web.
 
@@ -648,7 +664,7 @@ class PagesController extends Controller
             'Veronica'
         ];
 
-        return view('nosotros', @compact('equipo', 'nombre'));
+        return view('nosotros', compact('equipo', 'nombre'));
     }
 }
 ```
