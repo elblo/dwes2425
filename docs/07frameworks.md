@@ -231,38 +231,29 @@ Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defec
     - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
   - Policies/ : Gestionan la autenticación basada en permisos.
   - Providers: Almacena los proveedores de servicios de tu aplicación, que son responsables de inicializar componentes y enlazar servicios en el contenedor de servicios.
-
 - **bootstrap**: Incluye el archivo app.php que inicia el framework y una carpeta cache con archivos generados para optimizar el rendimiento.
-
 - **config**: Alberga todos los archivos de configuración de la aplicación. Es recomendable revisarlos para familiarizarse con las opciones disponibles.
-
 - **database**: Gestión de bases de datos.
   - Migraciones/ : Archivos para definir la estructura de las tablas de manera programática.
   - Factorías/ : Generación de datos de prueba para los modelos.
   - Seeders/ : Inserción de datos iniciales para la base de datos.
-
 - **public**: Contiene el archivo index.php, punto de entrada para todas las solicitudes, y los recursos públicos como imágenes, JavaScript y CSS.
-
 - **resources**: Carpeta de recursos para la interfaz de usuario. Incluye las vistas y los recursos sin compilar, como archivos CSS o JavaScript.
   - views/ : Contiene las vistas Blade.
   - lang/ : Archivos de traducción para aplicaciones multilingües.
   - css/ y js/ : Recursos de estilo y funcionalidad del cliente.
-
 - **routes**: Contiene las definiciones de rutas de la aplicación. 
   - web.php : Rutas para la aplicación web.
   - api.php : Rutas para APIs RESTful.
   - console.php : Pedidos Artisan personalizados.
   - channels.php : Rutas para canales de difusión.
-
 - **storage**: Almacenamiento de archivos generados por la aplicación.
   - app/ : Contiene archivos de usuario o aplicación.
   - framework/ : Caché, sesiones, y otros archivos temporales.
   - logs/ : Registros de errores y actividad.
-
 - **tests**: Contiene las pruebas automatizadas de la aplicación, con ejemplos de pruebas unitarias y de características.
   - Feature/ : Pruebas completas que cubren múltiples componentes.
   - Unit/ : Pruebas individuales para componentes o métodos específicos.
-
 - **vendor**: Carpeta gestionada por Composer. Contiene todas las dependencias y paquetes de terceros utilizados por el proyecto. No debe modificarse manualmente.
 
 Esta estructura es flexible, permitiendo reorganizar los componentes según las necesidades específicas del proyecto, siempre que Composer pueda cargar automáticamente las clases.
@@ -288,7 +279,7 @@ Las rutas pueden:
 Una ruta simple tiene una URL fija y una función que devuelve una respuesta. Por ejemplo, una petición tipo GET se define así:
 
 ```php
-
+<?php
   Route::get('/saludo', function () {
     return 'Hola mundo!';
   });
@@ -296,7 +287,7 @@ Una ruta simple tiene una URL fija y una función que devuelve una respuesta. Po
 
 Cuando accedamos a `http://localhost/saludo`, Laravel devolverá "Hola mundo!".
 
-### Rutas con parámetros
+### Rutas con parámetros
 
 Se pueden definir parámetros dinámicos en las rutas mediante claves **{}**. Por ejemplo:
 
@@ -318,14 +309,103 @@ Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un *paráme
 
 Ahora, `/saludo`, devolverá "Hola, Invitado".
 
+### Validación de parámetros
+
+Podemos validar los parámetros usando el método *where*. Por ejemplo:
+
+```php
+<?php
+  Route::get('/saludo/{nombre}', function ($nombre) {
+    return 'Hola, ' . $nom;
+  })->where('nombre', '[A-Za-z]+');
+
+  Route::get('/producto/{id}', function ($id) {
+    return 'Producto ID: ' . $id;
+  })->where('id', '[0-9]+');
+
+  Route::get('/usuario/{nombre}/{id}', function ($nombre, $id) {
+    return 'Usuario: ' . $nombre . ', ID: ' . $id;
+  })->where(['nombre' => '[A-Za-z]+', 'id' => '[0-9]+']);
+```
+
+### Rutas con nombre (alias)
+
+Mediante el método *name* podemos darle un alias o un nombre a nuestras rutas para poder referenciarlas fácilmente desde nuestras plantillas de Laravel, como se verá más adelante..
+
+```php
+<?php
+  Route::get('/contacto', function () {
+    return 'Página de contacto';
+  })->name('contacto');
+```
+
+Podemos utilizar el nombre de la ruta en las plantillas Blade:
+
+
+```php
+<?php
+  [Contacto]({{ route('contacto') }})
+```
+
+### Grupos de rutas
+
+Laravel permite agrupar rutas para compartir configuraciones como prefijos o middleware:
+
+```php
+<?php
+Route::prefix('admin')->group(function () {
+  Route::get('/dashboard', function () {
+    return 'Admin Dashboard';
+  });
+
+  Route::get('/usuarios', function () {
+    return 'Admin Usuarios';
+  });
+});
+```
+
+Esto crea las rutas `/admin/dashboard` y `/admin/usuarios`.
+
+### Rutas con controladores
+
+Para gestionar lógica más compleja, es recomendable utilizar controladores:
+
+```php
+<?php
+Route::get('/usuario/{id}', [UsuarioController::class, 'mostrar']);
+
+// Controlador definido mediante Artisan
+// php artisan make:controller UsuarioController
+
+```
+
+### Recursos y APIs
+
+Podemos definir rutas con el método resource para CRUDs:
+
+
+```php
+<?php
+  Route::resource('articles', ArticleController::class);
+```
+
+Este método genera automáticamente las rutas para acciones como index, create, store, show, edit, update y destroy.
+
+!!! info "Más info"
+  Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/11.x/routing) que contiene numerosos ejemplos.
+
+## 7.6 Vistas
+
+Las vistas son la forma de presentar el resultado (una pantalla de nuestro sitio web) de forma visual al usuario. Laravel permite estructurar esta parte de la aplicación utilizando **vistas simples** o **plantillas Blade**, una herramienta potente para modularizar y reutilizar el código de nuestras vistas.
 
 
 
 
+```php
+<?php
 
 
-
-
+```
 
 
 ```php
@@ -340,75 +420,6 @@ Route::get('/', function () {
 
 En el ejemplo de arriba vamos a cargar la vista llamada `welcome` que hace referencia a la vista `resources/views/welcome.blade.php`
 
-### Alias
-
-Es interesante darle un alias o un nombre a nuestras rutas para poder utilizar dichos alias en nuestras plantillas de Laravel que veremos más adelante.
-
-Para ello, basta con utilizar la palabra `name` al final de la estructura de la ruta y darle un nombre que queramos; normalmente descriptivo y asociado a la vista que tiene que cargar el enroutador de Laravel.
-
-```php
-<?php
-
-Route::get('/users', function () {
-    return view('users');
-}) -> name('usuarios');
-```
-
-Después veremos que es muy útil ya que a la hora de refactorizar o hacer un cambio, si tenemos enlaces o menús de navegación que apuntan a esta ruta, sólo tendríamos que cambiar el parámetro dentro del `get()` y no tener que ir archivo por archivo.
-
-Laravel nos proporciona una manera más cómoda a la hora de cargar una vista si no queremos parámetros ni condiciones. Tan sólo definiremos la siguiente línea que hace referencia la ruta `datos` en la URL y va a cargar el archivo `usuarios.php` de nuestra carpeta `views` como le hemos indicado en el segundo parámetro.
-
-```php
-<?php
-
-/* http://localhost/datos/ */
-
-Route::view('datos', 'usuarios');
-```
-
-Pero no sólo podemos retornar una vista sino, desde un simple string a módulos propios de Laravel.
-
-### Parámetros
-
-Ya hemos visto que con PHP podemos pasar parámetros a través de la URL, como si fueran variables, que las recuperábamos a través del método GET o POST.
-
-Con Laravel también podemos introducir parámetros pero de una forma más vistosa y ordenada, de tal manera que sea visualmente más cómodo de recordar y de indexar por los motores de búsqueda como Google.
-
-      http://localhost/cliente/324
-
-Para configurar este tipo de rutas en nuestro archivo de rutas `public/routes/web.php` haremos lo siguiente.
-
-``` php
-<?php
-
-Route::get('cliente/{id}', function($id) {
-    return('Cliente con el id: ' . $id);
-});
-```
-
-¿Qué pasa si no introducimos un id y sólo navegamos hasta `cliente/` ? ... Nos va a devolver un 404
-
-Para resolver ésto, podemos definir una ruta por defecto en caso de que el `id` (o parámetro) no sea pasado. Para ello usaremos el símbolo `?` en nuestro nombre de ruta e inicializaremos la variable con el valor que queramos.
-
-``` php
-<?php
-
-Route::get('cliente/{id?}', function($id = 1) {
-    return ('Cliente con el id: ' . $id);
-});
-```
-
-Ahora tenemos otro problema, porque estamos filtrando por id del cliente que, normalmente es un número, pero si metemos un parámetro que no sea un número, vamos a obtener un resultado no deseado.
-
-Para resolver este caso haremos uso de la cláusula `where` junto con una expresión regular númerica.
-
-``` php
-<?php
-
-Route::get('cliente/{id?}', function($id = 1) {
-    return ('Cliente con el id: ' . $id);
-}) -> where('id', '[0-9]+');
-```
 
 Además, podemos pasarle variables a nuestra URL para luego utilzarlas en nuestros archivos de plantillas o en archivos `.php` haciendo uso de un array asociativo. Veamos un ejemplo con la forma reducida para ahorrarnos código
 
@@ -430,7 +441,7 @@ Route::view('datos', 'usuarios', ['id' => 5446]);
 
 ***Con las plantillas de Laravel `blade.php` veremos cómo simplificar aún más nuestro código.***
 
-Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/8.x/routing#route-parameters) que contiene numerosos ejemplos.
+
 
 
 ## Plantillas o Templates
