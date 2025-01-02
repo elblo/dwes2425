@@ -272,9 +272,61 @@ Es importante destacar que algunos de estos directorios no existen por defecto y
 
 ## 7.5 Rutas
 
-Las rutas en Laravel (y en casi cualquier Framework) sirven para redireccionar al cliente (o navegador) a las vistas que nosotros queramos.
+Podríamos decir que existen dos tipos principales de rutas:
 
-Estas rutas se configuran en el archivo `public/routes/web.php` donde se define la ruta que el usuario pone en la URL después del dominio y se retorna la vista que se quiere cargar al introducir dicha dirección en el navegador.
+- **Rutas web**: Almacenadas en el archivo *web.php*, nos permiten cargar diferentes vistas en función de la URL que indique el cliente.
+- **Rutas API**: Almacenadas en el archivo *api.php*, se utilizan para definir servicios REST.
+  
+En este tema, nos centraremos en las rutas web, por lo que editaremos el contenido del archivo `routes/web.php`. Este archivo es el punto centralizado para la definición de rutas. Cualquier ruta no definida en este archivo no será válida y generará un error 404.
+
+Las rutas pueden: 
+1. Devolver directamente un valor desde el archivo de rutas. 
+2. Llamar una vista o un controlador.
+
+### Rutas simples
+
+Una ruta simple tiene una URL fija y una función que devuelve una respuesta. Por ejemplo, una petición tipo GET se define así:
+
+```php
+
+  Route::get('/saludo', function () {
+    return 'Hola mundo!';
+  });
+```
+
+Cuando accedamos a `http://localhost/saludo`, Laravel devolverá "Hola mundo!".
+
+### Rutas con parámetros
+
+Se pueden definir parámetros dinámicos en las rutas mediante claves **{}**. Por ejemplo:
+
+```php
+<?php
+  Route::get('/saludo/{nombre}', function ($nombre) {
+    return 'Hola, ' . $nombre;
+});
+```
+
+Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un *parámetro opcional*, añadimos un símbolo **?**:
+
+```php
+<?php
+  Route::get('/saludo/{nombre?}', function ($nombre = "Invitado") {
+    return 'Hola, ' . $nombre;
+});
+```
+
+Ahora, `/saludo`, devolverá "Hola, Invitado".
+
+
+
+
+
+
+
+
+
+
 
 ```php
 <?php
