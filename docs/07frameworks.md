@@ -18,79 +18,259 @@
     }
 </style>
 
-# Frameworks PHP. Laravel
+# Introducción a Laravel
 
 > Duración estimada: 40 sesiones
 
-## Puesta en marcha
+## 7.1 Introducción
 
-Lo primero de todo es crear una carpeta con el nombre del proyecto que vayamos a crear y nos metemos en ella.
+### ¿Qué es un framework?
 
-Vamos a utilizar la imagen de Bitnami ya preparada, así que lo que hacer ahora es [descargar el archivo docker-compose.yml](https://github.com/bitnami/bitnami-docker-laravel/blob/master/docker-compose.yml) del repositorio de Github oficial.
+Un **framework** proporciona una estructura base para el desarrollo de aplicaciones, facilitando tareas como:
 
-Una vez descargado el archivo en nuestra carpeta que acabamos de crear con el nombre del proyecto, lanzamos el siguiente comando por consola para instalar todas las dependencias y crear las imágenes de Docker correspondientes.
+- Conexión a bases de datos.
+- Organización del código.
+- Gestión de rutas y validaciones.
 
-```console
-docker-compose -p Laravel up -d
+La mayoría de frameworks PHP siguen el **patrón MVC** (Modelo-Vista-Controlador), que permite separar claramente la lógica de negocio, la interfaz de usuario y los datos.
+
+### ¿Por qué utilizar un framework?
+
+Los frameworks ofrecen:
+
+- **Estandarización**: Promueven buenas prácticas de desarrollo.
+- **Eficacia**: Aceleración del desarrollo con herramientas preconstruidas.
+- **Mantenibilidad**: Facilitan la escalabilidad y el mantenimiento del código.
+
+Ejemplos de frameworks PHP populares:
+
+- *Laravel*: Sintaxis clara, funcionalidades modernas, ideal para proyectos de cualquier tamaño.
+- *Symfony*: Robusto y altamente modular, enfocado en aplicaciones complejas.
+- *Slim*: Ligero e ideal para APIs RESTful.
+
+### ¿Por qué elegir Laravel?
+
+Laravel es uno de los frameworks más populares gracias a:
+
+- **Facilidad de uso**: Sintaxis expresiva e intuitiva.
+- **Patrón MVC**: Claramente implementado para separar lógica, vistas y datos.
+- **ORM Eloquent**: Gestión intuitiva de bases de datos.
+- **Migraciones**: Control de versiones para estructuras de bases de datos.
+- **Artisan CLI**: Automatización de tareas habituales como migraciones o generación de modelos.
+- **Blade**: Motor de plantillas con sintaxis simplificada.
+- **Seguridad integrada**: Protección contra ataques como CSRF y XSS.
+
+## 7.2 Instalación de Laravel
+
+A continuación, se van a ver 3 alternativas distintas para instalar las dependencias necesarias para trabajar con Laravel en un entorno de desarrollo local. Elige la que más te convenga. Se pueden encontrar más opciones y las últimas recomendaciones directamente en la [documentación oficial](https://laravel.com/docs/11.x/installation).
+
+### a. Manual
+
+Lanzar el siguiente script de [php.new](https://php.new/) que instalará *PHP*, *Composer* y el instalador *Laravel* en el equipo.
+
+=== "En macOS"
+
+    ``` bash
+      /bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.4)"
+    ```
+
+=== "En Windows"
+
+    ``` bash
+      # Run as administrator...
+      Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.4'))
+    ```
+
+Después de lanzar el comando de arriba hay que reiniciar la sesión de la terminal.
+
+Si en cualquier momento queremos acutalizar PHP, Composer o el instalador de Laravel, bastará con volver a ejecutar el comando en la terminal.
+
+*Si ya tenemos instalado PHP y Composer en el equipo*, sólo es necesario instalar Laravel de la siguiente forma:
+
+``` bash
+  composer global require laravel/installer
 ```
 
-Si todo ha salido bien podrás ver en el Visual Studio Code que se han creado 2 imágenes y que el servidor web de Laravel está funcionando bajo la siguiente URL.
+#### Crear proyecto
 
-```console
-http://localhost:8000
+Una vez tenemos instalados PHP, Composer y el instalador de Laravel en el equipo, para crear una aplicación con el nombre **example-app** vamos al directorio de nuestros proyectos y ejecutamos:
+
+``` bash
+  laravel new example-app
 ```
 
-Si por alguna extraña razón **estás en Windows** y no te funciona una de las 2 imágenes, puede ser debido a la instalción de composer dentro de la imagen de Laravel.
+Una vez creada la aplicación, hay que iniciar el servidor de desarrollo local usando el script dev de Composer:
 
-<div class="center img-large">
-    <img src="imagenes/07/error-laravel.png">
-</div>
-
-Para solucionarlo, nos vamos a la carpeta del proyecto que se te habrá creado por defecto al hacer docker-compose, en este caso y si no has modificado el archivo .yml la carpeta del proyecto sera `my-proyect` y dentro de ella eliminamos la carpeta `vendor`.
-
-Cuando hayamos eliminado dicha carpeta, necesitaremos instalar `Composer` de manera global en nuestro sistema Windows. Para ello. bájate el instalador [desde este enlace](https://getcomposer.org/Composer-Setup.exe).
-
-Una vez lo instales ya serás capaz de lanzar el comando `composer` desde cualquier consola de Windows.
-
-Por último, abrimos una consola dentro de la carpeta `my-project` o el nombre que le hayas puesto a la carpeta del proyecto de Laravel y ejecutamos el siguiente comando.
-
-```console
-composer install
+``` bash
+  cd example-app
+  npm install && npm run build
+  composer run dev
 ```
 
-Para terminar tan sólo tendremos que volver a ejecutar el contenedor de Laravel desde Docker.
+Una vez iniciado el servidor de desarrollo, la aplicación será accesible en el navegador web en `http://localhost:8000`.
 
-### VSCode extensiones
+<figure style="align: center;">
+    <img src="imagenes/07/manual-laravel-project.png" width="700">
+    <figcaption>Creación de proyecto de forma manual</figcaption>
+</figure>
 
-Recomendable instalar los siguientes plugins para Visual Studio Code
 
-      Laravel Blade Snippets
+### b. Laravel Herd
+
+Herd es un entorno de desarrollo nativo de Laravel y PHP para macOS y Windows, increíblemente rápido. Incluye todo lo que necesitas para comenzar a desarrollar con Laravel, incluidos PHP y nginx. Una vez que instales Herd, estarás listo para comenzar a desarrollar con Laravel.
+
+Puedes descargar Herd desde [aquí](https://herd.laravel.com/). Incluye la última versión de PHP y Composer y configura tu equipo para ejecutar el servidor web Nginx en segundo plano para servir automáticamente cualquier aplicación de Laravel en **~/Herd** a través de la URL formada por el nombre de su directorio y el dominio **.test**.
+
+Ten en cuenta que la versión gratuita no tiene soporte para BBDD, por lo que ese servicio tendremos que proporcionarlo mediante XAMPP, Laragon, Docker...
+
+Y como siempre, es recomendable echar un vistazo a la [documentación oficial de Herd](https://herd.laravel.com/docs).
+
+#### Crear proyecto
+
+Crear una nueva aplicación en Herd es muy sencillo. Hay que desplegar su menú, entrar a *Sites* y desde ahí clic en *+*. 
+
+Seguir los pasos del script y por ejemplo, un proyecto con nombre **example-app** estará disponible en `http://example-app.test`.
+
+<figure style="align: center;">
+    <img src="imagenes/07/herd-laravel-project.png" width="700">
+    <figcaption>Creación de proyecto de forma manual</figcaption>
+</figure>
 
 
-## Carpetas en Laravel
+### c. Contenedores Docker
 
-Al crear un nuevo proyecto con este framework, Laravel crea una serie de carpetas por defecto. Esta estructura de carpetas es la recomendada para utilizar Laravel.
+Laravel [Sail](https://laravel.com/docs/11.x/sail) es una interfaz de línea de comandos que permite crear una aplicación de Laravel con PHP, MySQL y Redis sin necesidad de tener experiencia previa con Docker.
 
-### Public
+Por ejemplo, para crear una aplicación con el nombre **example-app** ejecutaremos directamente el comando:
 
-Esta es la carpeta más importante ya que es donde se ponen todos los archivos que el cliente va a mostrar al usuario cuando introduzcamos la URL de nuestro sitio web. Normalmente se carga el archivo `index.php` por defecto.
+=== "En macOS"
 
-### Routes
+    ``` bash
+      curl -s "https://laravel.build/example-app" | bash
 
-Otra de las carpetas que más vamos a usar a lo largo de este curso de Laravel. En ella se albergan todas las rutas (redirecciones web) de nuestro proyecto, pero más concretamente en el archivo `web.php`
+    ```
 
-    Dada una ruta → se cargará una vista
+=== "En Windows"
 
-### Resources
+    ``` bash
+      curl -s https://laravel.build/example-app | bash
 
-Esta es nuestra carpeta de recursos donde guardaremos los siguientes archivos, que también, están separados por sus carpetas... como cada nombre indica:
+    ```
 
-- `css` Archivos CSS
-- `js` Archivos JS (JavaScript)
-- `lang` Archivos relacionados con el idioma del sitio (variables & strings)
-- `views` Archivos de nuestras vistas, lo que las rutas cargan
+Una vez creados los contenedores, accedemos al directorio de la app y lanzamos Laravel Sail:
 
-## Rutas
+``` bash
+  cd example-app
+ 
+  ./vendor/bin/sail up
+```
+
+Por último, lanzamos las migraciones de la BDD:
+
+``` bash
+  ./vendor/bin/sail artisan migrate
+```
+
+Y la aplicación ya es accesible desde `http://localhost/`.
+
+Si queremos que funcione **phpmyadmin** hay que añadir otro contenedor docker a mano o incluyendo el siguiente código en el docker-compose.yml:
+
+``` bash
+  phpmyadmin:
+        image: 'phpmyadmin:latest'
+        ports:
+            - 8080:80
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        links:
+            - "mysql:db"
+        depends_on:
+            - mysql
+        networks:
+            - sail
+```
+
+Parando Laravel Sail y volviéndolo a lanzar ya lo tenemos funcionando:
+
+``` bash
+  ./vendor/bin/sail up
+```
+
+<figure style="align: center;">
+    <img src="imagenes/07/laravel-sail.png" width="700">
+    <figcaption>Contenedores de Laravel Sail</figcaption>
+</figure>
+
+!!! info "A tener en cuenta"
+    Esta es la opción más sencilla para crear una aplicación con el servicio de BBDD incluido, pero la más lenta y costosa, ya que por cada aplicación se crean todos los contenedores asociados a ella.
+
+## 7.3 Entornos de desarrollo
+
+Puedes utilizar [VS Code](https://code.visualstudio.com/) con la [extensión oficial de Laravel](https://marketplace.visualstudio.com/items?itemName=laravel.vscode-laravel).
+
+<figure style="align: center;">
+    <img src="imagenes/07/laravel-vscode-extension.png" width="700">
+    <figcaption>Extensión de Laravel para VS Code</figcaption>
+</figure>
+
+O si lo prefieres también puedes probar [PhpStorm](https://www.jetbrains.com/es-es/phpstorm/laravel/) de forma gratuita con la cuenta del instituto.
+
+<figure style="align: center;">
+    <img src="imagenes/07/phpStorm.png" width="700">
+    <figcaption>IDE PhpStorm gratis para educación</figcaption>
+</figure>
+
+## 7.4 Estructura de una aplicación 
+
+Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defecto para ofrecer un punto de partida sólido para aplicaciones de cualquier tamaño siguiendo una estructura modular basada en el patrón MVC (Modelo-Vista-Controlador). Esta organización facilita la separación de responsabilidades, mantenimiento y escalabilidad. A continuación, se describen las carpetas más importantes.
+
+- **app**: Contiene el código principal de la aplicación.
+  - Models/ : Incluye las clases de los modelos Eloquent, que representan las tablas de tu base de datos y permiten interactuar con ellas de manera sencilla.
+  - Http/ : Incluye controladores, middleware y solicitudes de formulario. Es el lugar donde se maneja la lógica relacionada con las solicitudes HTTP que entran en tu aplicación.
+    - Http/Controllers/ : Controladores que procesan las peticiones y devuelven respuestas.
+    - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
+  - Policies/ : Gestionan la autenticación basada en permisos.
+  - Providers: Almacena los proveedores de servicios de tu aplicación, que son responsables de inicializar componentes y enlazar servicios en el contenedor de servicios.
+
+- **bootstrap**: Incluye el archivo app.php que inicia el framework y una carpeta cache con archivos generados para optimizar el rendimiento.
+
+- **config**: Alberga todos los archivos de configuración de la aplicación. Es recomendable revisarlos para familiarizarse con las opciones disponibles.
+
+- **database**: Gestión de bases de datos.
+  - Migraciones/ : Archivos para definir la estructura de las tablas de manera programática.
+  - Factorías/ : Generación de datos de prueba para los modelos.
+  - Seeders/ : Inserción de datos iniciales para la base de datos.
+
+- **public**: Contiene el archivo index.php, punto de entrada para todas las solicitudes, y los recursos públicos como imágenes, JavaScript y CSS.
+
+- **resources**: Carpeta de recursos para la interfaz de usuario. Incluye las vistas y los recursos sin compilar, como archivos CSS o JavaScript.
+  - views/ : Contiene las vistas Blade.
+  - lang/ : Archivos de traducción para aplicaciones multilingües.
+  - css/ y js/ : Recursos de estilo y funcionalidad del cliente.
+
+- **routes**: Contiene las definiciones de rutas de la aplicación. 
+  - web.php : Rutas para la aplicación web.
+  - api.php : Rutas para APIs RESTful.
+  - console.php : Pedidos Artisan personalizados.
+  - channels.php : Rutas para canales de difusión.
+
+- **storage**: Almacenamiento de archivos generados por la aplicación.
+  - app/ : Contiene archivos de usuario o aplicación.
+  - framework/ : Caché, sesiones, y otros archivos temporales.
+  - logs/ : Registros de errores y actividad.
+
+- **tests**: Contiene las pruebas automatizadas de la aplicación, con ejemplos de pruebas unitarias y de características.
+  - Feature/ : Pruebas completas que cubren múltiples componentes.
+  - Unit/ : Pruebas individuales para componentes o métodos específicos.
+
+- **vendor**: Carpeta gestionada por Composer. Contiene todas las dependencias y paquetes de terceros utilizados por el proyecto. No debe modificarse manualmente.
+
+Esta estructura es flexible, permitiendo reorganizar los componentes según las necesidades específicas del proyecto, siempre que Composer pueda cargar automáticamente las clases.
+
+Es importante destacar que algunos de estos directorios no existen por defecto y se crean a medida que utilizas los comandos de Artisan para generar las clases correspondientes.
+
+
+## 7.5 Rutas
 
 Las rutas en Laravel (y en casi cualquier Framework) sirven para redireccionar al cliente (o navegador) a las vistas que nosotros queramos.
 
