@@ -231,26 +231,26 @@ Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defec
 - **bootstrap**: Incluye el archivo app.php que inicia el framework y una carpeta cache con archivos generados para optimizar el rendimiento.
 - **config**: Alberga todos los archivos de configuración de la aplicación. Es recomendable revisarlos para familiarizarse con las opciones disponibles.
 - **database**: Gestión de bases de datos.
-  - Migraciones/ : Archivos para definir la estructura de las tablas de manera programática.
-  - Factorías/ : Generación de datos de prueba para los modelos.
-  - Seeders/ : Inserción de datos iniciales para la base de datos.
+    - Migraciones/ : Archivos para definir la estructura de las tablas de manera programática.
+    - Factorías/ : Generación de datos de prueba para los modelos.
+    - Seeders/ : Inserción de datos iniciales para la base de datos.
 - **public**: Contiene el archivo index.php, punto de entrada para todas las solicitudes, y los recursos públicos como imágenes, JavaScript y CSS.
 - **resources**: Carpeta de recursos para la interfaz de usuario. Incluye las vistas y los recursos sin compilar, como archivos CSS o JavaScript.
-  - views/ : Contiene las vistas Blade.
-  - lang/ : Archivos de traducción para aplicaciones multilingües.
-  - css/ y js/ : Recursos de estilo y funcionalidad del cliente.
+    - views/ : Contiene las vistas Blade.
+    - lang/ : Archivos de traducción para aplicaciones multilingües.
+    - css/ y js/ : Recursos de estilo y funcionalidad del cliente.
 - **routes**: Contiene las definiciones de rutas de la aplicación. 
-  - web.php : Rutas para la aplicación web.
-  - api.php : Rutas para APIs RESTful.
-  - console.php : Pedidos Artisan personalizados.
-  - channels.php : Rutas para canales de difusión.
+    - web.php : Rutas para la aplicación web.
+    - api.php : Rutas para APIs RESTful.
+    - console.php : Pedidos Artisan personalizados.
+    - channels.php : Rutas para canales de difusión.
 - **storage**: Almacenamiento de archivos generados por la aplicación.
-  - app/ : Contiene archivos de usuario o aplicación.
-  - framework/ : Caché, sesiones, y otros archivos temporales.
-  - logs/ : Registros de errores y actividad.
+    - app/ : Contiene archivos de usuario o aplicación.
+    - framework/ : Caché, sesiones, y otros archivos temporales.
+    - logs/ : Registros de errores y actividad.
 - **tests**: Contiene las pruebas automatizadas de la aplicación, con ejemplos de pruebas unitarias y de características.
-  - Feature/ : Pruebas completas que cubren múltiples componentes.
-  - Unit/ : Pruebas individuales para componentes o métodos específicos.
+    - Feature/ : Pruebas completas que cubren múltiples componentes.
+    - Unit/ : Pruebas individuales para componentes o métodos específicos.
 - **vendor**: Carpeta gestionada por Composer. Contiene todas las dependencias y paquetes de terceros utilizados por el proyecto. No debe modificarse manualmente.
 
 Esta estructura es flexible, permitiendo reorganizar los componentes según las necesidades específicas del proyecto, siempre que Composer pueda cargar automáticamente las clases.
@@ -277,9 +277,9 @@ Una ruta simple tiene una URL fija y una función que devuelve una respuesta. Po
 
 ```php
 <?php
-  Route::get('/saludo', function () {
-    return 'Hola mundo!';
-  });
+Route::get('/saludo', function () {
+  return 'Hola mundo!';
+});
 ```
 
 Cuando accedamos a `http://localhost/saludo` (localhost o el equivalente a nuestra app local o en remoto), Laravel devolverá "Hola mundo!".
@@ -290,8 +290,8 @@ Se pueden definir **parámetros dinámicos** en las rutas mediante claves **{ }*
 
 ```php
 <?php
-  Route::get('/saludo/{nombre}', function ($nombre) {
-    return 'Hola, ' . $nombre;
+Route::get('/saludo/{nombre}', function ($nombre) {
+  return 'Hola, ' . $nombre;
 });
 ```
 
@@ -299,8 +299,8 @@ Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un **parám
 
 ```php
 <?php
-  Route::get('/saludo/{nombre?}', function ($nombre = "Invitado") {
-    return 'Hola, ' . $nombre;
+Route::get('/saludo/{nombre?}', function ($nombre = "Invitado") {
+  return 'Hola, ' . $nombre;
 });
 ```
 
@@ -312,17 +312,17 @@ Podemos **validar** los parámetros usando el método **where**. Por ejemplo:
 
 ```php
 <?php
-  Route::get('/saludo/{nombre}', function ($nombre) {
-    return 'Hola, ' . $nom;
-  })->where('nombre', '[A-Za-z]+');
+Route::get('/saludo/{nombre}', function ($nombre) {
+  return 'Hola, ' . $nom;
+})->where('nombre', '[A-Za-z]+');
 
-  Route::get('/producto/{id}', function ($id) {
-    return 'Producto ID: ' . $id;
-  })->where('id', '[0-9]+');
+Route::get('/producto/{id}', function ($id) {
+  return 'Producto ID: ' . $id;
+})->where('id', '[0-9]+');
 
-  Route::get('/usuario/{nombre}/{id}', function ($nombre, $id) {
-    return 'Usuario: ' . $nombre . ', ID: ' . $id;
-  })->where(['nombre' => '[A-Za-z]+', 'id' => '[0-9]+']);
+Route::get('/usuario/{nombre}/{id}', function ($nombre, $id) {
+  return 'Usuario: ' . $nombre . ', ID: ' . $id;
+})->where(['nombre' => '[A-Za-z]+', 'id' => '[0-9]+']);
 ```
 
 ### Rutas con nombre (alias)
@@ -331,9 +331,9 @@ Podemos darle un alias o un **nombre** a nuestras rutas mediante el método **na
 
 ```php
 <?php
-  Route::get('/contacto', function () {
-    return 'Página de contacto';
-  })->name('contacto');
+Route::get('/contacto', function () {
+  return 'Página de contacto';
+ })->name('contacto');
 ```
 
 Podemos utilizar el nombre de la ruta en las plantillas Blade:
@@ -341,7 +341,7 @@ Podemos utilizar el nombre de la ruta en las plantillas Blade:
 
 ```php
 <?php
-  [Contacto]({{ route('contacto') }})
+[Contacto]({{ route('contacto') }})
 ```
 
 ### Grupos de rutas
@@ -384,7 +384,7 @@ Si queremos hacer **CRUDs** podemos definir rutas directamente con el método **
 
 ```php
 <?php
-  Route::resource('articles', ArticleController::class);
+Route::resource('articles', ArticleController::class);
 ```
 
 Este método genera automáticamente las rutas para acciones como index, create, store, show, edit, update y destroy.
@@ -402,9 +402,9 @@ Las vistas se definen en la carpeta *resources/views* y están diseñadas para s
 
 Las vistas no deben contener lógica de negocio ni realizar consultas a bases de datos. Sólo deben recibir datos de los controladores y presentarlos al usuario.
 
-### Mostrar una vista
+### Mostrar una vista
 
-Para mostrar una vista, podemos utilizar la función *view()* desde una ruta o controlador.
+Para mostrar una vista, podemos devolver la función **view** desde una ruta o método de un controlador.
 
 ```php
 <?php
@@ -413,11 +413,11 @@ Route::get('/', function () {
 });
 ```
 
-### Pasar datos a una vista
+### Pasar datos a una vista
 
 Es habitual pasar datos a las vistas desde una ruta o controlador.
 
-1. Con *with*:
+1. Con **with***:
 
 ```php
 <?php
@@ -427,25 +427,27 @@ Route::get('/', function () {
 });
 ```
 
-2. Con un *array asociativo*:
+2. Con un **array asociativo**:
 
 ```php
 <?php
+  $nombre = 'Juan';
   return view('welcome', ['nombre' => $nombre]);
 ```
 
-3. Con la función *compact*. La función compact genera un array asociativo utilizando los nombres de las variables que se pasan como argumentos:
+3. Con la función **compact**, que genera un array asociativo utilizando los nombres de las variables que se le pasan como argumentos:
 
 ```php
 <?php
+  $nombre = 'Juan';
   return view('welcome', compact('nombre'));
 ```
 
-4. Utilizando la función *Route::view*:
+4. Utilizando la función **Route::view**:
 
 ```php
 <?php
-  Route::view('/', 'welcome', ['nombre' => 'Juan']);
+Route::view('/', 'welcome', ['nombre' => 'Juan']);
 ```
 
 En la vista, podemos utilizar Blade para mostrar estos datos:
@@ -514,9 +516,7 @@ Ahora crearemos los archivos dinámicos de cada una de las secciones, en nuestro
 
 ```php
 <?php
-
 // blog.blade.php
-
 @extends('plantilla')
 
 @section('apartado')
@@ -530,9 +530,7 @@ Ahora casi lo mismo para la sección de `fotos`
 
 ```php
 <?php
-
 // fotos.blade.html
-
 @extends('plantilla')
 
 @section('apartado')
@@ -544,9 +542,7 @@ El último paso que nos queda es configurar el archivo de rutas `routes/web.php`
 
 ```php
 <?php
-
 // web.php
-
 Route::view('blog', 'blog') -> name('noticias');
 Route::view('fotos', 'fotos') -> name('galeria');
 ```
@@ -555,73 +551,82 @@ De esta manera podremos hacer uso del menú de navegación que hemos puesto en n
 
 #### Estructuras de control
 
-Como en todo buen lenguaje de programación, en Laravel también tenemos estructuras de control.
+En Blade siempre que iniciemos un bloque de estructura de control DEBEMOS cerrarlo. Tenemos las siguientes estructuras:
 
-En Blade (plantillas de Laravel) siempre que iniciemos un bloque de estructura de control DEBEMOS cerrarla
+- `@foreach` ~ `@endforeach` lo usamos para recorrer arrays.
+- `@if` ~ `@endif` para comprobar condiciones lógicas.
+- `@switch` ~ `@endswitch` en función del valor de una variable ejecutar un código.
+    - `@case` define la casuística del switch.
+    - `@break` rompe la ejecución del código en curso.
+    - `@default` si ninguna casuística se cumple.
 
-- `@foreach` ~ `@endforeach` lo usamos para recorrer arrays
-- `@if` ~ `@endif` para comprobar condiciones lógicas
-- `@switch` ~ `@endswitch` en función del valor de una variable ejecutar un código
-    - `@case` define la casuística del switch
-    - `@break` rompe la ejecución del código en curso
-    - `@default` si ninguna casuística se cumple
+Ejemplos:
 
 ```php
 <?php
-
 $equipo = ['María', 'Alfredo', 'William', 'Verónica'];
+$edad = 21;
+$opcion = 2;
 
-@foreach ($equipo as $nombre)
+// en la plantilla blade
+@foreach($equipo as $nombre)
   <p> {{ $nombre }} </p>
 @endforeach
-```
 
-Como se ha visto en el punto anterior, podemos pasar variables a través de las rutas como si fueran parámetros:
 
-```php
-<?php
+@if($edad>18)
+  <p>Adelante, con {{ $edad }} accedes sin problemas.</p>
+@elseif($edad>16)
+  <p>Con {{ $edad }} accedes con autorización de tus padres.</p>
+@else
+  <p>Lo siento, con {{ $edad }} no puedes acceder.</p>
+@endif
 
-// Uso de compact
-$equipo = ['María', 'Alfredo', 'William', 'Verónica'];
 
-// Route::view('nosotros', ['equipo' => 'equipo']);
-Route::view('nosotros', compact('equipo'));
+@switch($opcion)
+  @case(1)
+    <p>Opción 1...</p>
+    @break
+  @case(2)
+    <p>Opción 2...</p>
+    @break
+  @default
+    <p>Opción {{ $opcion }} no es válida.</p>
+@endswitch
 ```
 
 !!! info "Ampliar sobre vistas"
-    Para más información acerca de las vistas, incluso la reciente posibilidad de crearlas mediante React o Vue gracias a Inertia, seguir la [documentación oficial de vistas](https://laravel.com/docs/11.x/views).
+    Para más información acerca de las vistas, incluso la reciente posibilidad de crearlas mediante React o Vue gracias a Inertia, seguir la [documentación oficial de vistas](https://laravel.com/docs/11.x/views). Y para aquí para más info sobre [las plantillas Blade](https://laravel.com/docs/11.x/blade).
 
 
 ## 7.7 Controladores
 
-Los controladores son el lugar perfecto para definir la lógica de negocio de nuestra aplicación o sitio web.
-
-Hace de intermediario entre la vista (lo que vemos con nuestro navegador o cliente) y el servidor donde la app está alojada.
+Los controladores son una pieza clave en Laravel para organizar y estructurar la lógica de nuestra aplicación. Permiten separar la gestión de las rutas y la lógica del negocio, haciendo que el código sea más limpio, escalable y fácil de mantener.
 
 Por defecto, los controladores se guardan en una carpeta específica situada en `app/Http/Controllers` y tienen extensión `.php`.
 
-Para crear un controlador nuevo debemos hacer uso de nuestro querido autómata `artisan` donde le diremos que cree un controlador con el nombre que nosotros queramos.
+### Crear un controlador
 
-Abrimos la consola y nos situamos en la raíz de nuestro proyecto
+Artisan nos va a facilitar la creación de un controlador. Abrimos una terminal y desde la raíz del proyecto ejecutamos `php artisan make:controller NombreController`. Por convención, los controladores suelen acabar con el sufijo Controller. 
+
+Ejemplo:
 
 ```console
 php artisan make:controller PagesController
 ```
+
 Si todo ha salido bien, recibiremos un mensaje por consola con que todo ha ido bien y podremos comprobar que, efectivamente se ha creado el archivo `PagesController.php` con una estructura básica de controlador, dentro de la carpeta `Controllers` que hemos descrito anteriormente.
 
-Ahora podemos modificar nuestro archivo de rutas `web.pbp` para dejarlo limpio de lógica y trasladar ésta a nuestro nuevo controlador.
+### Separar la lógica
 
-La idea de ésto es dejar el archivo `web.php` tan limpio como podamos para que, de un vistazo, se entienda todo perfectamente.
+Ahora podemos modificar nuestro archivo de rutas `web.pbp` para dejarlo limpio de lógica y trasladar ésta a nuestro nuevo controlador. La idea es dejar `web.php` tan limpio como podamos para que, de un vistazo, se entienda todo perfectamente.
 
 **RECUERDA** que sólo movemos la lógica, mientras que las cláusulas como `where` y `name` las seguimos dejando en el archivo de rutas `web.php`
 
-Veamos cómo quedaría un refactor del archivo de rutas utilizando un `Controller` como el que acabamos de crear
-
-Ahora nos quedaría de la siguiente manera
+Veamos cómo quedaría un refactor del archivo de rutas utilizando un `Controller` como el que acabamos de crear:
 
 ```php
 <?php
-
 // web.php (v2.0) ▒▒▒▒ Refactorizado
 
 use App\Http\Controllers\PagesController;
@@ -630,44 +635,113 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ PagesController::class, 'inicio' ]);
 Route::get('datos', [ PagesController::class, 'datos' ]);
 Route::get('cliente/{id?}', [ PagesController::class, 'cliente' ]) -> where('id', '[0-9]+');
-Route::get('nosotros/{nosotros?}', [ PagesController::class, 'nosotros']) -> name('nosotros');
+Route::get('nosotros/{nombre?}', [ PagesController::class, 'nosotros']) -> name('nosotros');
 ```
 
 y en nuestro archivo controlador lo dejaríamos de la siguiente manera
 
 ```php
 <?php
-
 // PagesController.php
-
 namespace App\Http\Controllers;
 
 class PagesController extends Controller
 {
-    public function inicio() { return view('welcome'); }
+    public function inicio() { 
+      return view('welcome'); 
+    }
 
     public function datos() { 
-        return view('usuarios', ['id' => 56]);
+      return view('usuarios', ['id' => 56]);
     }
 
     public function cliente($id = 1) {
-        return ('Cliente con el id: ' . $id);
+      return ('Cliente con el id: ' . $id);
     }
 
     public function nosotros($nombre = null) {
-        $equipo = [
-            'Paco',
-            'Enrique',
-            'Maria',
-            'Veronica'
-        ];
-
-        return view('nosotros', compact('equipo', 'nombre'));
+      $equipo = ['Paco', 'Enrique', 'Maria', 'Veronica'];
+      return view('nosotros', compact('equipo', 'nombre'));
     }
 }
 ```
 
-## Migraciones & Eloquent
+### Controlador de recursos
+
+Podemos generar un controlador de recursos con la opción **-r**. Esto creará un controlador con métodos predeterminados para operaciones comunes. Ejemplo:
+
+```console
+php artisan make:controller PhotoController -r
+```
+
+Los métodos generados son:
+
+- **index**: Mostrar un listado de elementos.
+- **create**: Mostrar un formulario para crear un nuevo elemento.
+- **store**: Almacenar un nuevo elemento en la base de datos.
+- **show**: Mostrar un elemento específico.
+- **edit**: Mostrar un formulario para editar un elemento existente.
+- **update**: Actualizar un elemento en la base de datos.
+- **destroy**: Eliminar un elemento.
+
+Estos métodos se llaman desde el archivo de rutas exactamente igual que los métoodos hechos a mano antes, aunque también tenemos la opción de registrar todas las rutas automáticamente mediante el método **Route::resource**:
+
+```php
+<?php
+// web.php (v2.0) ▒▒▒▒ Refactorizado
+Route::resource('photos', PhotoController::class);
+```
+
+Las acciones manejadas por el controlador de recursos con su URI y nombre de la ruta:
+
+| Verb        | URI                  | Action   | Route Name      |
+|-------------|----------------------|----------|-----------------|
+| GET         | /photos              | index    | photos.index    |
+| GET         | /photos/create       | create   | photos.create   |
+| POST        | /photos              | store    | photos.store    |
+| GET         | /photos/{photo}      | show     | photos.show     |
+| GET         | /photos/{photo}/edit | edit     | photos.edit     |
+| PUT/PATCH   | /photos/{photo}      | update   | photos.update   |
+| DELETE      | /photos/{photo}      | destroy  | photos.destroy  |
+
+### Organización de vistas
+
+Las vistas asociadas a un controlador suelen estar estructuradas dentro de la carpeta *resources/views* en una **subcarpeta con nombre del controlador o modelo**. Ejemplo:
+
+- Controlador: PhotoController
+- Vistas: resources/views/**photo**/index.blade.php, resources/views/**photo**/show.blade.php, etc.
+
+Para renderizar estas vistas desde el controlador se usa *carpeta.vista*:
+
+```php
+<?php
+// PhotoController.php
+public function index() {
+  return view('photo.index');
+}
+```
+
+### Organización de controladores
+
+Los controladores también se pueden organizar en subcarpetas dentro de *app/Http/Controllers*. Para crearlo se indica la subcarpeta:
+
+```console
+php artisan make:controller Photo/AdminController
+```
+
+Y a la hora de utilizarlo, hay que incluir su espacio de nombres:
+
+```php
+<?php
+// web.php 
+Route::get('admin', [App\Http\Controllers\Photo\AdminController::class, 'method']);
+```
+
+!!! info "Ampliar sobre controladores"
+    Para más información acerca de los controladores, seguir la [documentación oficial de controladores](https://laravel.com/docs/11.x/controllers).
+
+
+## 7.8 Migraciones & Eloquent
 
 Con las migraciones vamos a gestionar la base de datos de nuestro sitio web; tanto crear nuevas BBDD como editarlas desde Laravel.
 
