@@ -139,7 +139,7 @@ Seguir los pasos del script y por ejemplo, un proyecto con nombre **example-app*
 
 ### c. Contenedores Docker
 
-Laravel [Sail](https://laravel.com/docs/11.x/sail) es una interfaz de línea de comandos que permite crear una aplicación de Laravel con PHP, MySQL y Redis sin necesidad de tener experiencia previa con Docker.
+[Laravel Sail](https://laravel.com/docs/11.x/sail) es una interfaz de línea de comandos que permite crear una aplicación de Laravel con PHP, MySQL y Redis sin necesidad de tener experiencia previa con Docker.
 
 Por ejemplo, para crear una aplicación con el nombre **example-app** ejecutaremos directamente el comando:
 
@@ -380,7 +380,6 @@ Route::get('/usuario/{id}', [UsuarioController::class, 'mostrar']);
 ### Recursos y APIs
 
 Si queremos hacer **CRUDs** podemos definir rutas directamente con el método **resource**:
-
 
 ```php
 <?php
@@ -917,6 +916,12 @@ Route::get('admin', [App\Http\Controllers\Photo\AdminController::class, 'method'
 
 El objetivo de este ejercicio es construir una aplicación Laravel para gestionar una guía de equipos de fútbol femenino. Aprenderemos a configurar rutas, controladores, vistas y a pasar datos utilizando las funcionalidades de Laravel.
 
+!!! info "Lanzar comandos Artisan"
+    A la hora de ejecutar **Artisan** se hace mediante Laravel Sail, que es la opción seguida para crear la app. Si se hiciese mediante Herd o la instalación manual de Laravel, se lanzarían los comandos directamente con php. Ejemplos:
+
+    `./vendor/bin/sail artisan make:controller EquipoController` --> Laravel Sail
+    `php artisan make:controller EquipoController` --> Herd o manual
+
 #### Paso 1: Configurar el proyecto
 
 1. Crear un proyecto Laravel con nombre `futbol-femenino`:
@@ -942,8 +947,9 @@ y después terminamos la instalación:
 1. Editar `routes/web.php` para crear una ruta inicial:
 
 ```php
+<?php
 Route::get('/', function () {
-    return "Bienvenido a la Guí ade Equipos de fútbol femenino.";
+    return "Bienvenido a la Guía de Equipos de fútbol femenino.";
 });
 ```
 
@@ -962,6 +968,7 @@ Route::get('/', function () {
 2. Añadir un método `index` al controlador:
 
 ```php
+<?php
 public function index() {
    return view('equipos.index');
 }
@@ -970,6 +977,7 @@ public function index() {
 3. Definir una ruta para el método  `index`:
 
 ```php
+<?php
 Route::get('/equipos', [EquipoController::class, 'index']);
 ```
 
@@ -994,6 +1002,7 @@ Route::get('/equipos', [EquipoController::class, 'index']);
 1. Modifica el método `index`para pasar un array de equipos:
 
 ```php
+<?php
 public function index() {
    $equipos = ['Barcelona', 'Real Madrid', 'Sevilla', 'Valencia', 'Atlético de Madrid'];
    return view('equipos.index', compact('equipos'));
@@ -1093,6 +1102,7 @@ npm run dev
 1. Añadir más campos a los equipos:
 
    ```php 
+   <?php
     public function index(){
         $equipos = [
             ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
@@ -1161,7 +1171,7 @@ npm run dev
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>@yield('title','Guía de fútbol femenino')</title>
-      @vite(['resources/css/app.css', 'resources/css/equips.css'])
+      @vite(['resources/css/app.css', 'resources/css/equipos.css'])
 </head>
 <body>
       <header>
@@ -1179,7 +1189,7 @@ npm run dev
 
 * Modifica la vista *resources/views/equipos/index.blade.php* para heredar de la plantilla base:
       
-```php
+```html
 @extends('layouts.app')
 @section('title', " Guía de Equipos")
 @section('content')
@@ -1244,6 +1254,7 @@ npm run dev
 * Crea un método en el controlador de equipos para mostrar un equipo:
 
 ```php
+<?php
 public function show($id){
     $equipos = [
         ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
@@ -1267,12 +1278,16 @@ public function show($id){
    :estadio="$equipo['estadio']"
    :titulos="$equipo['titulos']"
 />
+<p class="mt-4 text-center">
+   <a href="/equipos" class="text-blue-700 hover:underline">Volver</a>
+</p>
 @endsection 
 ```
 
 * Modifica el componente *app/Views/components/Equipo.php* para utilizar los datos pasados:
 
 ```php
+<?php
 public function __construct(
      public string $nombre,
      public string $estadio,
@@ -1282,6 +1297,7 @@ public function __construct(
 * Crea la ruta:
 
 ```php
+<?php
 Route::get('/equipos/{id}', [EquipoController::class, 'show']);
 ```
 
@@ -1300,6 +1316,7 @@ Route::get('/equipos/{id}', [EquipoController::class, 'show']);
 1. No repetir el array de equipos en el controlador:
 
 ```php
+<?php
 class EquipoController extends Controller{
     public $equipos = [
         ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
@@ -1324,6 +1341,7 @@ class EquipoController extends Controller{
 2. Pasar las rutas a resource:
     
 ```php
+<?php
 Route::resource('equipos', EquipController::class);
 ```
 
@@ -1339,7 +1357,7 @@ Route::resource('equipos', EquipController::class);
 @endforeach
 ```
 
-4. Usa ChatGPT para dar estilo a las vistas mediante tailwind:
+4. Usa ChatGPT para dar estilo a las vistas mediante [tailwind](https://tailwindcss.com/):
 
 ```html
 app.blade.php
@@ -1352,7 +1370,7 @@ app.blade.php
       <title>@yield('title','Guía de fútbol femenino')</title>
       @vite(['resources/css/app.css'])
 </head>
-<body class="font-sans bg-gray-100 text-gray-900">
+<body class="font-sans bg-gray-100 text-gray-900 flex flex-col h-screen justify-between">
     <header class="bg-blue-800 text-orange p-4">
         @include('partials.menu')
     </header>
@@ -1386,7 +1404,9 @@ index.blade.php
         @foreach($equipos as $key => $equipo)
             <tr class="hover:bg-gray-100">
                 <td class="border border-gray-300 p-2">
-                    <a href="{{ route('equipos.show', $key) }}" class="text-blue-700 hover:underline">{{ $equipo['nombre'] }}</a>
+                    <a href="{{ route('equipos.show', $key) }}" class="text-blue-700 hover:underline">
+                      {{ $equipo['nombre'] }}
+                    </a>
                 </td>
                 <td class="border border-gray-300 p-2">{{ $equipo['estadio'] }}</td>
                 <td class="border border-gray-300 p-2">{{ $equipo['titulos'] }}</td>
@@ -1421,6 +1441,11 @@ menu.blade.php
 
 El objetivo de este ejercicio es crear una extensión de la guía de equipos de fútbol femenino para incluir una nueva funcionalidad: un listado de estadios de fútbol. Los alumnos implementarán rutas, controladores y vistas para mostrar estadios y sus características.
 
+<figure style="align: center;">
+    <img src="imagenes/07/futbol-femenino.gif">
+    <figcaption>Ejemplo de navegación por la app</figcaption>
+</figure>
+
 ---
 
 #### 1. Crear un controlador de estadios
@@ -1430,7 +1455,7 @@ El objetivo de este ejercicio es crear una extensión de la guía de equipos de 
 
 ```php
 <?php
-$estadiosFutbolFemenino = [
+$estadios = [
     [
       'nombre' => 'Estadio Johan Cruyff',
       'ciudad' => 'Sant Joan Despí',
@@ -1467,7 +1492,7 @@ $estadiosFutbolFemenino = [
 
 ---
 
-#### 4. Añadir estilos al listado de estadios
+#### 4. Añadir estilos propios con Vite al listado de estadios
 
 1. Crea un archivo CSS `resources/css/estadios.css` para estilizar la tabla.
 2. Incluye el CSS a la vista utilizando `@vite`.
@@ -1475,14 +1500,13 @@ $estadiosFutbolFemenino = [
 
 ---
 
-#### 5. Ampliar la guía de estadios
+#### 5. Componente Estadio y estilos mediante tailwind
 
-1. Añadir una nueva ruta `/estadios/crear` para mostrar un formulario que permita añadir un nuevo estadio.
-2. Crear un controlador con un método `crear` que devuelva una vista con el formulario.
-3. Diseñar un formulario Blade que contenga campos para el nombre del estadio, ciudad y capacidad.
-4. Mostrar un mensaje de confirmación cuando el usuario haga clic en el botón de enviar.
-5. Crea un componente para los estadios.
-6. Modifica la vista `resources/views/estadios/index.blade.php` para heredar de `layouts.app`.
+1. Crea un componente para los estadios.
+2. Modifica la vista `resources/views/estadios/index.blade.php` para heredar de `layouts.app`.
+3. Crea la vista `resources/views/estadios/show.blade.php` con su ruta y función en el controlador, para mostrar el detalle del estadio, de forma similar a como se hacía con los equipos.
+
+---
 
 #### 6. Jugadoras
 
@@ -1496,6 +1520,9 @@ $jugadoras = [
     ['nombre' => 'Misa Rodríguez', 'equipo' => 'Real Madrid', 'posicion' => 'Portera'],
 ];
 ```
+
+---
+
 #### 7. Partidos
  
 Haz lo mismo con los partidos, crea un controlador, una vista y un componente. Ejemplo:
@@ -1508,11 +1535,22 @@ $partidos = [
 ];
 ```
 
+---
+
 #### 8. Modifica el menú
 
 Para poder ir a todas las pantallas y cambiar las rutas a llamadas.
 
- ---
+--- 
+
+#### 9. Ampliar la guía de estadios con formulario
+
+1. Añadir una nueva ruta `/estadios/crear` para mostrar un formulario que permita añadir un nuevo estadio.
+2. Crear un controlador con un método `crear` que devuelva una vista con el formulario.
+3. Diseñar un formulario Blade que contenga campos para el nombre del estadio, ciudad, capacidad y equipo principal.
+4. Mostrar un mensaje de confirmación cuando el usuario haga clic en el botón de enviar.
+
+---
 
 #### Preguntas para reflexionar
 
