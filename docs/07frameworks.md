@@ -1429,6 +1429,7 @@ El objetivo de este ejercicio es crear una extensión de la guía de equipos de 
 2. Añade un método `index` al controlador para devolver una vista con un listado de estadios.
 
 ```php
+<?php
 $estadiosFutbolFemenino = [
     [
       'nombre' => 'Estadio Johan Cruyff',
@@ -1450,6 +1451,7 @@ $estadiosFutbolFemenino = [
     ]
 ];
 ```  
+
 ---
 
 #### 2. Crear una ruta para los estadios
@@ -1487,7 +1489,8 @@ $estadiosFutbolFemenino = [
 Haz lo mismo con las jugadoras, crea un controlador, una vista y un componente. Ejemplo: 
 
 ```php
-$jugadores = [
+<?php
+$jugadoras = [
     ['nombre' => 'Alexia Putellas', 'equipo' => 'Barcelona', 'posicion' => 'Centrocampista'],
     ['nombre' => 'Esther González', 'equipo' => 'Atlético de Madrid', 'posicion' => 'Delantera'],
     ['nombre' => 'Misa Rodríguez', 'equipo' => 'Real Madrid', 'posicion' => 'Portera'],
@@ -1498,7 +1501,8 @@ $jugadores = [
 Haz lo mismo con los partidos, crea un controlador, una vista y un componente. Ejemplo:
 
 ```php
-$partits = [
+<?php
+$partidos = [
     ['local' => 'Barcelona', 'visitante' => 'Atlético de Marid', 'fecha' => '2025-01-30', 'resultado' => null],
     ['local' => 'Real Madrid', 'visitante' => 'Barcelona', 'fecha' => '2025-01-15', 'resultado' => '3-0'],
 ];
