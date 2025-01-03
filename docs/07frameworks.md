@@ -217,7 +217,7 @@ O si lo prefieres, también puedes probar [PhpStorm](https://www.jetbrains.com/e
     <figcaption>IDE PhpStorm gratis para educación</figcaption>
 </figure>
 
-## 7.4 Estructura de una aplicación 
+## 7.4 Estructura de una app 
 
 Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defecto para ofrecer un punto de partida sólido para aplicaciones de cualquier tamaño siguiendo una estructura modular basada en el patrón MVC (Modelo-Vista-Controlador). Esta organización facilita la separación de responsabilidades, mantenimiento y escalabilidad. A continuación, se describen las carpetas más importantes.
 
@@ -644,7 +644,7 @@ class Alert extends Component{
 
 Las expresiones y variables PHP se deben pasar al componente mediante atributos que utilicen el carácter *:* como prefijo. Ejemplo:
 
-```php
+```html
 <x-alert :type="$tipos[5]" />
 ```
 
@@ -889,7 +889,7 @@ Route::get('admin', [App\Http\Controllers\Photo\AdminController::class, 'method'
 
   - `Proyecto` enlace que cargue una vista con el siguiente texto "Estás en el proyecto numero: X" donde X es un número entero que podamos introducirlo en la propia ruta. Si no se mete ningún número en la ruta, por defecto tiene que ser 1; por ejemplo
 
-        http://localhost:8000/proyecto/210937
+        http://localhost/proyecto/210937
 
   - Recuerda que el título y el menú de navegación han de aparecer en todas las vistas que cargues.
 
@@ -912,3 +912,606 @@ Route::get('admin', [App\Http\Controllers\Photo\AdminController::class, 'method'
   - Puedes usar Bootstrap como algo opcional para practicar. Recuerda que viene incluido con la instalación de Laravel.
 
 ---
+
+### Práctica guiada: Guía de equipos de fútbol femenino
+
+El objetivo de este ejercicio es construir una aplicación Laravel para gestionar una guía de equipos de fútbol femenino. Aprenderemos a configurar rutas, controladores, vistas y a pasar datos utilizando las funcionalidades de Laravel.
+
+#### Paso 1: Configurar el proyecto
+
+1. Crear un proyecto Laravel con nombre `futbol-femenino`:
+
+ ```bash
+  curl -s "https://laravel.build/futbol-femenino?with=mysql,mailpit" | bash
+ ```
+
+y después terminamos la instalación:
+
+```bash
+  cd futbol-femenio
+  ./vendor/bin/sail up 
+  ./vendor/bin/sail artisan migrate
+```
+
+2. **Pregunta:** ¿Por qué es importante tener una estructura clara en el proyecto Laravel?
+
+---
+
+#### Paso 2: Definir la ruta inicial
+
+1. Editar `routes/web.php` para crear una ruta inicial:
+
+```php
+Route::get('/', function () {
+    return "Bienvenido a la Guí ade Equipos de fútbol femenino.";
+});
+```
+
+2. **Pregunta:** ¿Qué diferencia existe entre definir una ruta directa y una que utiliza un controlador?
+
+---
+
+#### Paso 3: Crear un controlador
+
+1. Generar un controlador llamado `EquipoController`:
+
+```bash
+./vendor/bin/sail artisan make:controller EquipoController
+```
+
+2. Añadir un método `index` al controlador:
+
+```php
+public function index() {
+   return view('equipos.index');
+}
+```
+
+3. Definir una ruta para el método  `index`:
+
+```php
+Route::get('/equipos', [EquipoController::class, 'index']);
+```
+
+4. **Pregunta:** ¿Por qué es recomendable separar la lógica en controladores?
+
+---
+
+#### Paso 4: Crear una vista
+
+1. Crear una vista en `resources/views/equipos/index.blade.php`:
+
+```html
+<h1>Guía de Equipos</h1>
+```
+
+2. **Pregunta:** ¿Qué hace especial el motor de plantillas Blade en comparación con HTML estándar?
+
+---
+
+#### Paso 5: Passar datos a la vista
+
+1. Modifica el método `index`para pasar un array de equipos:
+
+```php
+public function index() {
+   $equipos = ['Barcelona', 'Real Madrid', 'Sevilla', 'Valencia', 'Atlético de Madrid'];
+   return view('equipos.index', compact('equipos'));
+}
+```
+
+2. Añade un bucle `@foreach`a la vista:
+
+```html
+<h1>Guía de Equipos</h1>
+<ul>
+   @foreach($equipos as $equipo)
+       <li>{{ $equipo }}</li>
+   @endforeach
+</ul>
+```
+
+3. **Pregunta:** ¿Cómo podemos utilizar Blade para hacer el código más seguro?
+
+---
+
+#### Paso 6: Añadir estilos con Vite
+
+1. Crear un archivo CSS en `resources/css/equipos.css`:
+
+```css
+body {
+   font-family: Arial, sans-serif;
+}
+
+h1 {
+   color: darkblue;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: darkblue;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+```
+
+2. Modificar el archivo *vite.config.js* para que incluya el archivo CSS:
+
+```js 
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css', 
+                'resources/css/equipos.css', 
+                'resources/js/app.js'],
+            refresh: true,
+        }),
+    ],
+});
+```
+    
+3. Incluir el archivo CSS con `@vite` en la vista:
+ 
+```html
+@vite('resources/css/equipos.css')
+```
+
+5. Instalar dependencias y conector Vite si no se ha hecho antes:
+
+```bash
+npm install 
+```
+
+6. Ejecutar servidor de desarrollo local Vite:
+```bash 
+npm run dev
+```
+
+7. **Pregunta:** ¿Qué es Hot Module Replacement (HMR) y cómo ayuda en el desarrollo?
+
+---
+
+#### Paso 7: Ampliar funcionalidades
+
+1. Añadir más campos a los equipos:
+
+   ```php 
+    public function index(){
+        $equipos = [
+            ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
+            ['nombre' => 'Real Madrid', 'estadio' => 'Santiago Bernabeu', 'titulos' => 10],
+            ['nombre' => 'Sevilla', 'estadio' => 'Ramón Sánchez Pizjuán', 'titulos' => 8],
+            ['nombre' => 'Valencia', 'estadio' => 'Mestalla', 'titulos' => 6],
+            ['nombre' => 'Atlético de Madrid', 'estadio' => 'Wanda Metropolitano', 'titulos' => 5],
+        ];
+        return view('equipos.index', compact('equipos'));
+    }
+   ```
+
+2. Actualizar la vista para mostrar una tabla:
+
+   ```html
+   <h1>Guia de Equipos</h1>
+   <table>
+       <thead>
+           <tr>
+               <th>Nombre</th>
+               <th>Estadio</th>
+               <th>Títulos</th>
+           </tr>
+       </thead>
+       <tbody>
+           @foreach($equipos as $equipo)
+               <tr>
+                   <td>{{ $equipo['nombre'] }}</td>
+                   <td>{{ $equipo['estadio'] }}</td>
+                   <td>{{ $equipo['titulos'] }}</td>
+               </tr>
+           @endforeach
+       </tbody>
+   </table>
+   ```
+
+3. Crear una nueva vista parcial para el menú de navegación:
+  
+* Añade un nuevo archivo a *resources/views/partials/menu.blade.php* con el siguiente contenido:
+
+```html
+<nav>
+    <ul>
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/equipos">Guía de Equipos</a></li>
+        <li><a href="/estadios">Listado de Estadios</a></li>
+    </ul>
+</nav>
+```
+
+* Modifica la vista *resources/views/equipos/index.blade.php* para incluir el menú con la directiva @include:
+
+```html
+@include('partials.menu')
+```
+
+4. Crear una plantilla base:
+
+* Crea el archivo *resources/views/layouts/app.blade.php*:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>@yield('title','Guía de fútbol femenino')</title>
+      @vite(['resources/css/app.css', 'resources/css/equips.css'])
+</head>
+<body>
+      <header>
+        @include('partials.menu')
+      </header>
+      <main>
+       @yield('content')
+      </main>
+      <footer>
+          <p>&copy; 2025 Guía de fútbol femenino</p>
+      </footer>
+</body>
+</html>
+```
+
+* Modifica la vista *resources/views/equipos/index.blade.php* para heredar de la plantilla base:
+      
+```php
+@extends('layouts.app')
+@section('title', " Guía de Equipos")
+@section('content')
+  <h1>Guía de Equipos</h1>
+  <table>
+      <thead>
+      <tr>
+          <th>Nombre</th>
+          <th>Estadio</th>
+          <th>Títulos</th>
+      </tr>
+      </thead>
+      <tbody>
+      @foreach($equips as $equip )
+          <tr>
+              <td class="equipo"><h2>{{ $equipo['nombre']  }}</h2></td>
+              <td class="equipo">{{ $equipo['estadio']  }}</td>
+              <td class="equipo">{{ $equipo['titulos']  }}</td>
+          </tr>
+      @endforeach
+      </tbody>
+  </table>
+@endsection
+
+```
+
+5. Crear un componente para los equipos:
+
+* Ejecuta el siguiente comando para crear un componente Blade llamado Equipo:
+
+```bash
+./vendor/bin/sail artisan make:component Equipo
+```
+
+* Añade los estilos al archivo CSS *resources/css/equipos.css*:
+
+```css
+  .equipo {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .equipo h2 {
+    margin: 0;
+    color: darkblue;
+  }
+```
+
+*  Modifica la vista *resources/views/components/equipo.blade.php* para crear el componente:
+
+```html
+<div class="equipo">
+    <h2>{{ $nombre }}</h2>
+    <p><strong>Estadio:</strong> {{ $estadio }}</p>
+    <p><strong>Títulos:</strong> {{ $titulos }}</p>
+</div>
+```
+
+* Crea un método en el controlador de equipos para mostrar un equipo:
+
+```php
+public function show($id){
+    $equipos = [
+        ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
+        ['nombre' => 'Real Madrid', 'estadio' => 'Santiago Bernabeu', 'titulos' => 10],
+        ['nombre' => 'Sevilla', 'estadio' => 'Ramón Sánchez Pizjuán', 'titulos' => 8],
+        ['nombre' => 'Valencia', 'estadio' => 'Mestalla', 'titulos' => 6],
+        ['nombre' => 'Atlético de Madrid', 'estadio' => 'Wanda Metropolitano', 'titulos' => 5],
+    ];
+    return view('equipos.show', compact('equipo'));
+}
+```
+
+* Crea la vista *resources/views/equipos/show.blade.php* para utilizar el componente:
+
+```html
+@extends('layouts.app')
+@section('title', " Guía de Equipos" )
+@section('content')
+<x-equip
+   :nombre="$equipo['nombre']"
+   :estadio="$equipo['estadio']"
+   :titulos="$equipo['titulos']"
+/>
+@endsection 
+```
+
+* Modifica el componente *app/Views/components/Equipo.php* para utilizar los datos pasados:
+
+```php
+public function __construct(
+     public string $nombre,
+     public string $estadio,
+     public int $titulos) { }
+``` 
+
+* Crea la ruta:
+
+```php
+Route::get('/equipos/{id}', [EquipoController::class, 'show']);
+```
+
+6. **Pregunta:** ¿Cómo podemos hacer para no repetir el array de equipos en el controlador?
+
+7. **Pregunta:** ¿Qué es un componente Blade y qué ventajas tiene respecto a las vistas parciales?
+
+8. **Pregunta:** ¿Qué permite la directiva @yield y cómo se relaciona con @section?
+
+9. **Pregunta:** ¿Por qué es importante tener una plantilla base en una aplicación Web?
+
+---
+
+#### Paso 8: Refactorizar el código
+
+1. No repetir el array de equipos en el controlador:
+
+```php
+class EquipoController extends Controller{
+    public $equipos = [
+        ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
+        ['nombre' => 'Real Madrid', 'estadio' => 'Santiago Bernabeu', 'titulos' => 10],
+        ['nombre' => 'Sevilla', 'estadio' => 'Ramón Sánchez Pizjuán', 'titulos' => 8],
+        ['nombre' => 'Valencia', 'estadio' => 'Mestalla', 'titulos' => 6],
+        ['nombre' => 'Atlético de Madrid', 'estadio' => 'Wanda Metropolitano', 'titulos' => 5],
+    ];
+
+    public function index(){
+        $equipos = $this->equipos;
+        return view('equipos.index', compact('equipos'));
+    }
+
+    public function show($id){
+        $equipo = $this->equipos[$id];
+        return view('equipos.show', compact('equipo'));
+    }
+}
+```
+
+2. Pasar las rutas a resource:
+    
+```php
+Route::resource('equipos', EquipController::class);
+```
+
+3. Crear el enlace en el índice para ver un equipo:
+
+```html
+@foreach($equipos as $key => $equipo)
+    <tr>
+        <td><a href="{{ route('equipos.show', $key) }}">{{ $equipo['nombre'] }}</a></td>
+        <td>{{ $equipo['estadio'] }}</td>
+        <td>{{ $equipo['titulos'] }}</td>
+    </tr>
+@endforeach
+```
+
+4. Usa ChatGPT para dar estilo a las vistas mediante tailwind:
+
+```html
+app.blade.php
+<!DOCTYPE html>
+<html lang="es">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>@yield('title','Guía de fútbol femenino')</title>
+      @vite(['resources/css/app.css'])
+</head>
+<body class="font-sans bg-gray-100 text-gray-900">
+    <header class="bg-blue-800 text-orange p-4">
+        @include('partials.menu')
+    </header>
+    <main class="container mx-auto p-6">
+        @yield('content')
+    </main>
+    <footer class="bg-blue-800 text-white text-center p-4">
+        <p>&copy; 2025 Guía de fútbol femenino</p>
+    </footer>
+</body>
+</html>
+``` 
+
+```html
+index.blade.php
+@extends('layouts.app')
+@section('title', "Guía de equipos")
+@section('content')
+
+<h1 class="text-3xl font-bold text-blue-800 mb-6">Guía de Equipos</h1>
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="border border-gray-300 p-2">Nombre</th>
+            <th class="border border-gray-300 p-2">Estadio</th>
+            <th class="border border-gray-300 p-2">Títulos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($equipos as $key => $equipo)
+            <tr class="hover:bg-gray-100">
+                <td class="border border-gray-300 p-2">
+                    <a href="{{ route('equipos.show', $key) }}" class="text-blue-700 hover:underline">{{ $equipo['nombre'] }}</a>
+                </td>
+                <td class="border border-gray-300 p-2">{{ $equipo['estadio'] }}</td>
+                <td class="border border-gray-300 p-2">{{ $equipo['titulos'] }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+@endsection
+``` 
+
+```html
+equipo.blade.php
+<div class="equipo border rounded-lg shadow-md p-4 bg-white">
+    <h2 class="text-xl font-bold text-blue-800">{{ $nombre }}</h2>
+    <p><strong>Estadio:</strong> {{ $estadio }}</p>
+    <p><strong>Títulos:</strong> {{ $titulos }}</p>
+</div>
+``` 
+
+```html
+menu.blade.php
+<nav>
+    <ul class="flex space-x-4">
+        <li><a href="/" class="text-white hover:underline">Inicio</a></li>
+        <li><a href="/equipos" class="text-white hover:underline">Guía de equipos</a></li>
+        <li><a href="/estadios" class="text-white hover:underline">Listado de estadios</a></li>
+    </ul>
+</nav>
+```
+
+### Práctica: Guía de estadios de fútbol
+
+El objetivo de este ejercicio es crear una extensión de la guía de equipos de fútbol femenino para incluir una nueva funcionalidad: un listado de estadios de fútbol. Los alumnos implementarán rutas, controladores y vistas para mostrar estadios y sus características.
+
+---
+
+#### 1. Crear un controlador de estadios
+
+1. Genera un nuevo controlador llamado `EstadioController`.
+2. Añade un método `index` al controlador para devolver una vista con un listado de estadios.
+
+```php
+$estadiosFutbolFemenino = [
+    [
+      'nombre' => 'Estadio Johan Cruyff',
+      'ciudad' => 'Sant Joan Despí',
+      'capacidad' => 6000,
+      'equipo_principal' => 'Barcelona'
+    ],
+    [
+      'nombre' => 'Centro Deportivo Wanda Alcalá de Henares',
+      'ciudad' => 'Alcalá de Henares',
+      'capacidad' => 2800,
+      'equipo_principal' => 'Atlético de Madrid'
+    ],
+    [
+      'nombre' => 'Estadio Alfredo Di Stéfano',
+      'ciudad' => 'Madrid',
+      'capacidad' => 6000,
+      'equipo_principal' => 'Real Madrid'
+    ]
+];
+```  
+---
+
+#### 2. Crear una ruta para los estadios
+
+1. Define una nueva ruta en `routes/web.php` que apunte al método `index` del controlador.
+
+---
+
+#### 3. Crear una vista para mostrar los estadios
+
+1. Crea un archivo de vista en `resources/views/estadios/index.blade.php` para mostrar los estadios en formato de tabla.
+2. Incluye el menú.
+
+---
+
+#### 4. Añadir estilos al listado de estadios
+
+1. Crea un archivo CSS `resources/css/estadios.css` para estilizar la tabla.
+2. Incluye el CSS a la vista utilizando `@vite`.
+3. Ejecuta Vite para aplicar los estilos.
+
+---
+
+#### 5. Ampliar la guía de estadios
+
+1. Añadir una nueva ruta `/estadios/crear` para mostrar un formulario que permita añadir un nuevo estadio.
+2. Crear un controlador con un método `crear` que devuelva una vista con el formulario.
+3. Diseñar un formulario Blade que contenga campos para el nombre del estadio, ciudad y capacidad.
+4. Mostrar un mensaje de confirmación cuando el usuario haga clic en el botón de enviar.
+5. Crea un componente para los estadios.
+6. Modifica la vista `resources/views/estadios/index.blade.php` para heredar de `layouts.app`.
+
+#### 6. Jugadoras
+
+Haz lo mismo con las jugadoras, crea un controlador, una vista y un componente. Ejemplo: 
+
+```php
+$jugadores = [
+    ['nombre' => 'Alexia Putellas', 'equipo' => 'Barcelona', 'posicion' => 'Centrocampista'],
+    ['nombre' => 'Esther González', 'equipo' => 'Atlético de Madrid', 'posicion' => 'Delantera'],
+    ['nombre' => 'Misa Rodríguez', 'equipo' => 'Real Madrid', 'posicion' => 'Portera'],
+];
+```
+#### 7. Partidos
+ 
+Haz lo mismo con los partidos, crea un controlador, una vista y un componente. Ejemplo:
+
+```php
+$partits = [
+    ['local' => 'Barcelona', 'visitante' => 'Atlético de Marid', 'fecha' => '2025-01-30', 'resultado' => null],
+    ['local' => 'Real Madrid', 'visitante' => 'Barcelona', 'fecha' => '2025-01-15', 'resultado' => '3-0'],
+];
+```
+
+#### 8. Modifica el menú
+
+Para poder ir a todas las pantallas y cambiar las rutas a llamadas.
+
+ ---
+
+#### Preguntas para reflexionar
+
+1. **Rutas:** ¿Por qué utilizamos un controlador para gestionar la lógica de esa funcionalidad?
+2. **Blade:** ¿Qué ocurre si intentamos acceder a una clave que no existe en un array?
+3. **CSS y Vite:** ¿Qué diferencia existe entre incluir un archivo CSS estático y utilizar `@vite`?
