@@ -22,7 +22,7 @@
 
 > Duración estimada: 40 sesiones
 
-## 7.1 Introducción
+## 7.1 Introducción
 
 ### ¿Qué es un framework?
 
@@ -71,14 +71,14 @@ Lanzar el siguiente script de [php.new](https://php.new/) que instalará *PHP*, 
 === "En macOS"
 
     ``` bash
-      /bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.4)"
+    /bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.4)"
     ```
 
 === "En Windows"
 
     ``` bash
-      # Run as administrator...
-      Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.4'))
+    # Run as administrator...
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.4'))
     ```
 
 Después de lanzar el comando de arriba hay que reiniciar la sesión de la terminal.
@@ -88,7 +88,7 @@ Si en cualquier momento queremos acutalizar PHP, Composer o el instalador de Lar
 *Si ya tenemos instalado PHP y Composer en el equipo*, sólo es necesario instalar Laravel de la siguiente forma:
 
 ``` bash
-  composer global require laravel/installer
+composer global require laravel/installer
 ```
 
 #### Crear proyecto
@@ -96,15 +96,15 @@ Si en cualquier momento queremos acutalizar PHP, Composer o el instalador de Lar
 Una vez tenemos instalados PHP, Composer y el instalador de Laravel en el equipo, para crear una aplicación con el nombre **example-app** vamos al directorio de nuestros proyectos y ejecutamos:
 
 ``` bash
-  laravel new example-app
+laravel new example-app
 ```
 
 Una vez creada la aplicación, hay que iniciar el servidor de desarrollo local usando el script dev de Composer:
 
 ``` bash
-  cd example-app
-  npm install && npm run build
-  composer run dev
+cd example-app
+npm install && npm run build
+composer run dev
 ```
 
 Una vez iniciado el servidor de desarrollo, la aplicación será accesible en el navegador web en `http://localhost:8000`.
@@ -115,7 +115,7 @@ Una vez iniciado el servidor de desarrollo, la aplicación será accesible en el
 </figure>
 
 
-### b. Laravel Herd
+### b. Laravel Herd
 
 Herd es un entorno de desarrollo nativo de Laravel y PHP para macOS y Windows, increíblemente rápido. Incluye todo lo que necesitas para comenzar a desarrollar con Laravel, incluidos PHP y nginx. Una vez que instales Herd, estarás listo para comenzar a desarrollar con Laravel.
 
@@ -146,29 +146,26 @@ Por ejemplo, para crear una aplicación con el nombre **example-app** ejecutarem
 === "En macOS"
 
     ``` bash
-      curl -s "https://laravel.build/example-app" | bash
-
+    curl -s "https://laravel.build/example-app" | bash
     ```
 
 === "En Windows"
 
     ``` bash
-      curl -s https://laravel.build/example-app | bash
-
+    curl -s https://laravel.build/example-app | bash
     ```
 
 Una vez creados los contenedores, accedemos al directorio de la app y lanzamos Laravel Sail:
 
 ``` bash
-  cd example-app
- 
-  ./vendor/bin/sail up
+cd example-app
+./vendor/bin/sail up
 ```
 
 Por último, lanzamos las migraciones de la BDD:
 
 ``` bash
-  ./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan migrate
 ```
 
 Y la aplicación ya es accesible desde `http://localhost/`.
@@ -176,24 +173,24 @@ Y la aplicación ya es accesible desde `http://localhost/`.
 Si queremos que funcione **phpmyadmin** hay que añadir otro contenedor docker a mano o incluyendo el siguiente código en el docker-compose.yml:
 
 ``` bash
-  phpmyadmin:
-        image: 'phpmyadmin:latest'
-        ports:
-            - 8080:80
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-        links:
-            - "mysql:db"
-        depends_on:
-            - mysql
-        networks:
-            - sail
+phpmyadmin:
+      image: 'phpmyadmin:latest'
+      ports:
+          - 8080:80
+      environment:
+          MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      links:
+          - "mysql:db"
+      depends_on:
+          - mysql
+      networks:
+          - sail
 ```
 
 Parando Laravel Sail y volviéndolo a lanzar ya lo tenemos funcionando:
 
 ``` bash
-  ./vendor/bin/sail up
+./vendor/bin/sail up
 ```
 
 <figure style="align: center;">
@@ -213,7 +210,7 @@ Puedes utilizar [VS Code](https://code.visualstudio.com/) con la [extensión ofi
     <figcaption>Extensión de Laravel para VS Code</figcaption>
 </figure>
 
-O si lo prefieres también puedes probar [PhpStorm](https://www.jetbrains.com/es-es/phpstorm/laravel/) de forma gratuita con la cuenta del instituto.
+O si lo prefieres, también puedes probar [PhpStorm](https://www.jetbrains.com/es-es/phpstorm/laravel/) de forma gratuita con la cuenta del instituto.
 
 <figure style="align: center;">
     <img src="imagenes/07/phpStorm.png" width="700">
@@ -225,12 +222,12 @@ O si lo prefieres también puedes probar [PhpStorm](https://www.jetbrains.com/es
 Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defecto para ofrecer un punto de partida sólido para aplicaciones de cualquier tamaño siguiendo una estructura modular basada en el patrón MVC (Modelo-Vista-Controlador). Esta organización facilita la separación de responsabilidades, mantenimiento y escalabilidad. A continuación, se describen las carpetas más importantes.
 
 - **app**: Contiene el código principal de la aplicación.
-  - Models/ : Incluye las clases de los modelos Eloquent, que representan las tablas de tu base de datos y permiten interactuar con ellas de manera sencilla.
-  - Http/ : Incluye controladores, middleware y solicitudes de formulario. Es el lugar donde se maneja la lógica relacionada con las solicitudes HTTP que entran en tu aplicación.
-    - Http/Controllers/ : Controladores que procesan las peticiones y devuelven respuestas.
-    - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
-  - Policies/ : Gestionan la autenticación basada en permisos.
-  - Providers: Almacena los proveedores de servicios de tu aplicación, que son responsables de inicializar componentes y enlazar servicios en el contenedor de servicios.
+    - Models/ : Incluye las clases de los modelos Eloquent, que representan las tablas de tu base de datos y permiten interactuar con ellas de manera sencilla.
+    - Http/ : Incluye controladores, middleware y solicitudes de formulario. Es el lugar donde se maneja la lógica relacionada con las solicitudes HTTP que entran en tu aplicación.
+      - Http/Controllers/ : Controladores que procesan las peticiones y devuelven respuestas.
+      - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
+    - Policies/ : Gestionan la autenticación basada en permisos.
+    - Providers: Almacena los proveedores de servicios de tu aplicación, que son responsables de inicializar componentes y enlazar servicios en el contenedor de servicios.
 - **bootstrap**: Incluye el archivo app.php que inicia el framework y una carpeta cache con archivos generados para optimizar el rendimiento.
 - **config**: Alberga todos los archivos de configuración de la aplicación. Es recomendable revisarlos para familiarizarse con las opciones disponibles.
 - **database**: Gestión de bases de datos.
