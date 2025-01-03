@@ -224,8 +224,8 @@ Al crear un nuevo proyecto con Laravel, se crean una serie de carpetas por defec
 - **app**: Contiene el código principal de la aplicación.
     - Models/ : Incluye las clases de los modelos Eloquent, que representan las tablas de tu base de datos y permiten interactuar con ellas de manera sencilla.
     - Http/ : Incluye controladores, middleware y solicitudes de formulario. Es el lugar donde se maneja la lógica relacionada con las solicitudes HTTP que entran en tu aplicación.
-      - Http/Controllers/ : Controladores que procesan las peticiones y devuelven respuestas.
-      - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
+        - Http/Controllers/ : Controladores que procesan las peticiones y devuelven respuestas.
+        - Http/Middleware/ : Clases para filtrar y procesar las peticiones antes de llegar a los controladores.
     - Policies/ : Gestionan la autenticación basada en permisos.
     - Providers: Almacena los proveedores de servicios de tu aplicación, que son responsables de inicializar componentes y enlazar servicios en el contenedor de servicios.
 - **bootstrap**: Incluye el archivo app.php que inicia el framework y una carpeta cache con archivos generados para optimizar el rendimiento.
@@ -257,7 +257,6 @@ Esta estructura es flexible, permitiendo reorganizar los componentes según las 
 
 Es importante destacar que algunos de estos directorios no existen por defecto y se crean a medida que utilizas los comandos de Artisan para generar las clases correspondientes.
 
-
 ## 7.5 Rutas
 
 Podríamos decir que existen dos tipos principales de rutas:
@@ -267,7 +266,8 @@ Podríamos decir que existen dos tipos principales de rutas:
   
 En este tema, nos centraremos en las rutas web, por lo que editaremos el contenido del archivo `routes/web.php`. Este archivo es el punto centralizado para la definición de rutas. Cualquier ruta no definida en este archivo no será válida y generará un error 404.
 
-Las rutas pueden: 
+Las rutas pueden:
+
 1. Devolver directamente un valor desde el archivo de rutas. 
 2. Llamar una vista o un controlador.
 
@@ -282,11 +282,11 @@ Una ruta simple tiene una URL fija y una función que devuelve una respuesta. Po
   });
 ```
 
-Cuando accedamos a `http://localhost/saludo`, Laravel devolverá "Hola mundo!".
+Cuando accedamos a `http://localhost/saludo` (localhost o el equivalente a nuestra app local o en remoto), Laravel devolverá "Hola mundo!".
 
 ### Rutas con parámetros
 
-Se pueden definir parámetros dinámicos en las rutas mediante claves **{}**. Por ejemplo:
+Se pueden definir **parámetros dinámicos** en las rutas mediante claves **{ }**. Por ejemplo:
 
 ```php
 <?php
@@ -295,7 +295,7 @@ Se pueden definir parámetros dinámicos en las rutas mediante claves **{}**. Po
 });
 ```
 
-Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un *parámetro opcional*, añadimos un símbolo **?**:
+Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un **parámetro opcional**, añadimos un símbolo **?**:
 
 ```php
 <?php
@@ -306,9 +306,9 @@ Si accedemos a `/saludo/Juan`, devolverá "Hola, Juan". Para definir un *paráme
 
 Ahora, `/saludo`, devolverá "Hola, Invitado".
 
-### Validación de parámetros
+### Validación de parámetros
 
-Podemos validar los parámetros usando el método *where*. Por ejemplo:
+Podemos **validar** los parámetros usando el método **where**. Por ejemplo:
 
 ```php
 <?php
@@ -327,7 +327,7 @@ Podemos validar los parámetros usando el método *where*. Por ejemplo:
 
 ### Rutas con nombre (alias)
 
-Mediante el método *name* podemos darle un alias o un nombre a nuestras rutas para poder referenciarlas fácilmente desde nuestras plantillas de Laravel, como se verá más adelante..
+Podemos darle un alias o un **nombre** a nuestras rutas mediante el método **name** para poder referenciarlas fácilmente desde nuestras plantillas de Laravel, como se verá más adelante..
 
 ```php
 <?php
@@ -346,7 +346,7 @@ Podemos utilizar el nombre de la ruta en las plantillas Blade:
 
 ### Grupos de rutas
 
-Laravel permite agrupar rutas para compartir configuraciones como prefijos o middleware:
+Laravel permite **agrupar rutas** mediante el método **prefix** para compartir configuraciones como prefijos o middleware:
 
 ```php
 <?php
@@ -363,12 +363,13 @@ Route::prefix('admin')->group(function () {
 
 Esto crea las rutas `/admin/dashboard` y `/admin/usuarios`.
 
-### Rutas con controladores
+### Rutas con controladores
 
-Para gestionar lógica más compleja, es recomendable utilizar controladores:
+Para gestionar lógica más compleja, es **recomendable utilizar controladores** y que sean ellos quienes llamen a la vista correspondiente:
 
 ```php
 <?php
+// Llamada al método 'mostrar' de UsuarioController pasándole el $id como parámetro
 Route::get('/usuario/{id}', [UsuarioController::class, 'mostrar']);
 
 // Controlador definido mediante Artisan
@@ -378,7 +379,7 @@ Route::get('/usuario/{id}', [UsuarioController::class, 'mostrar']);
 
 ### Recursos y APIs
 
-Podemos definir rutas con el método resource para CRUDs:
+Si queremos hacer **CRUDs** podemos definir rutas directamente con el método **resource**:
 
 
 ```php
@@ -391,7 +392,7 @@ Este método genera automáticamente las rutas para acciones como index, create,
 !!! info "Ampliar sobre rutas"
     Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/11.x/routing) que contiene numerosos ejemplos.
 
-## 7.6 Vistas
+## 7.6 Vistas
 
 Las vistas son la forma de presentar el resultado (una pantalla de nuestro sitio web) de forma visual al usuario. Laravel permite estructurar esta parte de la aplicación utilizando **vistas simples** o **plantillas Blade**, una herramienta potente para modularizar y reutilizar el código de nuestras vistas.
 
