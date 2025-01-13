@@ -514,7 +514,6 @@ Cada sección que haga uso de esta plantilla contendrá el texto estático `Bien
 Ahora crearemos los archivos dinámicos de cada una de las secciones, en nuestro caso `blog.blade.php` y `fotos.blade.php`
 
 ```php
-<?php
 // blog.blade.php
 @extends('plantilla')
 
@@ -528,7 +527,6 @@ Importamos el contenido de `plantilla` bajo la directiva `@extends` para que car
 Ahora casi lo mismo para la sección de `fotos`
 
 ```php
-<?php
 // fotos.blade.html
 @extends('plantilla')
 
@@ -908,7 +906,7 @@ Route::get('admin', [App\Http\Controllers\Photo\AdminController::class, 'method'
       - El título `FOTO ░▒▓ BLOG` a la derecha del logotipo
       - `Menú` de navegación para moverse por las distintas secciones
 
-  - Puedes usar Bootstrap como algo opcional para practicar. Recuerda que viene incluido con la instalación de Laravel.
+  - Puedes usar [tailwind](https://tailwindcss.com/) como algo opcional para practicar. Recuerda que viene por defecto con la instalación de Laravel. Sólo tienes que incluirlo en el `head` de la plantilla: `@vite('resources/css/app.css')`.
 
 ---
 
