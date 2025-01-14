@@ -1138,7 +1138,7 @@ npm run dev
    </table>
    ```
 
-3. Crear una nueva vista parcial para el menú de navegación:
+3. Crear una nueva **vista parcial** para el menú de navegación:
   
 * Añade un nuevo archivo a *resources/views/partials/menu.blade.php* con el siguiente contenido:
 
@@ -1158,7 +1158,7 @@ npm run dev
 @include('partials.menu')
 ```
 
-4. Crear una plantilla base:
+4. Crear una **plantilla base**:
 
 * Crea el archivo *resources/views/layouts/app.blade.php*:
 
@@ -1215,7 +1215,7 @@ npm run dev
 
 ```
 
-5. Crear un componente para los equipos:
+5. Crear un **componente** para los equipos:
 
 * Ejecuta el siguiente comando para crear un componente Blade llamado Equipo:
 
@@ -1262,6 +1262,7 @@ public function show($id){
         ['nombre' => 'Valencia', 'estadio' => 'Mestalla', 'titulos' => 6],
         ['nombre' => 'Atlético de Madrid', 'estadio' => 'Wanda Metropolitano', 'titulos' => 5],
     ];
+    $equipo = $equipos[$id];
     return view('equipos.show', compact('equipo'));
 }
 ```
