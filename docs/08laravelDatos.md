@@ -1174,7 +1174,7 @@ El último paso que vamos a hacer es, listar los datos relacionados en una vista
 
 ## Actividades
 
-703.   Crear el proyecto CholloSevero:
+703. Crear el proyecto CholloSevero:
 
   - Crea un nuevo repositorio para el proyecto
   - Configura el `.gitignore` para no incluir en el repo los siguientes archivos y carpetas:

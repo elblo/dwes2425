@@ -995,7 +995,7 @@ Route::get('/equipos', [EquipoController::class, 'index']);
 
 ---
 
-#### Paso 5: Passar datos a la vista
+#### Paso 5: Pasar datos a la vista
 
 1. Modifica el método `index`para pasar un array de equipos:
 
@@ -1087,6 +1087,7 @@ npm install
 ```
 
 6. Ejecutar servidor de desarrollo local Vite:
+
 ```bash 
 npm run dev
 ```
