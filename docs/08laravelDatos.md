@@ -20,38 +20,43 @@
 
 # Gestión de datos en Laravel
 
-> Duración estimada: 40 sesiones
+> Duración estimada: 20 sesiones
 
-## 7.8 Migraciones & Eloquent
+## 8.1 Introducción
 
-Con las migraciones vamos a gestionar la base de datos de nuestro sitio web; tanto crear nuevas BBDD como editarlas desde Laravel.
+Laravel es un framework PHP moderno que simplifica el desarrollo de aplicaciones web, incluyendo la gestión de bases de datos. La integración con Eloquent, su ORM (Object Relational Mapping), permite trabajar con bases de datos de forma intuitiva y eficiente.
 
-Las migraciones de un sitio hecho con Laravel se alojan en la ruta `database/migrations` y tienen extensión `.php`.
+## 8.2 Configuración inicial
 
-Si te fijas, nada más instalar Laravel con la imagen de Bitnami, se han creado varios archivos de migraciones que podemos usar, pero de momento los dejamos ahí y **NO LOS BORRAMOS** porque son muy útiles.
+Laravel soporta varios motores de bases de datos como MySQL, PostgreSQL, SQLite y SQL Server. La configuración principal se realiza en el archivo `.env`. 
 
-### Archivos .env
-
-Es de uso común trabajr con archivos de entorno llamados también `archivos .env`. Normalmente, eun unproyecto real puedes encontrarte con varios archivos de este tipo en función del despliegue que se quiera hacer; como por ejemplo:
-
-  - `test.env` config. para desplegar en entorno seguro de pruebas
-  - `release.env` config. para desplegar cambios de versión que se envía a los *beta testers*
-  - `production.env`config. para desplegar el código ya probado al resto del mundo.
-
-En nuestro caso, como no vamos a desplegar nada, sólo vamos a usar un único archivo `.env` y en cuestión de las migraciones vamos a fijarnos a partir de la línea 11 donde dice:
+**Ejemplo de configuración en .env:**
 
 ```console
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=blog
-DB_USERNAME=root
-DB_PASSWORD=
+DB_DATABASE=nombre_base_datos
+DB_USERNAME=usuario
+DB_PASSWORD=password
 ```
 
-En este archivo debemos configurar los datos de nuestro servidor MySQL y rellenarlo con la información correspondiente a nuestra base de datos <span class="alert">***ya creada***</span>
+Nota: El servidor MySQL debe estar funcionando con la base de datos <span class="alert">***ya creada***</span>
 
-Una vez tengamos ésto, lo que nos queda es ejecutar el comando de las migraciones a través del CLI `artisan`
+**Comprobar conexión:**
+
+El siguiente comando confirma si Laravel puede conectarse a la base de datos configurada.
+
+`php artisan migrate:status`
+
+**Posibles problemas:**
+
+- La extensión del driver de la base de datos (como *pdo_mysql* o *pdo_pgsql*) debe estar habilitada en el `php.ini`.
+- Utilizar `php artisan config:clear` para borrar la caché de configuraciones si los cambios del `.env` no se reflejan.
+
+**Lanzar migraciones:**
+
+Si la conexión va bien, lanzamos las migraciones:
 
 ```console
 php artisan migrate
@@ -63,19 +68,79 @@ Si todo ha salido bien obtendremos el siguiente resultado donde podremos observa
     <img src="imagenes/07/migraciones.png">
 </div>
 
+## 8.3 Migraciones
+
+### Introducción
+
+Las migraciones son un sistema de control de versiones para bases de datos que permite trabajar de forma colaborativa, manteniendo un histórico de los cambios realizados en el esquema. Con las migraciones se puede: 
+
+- Crear, modificar y borrar tablas. 
+- Gestionar el esquema de forma programática utilizando **Artisan** y el **Schema Builder**. 
+- Revertir cambios mediante **rollback** o volver a aplicar todos los cambios con **refresh**.
+
+### Estructura de las migraciones
+
+Las migraciones de un proyecto Laravel se guardan en el directorio *database/migrations* en archivos `.php` y siguen una estructura predefinida con dos métodos principales: 
+
+- **up**: Define las operaciones que deben aplicarse en la base de datos (crear tablas, añadir columnas, etc.). 
+- **down**: Define las operaciones inversas para revertir los cambios aplicados por up.
+
+Ejemplo:
+
+```php
+<?php
+public function up()
+{
+    Schema::create('usuarios', function (Blueprint $tabla) {
+        $tabla->id();
+        $tabla->string('nombre');
+        $tabla->string('email')->unique();
+        $tabla->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('usuarios');
+}
+```
+
+Por defecto, Laravel añade un campo autonumérico id y dos columnas timestamps (created_aty updated_at) gestionadas automáticamente.
+
+### Crear una migración
+
+Este comando genera un archivo con un nombre que incluye un timestamp para asegurar el orden cronológico.
+
+```console
+php artisan make:migration nombre_migración
+```
+
+Ejemplos:
+
+
+
+
+
 Si nos vamos al cliente que utilicemos para manejar la base de datos (phpMyAdmin por ejemplo) veremos que en nuestra base de datos se han creado todas las tablas de la migración que hemos ejecutado y **además** una tabla que se llama <span class="success">***migrations***</span>.
 
-La tabla `migrations` es simplemente un registro de todas las migraciones llevadas a cabo. Además, podemos hacer un ***rollback*** en caso de que queramos reestablecer nuestra base de datos.
+La tabla `migrations` es simplemente un registro de todas las migraciones llevadas a cabo. 
 
-```console
-php artisan migrate:rollback
-```
 
-O si preferimos hacer un reset para dejarla limpia
 
-```console
-php artisan migrate:reset
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Modelos
 

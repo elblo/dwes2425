@@ -630,6 +630,7 @@ class Alert extends Component{
 ```html
 <div class="border rounded-lg shadow-md p-4 bg-white">
     <p><strong>Alerta tipo:</strong> {{ $type }}</p>
+    <p>Mensaje: {{ $slot }}</p> <!-- lo que irá entre la etiqueta de apertura y cierre del componente -->
 </div>
 ```
 
@@ -637,12 +638,15 @@ class Alert extends Component{
 
 ```html
 <x-alert type="Notificación" />
+<!-- Lo que se cargará en $slot de la vista -->
+<x-alert type="Advertencia">Esto va dentro del alert.</x-alert>
 ```
 
-Las expresiones y variables PHP se deben pasar al componente mediante atributos que utilicen el carácter *:* como prefijo. Ejemplo:
+Las expresiones y variables PHP se deben pasar al componente mediante atributos que utilicen el carácter *:* como prefijo o se interpolan con *{{ }}*. Ejemplo:
 
 ```html
-<x-alert :type="$tipos[5]" />
+<x-alert :type="$tipo" />
+<x-alert type="{{ $tipo }}" /> <!-- Mejor así -->
 ```
 
 !!! info "Ampliar sobre vistas"
