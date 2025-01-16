@@ -68,6 +68,10 @@ Si todo ha salido bien obtendremos el siguiente resultado donde podremos observa
     <img src="imagenes/07/migraciones.png">
 </div>
 
+Si nos vamos al cliente que utilicemos para manejar la base de datos (phpMyAdmin por ejemplo) veremos que en nuestra base de datos se han creado todas las tablas de la migración que hemos ejecutado y **además** una tabla que se llama <span class="success">***migrations***</span>.
+
+La tabla `migrations` es simplemente un registro de todas las migraciones llevadas a cabo.
+
 ## 8.3 Migraciones
 
 ### Introducción
@@ -78,12 +82,12 @@ Las migraciones son un sistema de control de versiones para bases de datos que p
 - Gestionar el esquema de forma programática utilizando **Artisan** y el **Schema Builder**. 
 - Revertir cambios mediante **rollback** o volver a aplicar todos los cambios con **refresh**.
 
-### Estructura de las migraciones
+### Estructura de las migraciones
 
 Las migraciones de un proyecto Laravel se guardan en el directorio *database/migrations* en archivos `.php` y siguen una estructura predefinida con dos métodos principales: 
 
 - **up**: Define las operaciones que deben aplicarse en la base de datos (crear tablas, añadir columnas, etc.). 
-- **down**: Define las operaciones inversas para revertir los cambios aplicados por up.
+- **down**: Define las operaciones inversas para revertir (rollback) los cambios aplicados por up.
 
 Ejemplo:
 
@@ -105,35 +109,169 @@ public function down()
 }
 ```
 
-Por defecto, Laravel añade un campo autonumérico id y dos columnas timestamps (created_aty updated_at) gestionadas automáticamente.
+Por defecto, Laravel añade un campo autonumérico *id* y si se llama al método `timestamps()`, dos columnas *created_at* y *updated_at* que se actualizan automáticamente para saber cuándo se creó y actualizó un registro.
 
 ### Crear una migración
 
-Este comando genera un archivo con un nombre que incluye un timestamp para asegurar el orden cronológico.
+Mediante el comando `make:migration` de Artisan generamos una migración, un archivo con las instrucciones (Schema Builder) para construir o cambiar las tablas de la base de datos. En el nombre de dicho archivo se incluye un timestamp para asegurar el orden cronológico.
 
-```console
-php artisan make:migration nombre_migración
+**Ejemplos:**
+
+```bash
+# Migración en blanco
+php artisan make:migration nombre_migración 
+# Migración para crear una tabla
+php artisan make:migration create_table_usuarios --create=usuarios  
+# Migración para modificar una tabla
+php artisan make:migration add_to_usuarios --table=usuarios 
 ```
 
-Ejemplos:
+Laravel puede inferir acciones del nombre de la migración gracias a la clase **TableGuesser**. Por ejemplo, si el nombre contiene *create* o *to*, Artisan deducirá si es para crear o modificar tablas.
+
+### Ejecutar migraciones
+
+- `php artisan migrate`: Ejecuta las migraciones pendientes.
+- `php artisan migrate:status`: Muestra el estado de las migraciones.
+- `php artisan migrate:fresh`: Borra todas las tablas de la BD (sin ejecutar rollback) y ejecuta todas las migraciones.
+- `php artisan migrate:refresh`: Hace un rollback de todas las migraciones y las vuelve a ejecutar. Para rellenar la BD con datos de prueba, usar el flag --seed.
+- `php artisan migrate:reset`: Hace un rollback de todas las migraciones.
+- `php artisan migrate:rollback`: Revierte la la última migración.
+
+### Schema Builder
+
+La clase **Schema** es el kernel para definir y modificar el esquema de las bases de datos. Incluye constructores para crear, modificar y eliminar tablas y columnas. Y es lo que utilizaremos dentro de los archivos de migraciones.
+
+#### Crear y eliminar tablas
+
+```php
+<?php
+Schema::create('usuarios', function (Blueprint $table) {
+    $table->id();
+    $table->string('nombre', 32);
+    $table->timestamps();
+});
+
+Schema::dropIfExists('usuarios');
+```
+
+#### Añadir y eliminar columnas
+
+```php
+<?php
+Schema::table('usuarios', function (Blueprint $table) {
+    $table->string('telefono')->after('nombre')->nullable();
+});
+
+Schema::table('usuarios', function (Blueprint $table) {
+    $table->dropColumn('telefono');
+});
+```
+
+#### Tipos de columnas
+
+Laravel ofrece una amplia variedad de tipos de columnas que puedes consultar en la [documentación oficial](https://laravel.com/docs/11.x/migrations#available-column-types).
+
+#### Índices
+
+```php
+<?php
+$table->primary('id'); // Campo id como clave primaria
+$table->primary(['nombre', 'apellidos']); // Clave primaria compuesta
+$table->unique('email'); // Campo email único
+$table->index('localidad'); // Campo localidad como índice
+```
+
+#### Claves foráneas
+
+```php
+<?php
+Schema::table('posts', function (Blueprint $table) {
+    $table->unsignedBigInteger('user_id');
+    $table->foreign('user_id')->references('id')->on('usuarios');
+});
+```
+
+Laravel proporciona mediante el método `foreignId` una forma más concisa de hacer lo anterior, creando automáticamente el *unsignedBigInteger* y determinando la tabla a la que hace referencia (user) por el nombre del campo.
+
+```php
+<?php
+Schema::table('posts', function (Blueprint $table) {
+    $table->foreignId('user_id')->constrained();
+});
+```
+
+Si la tabla a la que hace referencia no sigue las convenciones de nombres de Laravel, se puede indicar a mano la referencia.
+
+```php
+<?php
+$table->foreignId('user_id')->constrained(
+    table: 'usuarios', indexName: 'id_usuario'
+);
+```
+
+Y también se puede especificar si queremos que los registros de la tabla actual se actualicen o borren en cascada según lo haga el registro de la tabla principal.
+
+```php
+<?php
+$table->foreignId('user_id')
+      ->constrained()
+      ->onUpdate('cascade')
+      ->onDelete('cascade');
+```
+
+## 8.4 Query Builder
+
+**Query Builder** de Laravel proporciona una interfaz fluida para construir y ejecutar consultas de bases de datos. Permite trabajar con varias bases de datos de forma sencilla sin escribir código SQL.
 
 
+??? info "Ejemplos de consultas"
+    ```php
+    <?php
+    // Obtener todos los registros de users
+    $users = DB::table('users')->get(); 
+    // Filtrar registros
+    $users = DB::table('users')->where('type', 'customer')->get();
+    // Seleccionar columnas
+    $users = DB::table('users')->select('name', 'email')->get();
+    // Ordenar resultados
+    $users = DB::table('users')->orderBy('name', 'asc')->get();
+    // Contar registros
+    $count = DB::table('users')->count();
+    // Agregados
+    $maxSalary = DB::table('employees')->max('salary');
+    // Subconsultas
+    $users = DB::table('users')
+        ->whereExists(function($query) {
+            $query->select(DB::raw(1))
+                  ->from('orders')
+                  ->whereColumn('orders.user_id', 'users.id');
+        })
+        ->get();
+    ```
 
+**Ejemplos de manipulación de datos:**
 
+```php
+<?php
+// Insertar registro
+DB::table('users')->insert([
+    'name' => 'John Doe',
+    'email' => 'john@example.com',
+]);
 
-Si nos vamos al cliente que utilicemos para manejar la base de datos (phpMyAdmin por ejemplo) veremos que en nuestra base de datos se han creado todas las tablas de la migración que hemos ejecutado y **además** una tabla que se llama <span class="success">***migrations***</span>.
+// Actualizar registro
+DB::table('users')
+    ->where('id', 1)
+    ->update(['name' => 'Updated Name']);
 
-La tabla `migrations` es simplemente un registro de todas las migraciones llevadas a cabo. 
+// Eliminar registro
+DB::table('users')
+    ->where('id', 1)
+    ->delete();
 
-
-
-
-
-
-
-
-
-
+// Borrar todos los registros
+DB::table('users')->truncate();
+```
 
 
 
