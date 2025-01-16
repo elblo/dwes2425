@@ -120,10 +120,12 @@ Mediante el comando `make:migration` de Artisan generamos una migración, un arc
 ```bash
 # Migración en blanco
 php artisan make:migration nombre_migración 
+
 # Migración para crear una tabla
 php artisan make:migration create_table_usuarios --create=usuarios  
+
 # Migración para modificar una tabla
-php artisan make:migration add_to_usuarios --table=usuarios 
+php artisan make:migration add_fields_to_usuarios --table=usuarios 
 ```
 
 Laravel puede inferir acciones del nombre de la migración gracias a la clase **TableGuesser**. Por ejemplo, si el nombre contiene *create* o *to*, Artisan deducirá si es para crear o modificar tablas.
@@ -132,8 +134,8 @@ Laravel puede inferir acciones del nombre de la migración gracias a la clase **
 
 - `php artisan migrate`: Ejecuta las migraciones pendientes.
 - `php artisan migrate:status`: Muestra el estado de las migraciones.
-- `php artisan migrate:fresh`: Borra todas las tablas de la BD (sin ejecutar rollback) y ejecuta todas las migraciones.
-- `php artisan migrate:refresh`: Hace un rollback de todas las migraciones y las vuelve a ejecutar. Para rellenar la BD con datos de prueba, usar el flag --seed.
+- `php artisan migrate:fresh`: Borra todas las tablas de la BDD (sin ejecutar rollback) y ejecuta todas las migraciones.
+- `php artisan migrate:refresh`: Hace un rollback de todas las migraciones y las vuelve a ejecutar. Para rellenar la BDD con datos de prueba, usar el flag --seed.
 - `php artisan migrate:reset`: Hace un rollback de todas las migraciones.
 - `php artisan migrate:rollback`: Revierte la la última migración.
 
@@ -221,33 +223,35 @@ $table->foreignId('user_id')
 
 ## 8.4 Query Builder
 
-**Query Builder** de Laravel proporciona una interfaz fluida para construir y ejecutar consultas de bases de datos. Permite trabajar con varias bases de datos de forma sencilla sin escribir código SQL.
+El **Query Builder** de Laravel proporciona una interfaz fluida para construir y ejecutar consultas de bases de datos. Permite trabajar con varias bases de datos de forma sencilla sin escribir código SQL.
 
+Es ideal para crear *consultas personalizadas* en las que el rendimiento es una prioridad y *consultas complejas* que no se pueden expresar fácilmente con Eloquent.
 
-??? info "Ejemplos de consultas"
-    ```php
-    <?php
-    // Obtener todos los registros de users
-    $users = DB::table('users')->get(); 
-    // Filtrar registros
-    $users = DB::table('users')->where('type', 'customer')->get();
-    // Seleccionar columnas
-    $users = DB::table('users')->select('name', 'email')->get();
-    // Ordenar resultados
-    $users = DB::table('users')->orderBy('name', 'asc')->get();
-    // Contar registros
-    $count = DB::table('users')->count();
-    // Agregados
-    $maxSalary = DB::table('employees')->max('salary');
-    // Subconsultas
-    $users = DB::table('users')
-        ->whereExists(function($query) {
-            $query->select(DB::raw(1))
-                  ->from('orders')
-                  ->whereColumn('orders.user_id', 'users.id');
-        })
-        ->get();
-    ```
+**Ejemplos de consultas:**
+
+```php
+<?php
+// Obtener todos los registros de users
+$users = DB::table('users')->get(); 
+// Filtrar registros
+$users = DB::table('users')->where('type', 'customer')->get();
+// Seleccionar columnas
+$users = DB::table('users')->select('name', 'email')->get();
+// Ordenar resultados
+$users = DB::table('users')->orderBy('name', 'asc')->get();
+// Contar registros
+$count = DB::table('users')->count();
+// Agregados
+$maxSalary = DB::table('employees')->max('salary');
+// Subconsultas
+$users = DB::table('users')
+    ->whereExists(function($query) {
+        $query->select(DB::raw(1))
+              ->from('orders')
+              ->whereColumn('orders.user_id', 'users.id');
+    })
+    ->get();
+```
 
 **Ejemplos de manipulación de datos:**
 
@@ -273,26 +277,65 @@ DB::table('users')
 DB::table('users')->truncate();
 ```
 
+## 8.5 Eloquent
 
+### Introducción
 
+Un **ORM (Object-Relational Mapping)** es una técnica de programación que permite eliminar la disparidad entre el modelo de datos de una base de datos relacional y el modelo de objetos de una aplicación. Mientras que en una BDD pensamos en tablas y campos, en el mundo de desarrollo pensamos en objetos y propiedades.
 
+Ventajas de un ORM:
 
+- **Abstracción de la base de datos**: No es necesario escribir SQL, ya que el ORM se encarga de traducir las operaciones de la base de datos a objetos.
+- **Nombres de campos y tablas**: No es necesario recordar los nombres de las tablas y campos, ya que el ORM se encarga de ello. Si cambiamos el nombre de un campo, solo tenemos que cambiarlo en un lugar, en el modelo.
+- **Relaciones**: Las relaciones entre tablas se pueden definir en los modelos, y el ORM se encarga de gestionarlas. Atravesar relaciones es tan sencillo como acceder a una propiedad de un objeto.
 
+**Eloquent** es el ORM de Laravel, y nos permite interactuar con la base de datos de una forma sencilla y elegante. Eloquent es una capa de abstracción de la base de datos, que nos permite interactuar con ella utilizando objetos. 
 
+Cada tabla de la base de datos tiene un modelo asociado, que es una clase que representa a la tabla. Por tanto:
+
+- las tablas son modelos
+- los registros de la tabla son instancias de ese modelo
+- los campos de una tabla son propiedades del modelo
+
+<figure style="align: center;">
+    <img src="imagenes/08/eloquent-orm.png" width="700">
+    <figcaption>Relación entre tabla y modelo</figcaption>
+</figure>
 
 ### Modelos
 
-Gracias a Eloquent y su integración con Laravel, podremos crear modelos de datos de una manera automatizada a través de `artisan`
+Los modelos son uno de los componentes más importantes de Laravel, son los responsables de interactuar con nuestra base de datos de una manera orientada a objetos. Representan las tablas de la base de datos como clases en la aplicación, permiten realizar operaciones para seleccionar, crear, actualizar y eliminar datos de una manera más sencilla y estructurada.
 
-Ahora que ya sabemos manejar las migraciones es hora de crear nuestras propias migraciones pero a través de Eloquent.
+#### Crear un modelo
 
-A través de la instrucción `make:model` creamos un nuevo modelo de datos, a continuación ponemos el nombre <span class="alert">***siempre empezando en Mayúsucla y en SINGULAR***</span> y pasamos el parámetro relacionado con las migraciones `-m`.
+Los modelos se definen dentro de la carpeta *app/Models* y se pueden crear mediante Artisan:
 
 ```console
 php artisan make:model Nota -m
 ```
 
-Si todo ha salido bien, veremos en nuestro directorio de migraciones `database/migrations` un nuevo archivo que se llama `2022_01_07_81237_create_notas_table.php`.
+!!! danger "Nombrar correctamente"
+    El nombre del modelo empieza por Mayúscula y siempre se escribe en **SINGULAR***. 
+    
+    Si le pasamos el parámetro **-m** además creará la migración con el código para crear la tabla correspondiente en la BDD, cuyo nombre irá en minúscula y plural.
+
+??? info "Opciones al crear el modelo"
+    Podemos añadir las siguientes opciones al comando para crear otros elementos relacionados con el modelo:
+
+    - **-c**, --controller: Crea un controlador.
+    - **-m**, --migration: Crea una migración.
+    - **-r**, --resource: Crea un controlador y una vista.
+    - **-f**, --factory: Crea un factory.
+    - **-s**, --seed: Crea un seeder.
+    - **-a**, --all: Crea un controlador, una migración y una vista.
+  
+    Por ejemplo, si queremos crear un modelo, una migración y un controlador, ejecutamos:
+
+    ```console
+    php artisan make:model Nota -cm 
+    ```
+
+Si todo ha salido bien, veremos en nuestro directorio de migraciones `database/migrations` un nuevo archivo con un nombre similar a `2025_01_21_111237_create_notas_table.php`.
 
 El siguiente paso es ver nuestro archivo de migraciones y editarlo para que contenga las tablas que nosotros queramos. Si lo visualizamos tan sólo tendrá la estructura básica con un par de tablas. Vamos a añadir un par de tablas más.
 
@@ -319,7 +362,7 @@ Ya tenemos nuestra base de datos creada con nuestras tablas migradas, ahora sól
 
 Rellenamos las tablas a través del cliente de MySQL que más nos guste:
 
-- PHP MyAdmin
+- PHPMyAdmin
 - [MySQL Workbench](https://www.mysql.com/products/workbench/)
 - [HeidiSQL](https://www.heidisql.com/download.php) *
 - [SquirrelSQL](http://www.squirrelsql.org/#installation)
