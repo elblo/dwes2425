@@ -233,16 +233,22 @@ Es ideal para crear *consultas personalizadas* en las que el rendimiento es una 
 <?php
 // Obtener todos los registros de users
 $users = DB::table('users')->get(); 
+
 // Filtrar registros
 $users = DB::table('users')->where('type', 'customer')->get();
+
 // Seleccionar columnas
 $users = DB::table('users')->select('name', 'email')->get();
+
 // Ordenar resultados
 $users = DB::table('users')->orderBy('name', 'asc')->get();
+
 // Contar registros
 $count = DB::table('users')->count();
+
 // Agregados
 $maxSalary = DB::table('employees')->max('salary');
+
 // Subconsultas
 $users = DB::table('users')
     ->whereExists(function($query) {
@@ -335,9 +341,7 @@ php artisan make:model Nota -m
     php artisan make:model Nota -cm 
     ```
 
-Si todo ha salido bien, veremos en nuestro directorio de migraciones `database/migrations` un nuevo archivo con un nombre similar a `2025_01_21_111237_create_notas_table.php`.
-
-El siguiente paso es ver nuestro archivo de migraciones y editarlo para que contenga las tablas que nosotros queramos. Si lo visualizamos tan sólo tendrá la estructura básica con un par de tablas. Vamos a añadir un par de tablas más.
+Si todo ha salido bien, veremos en nuestro directorio de migraciones `database/migrations` un nuevo archivo con un nombre similar a `2025_01_21_111237_create_notas_table.php` en el que se encuentra la tabla relacionada y que podemos abrir para seguir añadiendo campos mediante el **Schema Builder** como se ha visto anteriormente. Por ejemplo:
 
 ```php
 <?php
@@ -345,16 +349,104 @@ El siguiente paso es ver nuestro archivo de migraciones y editarlo para que cont
 Schema::create('notas', function (Blueprint $table) {
   $table->id();
   $table->timestamps();
-
-  $table->string('nombre');
+  // Campos añadidos
+  $table->string('nombre'); 
   $table->text('descripcion');
+  $table->integer('prioridad');
 });
 ```
-En esta `Schema` podemos poner todas las tablas que nosotros queramos y establecer el tipo de dato para cada una de ellas, así como el nombre.
 
-Una vez que estamos satisfechos con nuestro esquema debemos volver a ejecutar el código de migración a través de artisan para que se introduzca esta nueva información en la base de datos.
+Una vez tengamos listo nuestro esquema debemos lanzar `php artisan migrate` para que ejecute las migraciones pendientes introduciendo la nueva información en la base de datos.
 
-Para ver todos los tipos de datos que maneja Eloquent puedes visitar la [documentación oficial](https://laravel.com/docs/5.0/schema#adding-columns).
+#### Uso básico de un modelo
+
+**Recuperar datos**
+
+```php
+<?php
+// Todos los registros
+$notas = Nota::all();
+
+// Registros filtrados
+$notas = Nota::where('prioridad', '>', 5)->get();
+
+// Registro único
+$nota = Nota::findOrFail($id);
+```
+
+**Insertar datos**
+```php
+<?php
+$nota = new Nota();
+$nota->titulo = "Proyecto Laravel";
+$nota->descripcion = "Programar la parte de los modelos de la práctica de Fútbol Femenino.";
+$nota->prioridad = 10;
+$nota->save();
+```
+
+**Actualizar datos**
+```php
+<?php
+$nota = Nota::find($id);
+$nota->titulo = "Nuevo título";
+$nota->save();
+```
+
+**Eliminar datos**
+```php
+<?php
+$nota = Nota::find($id);
+$nota->delete();
+```
+
+#### Propiedades comunes de los modelos Eloquent
+
+En los modelos podemos definir varias propiedades para configurar el comportamiento de la interacción con la base de datos. A continuación se detallan las más importantes:
+
+```php
+<?php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Example extends Model
+{
+    // Especifica el nombre de la tabla si no sigue la convención de nombres de Laravel
+    protected $table = 'custom_table_name';
+
+    // Define la clave primaria de la tabla
+    protected $primaryKey = 'custom_id';
+    // Indica si la clave primaria es autoincremental
+    public $incrementing = false;
+    // Especifica el tipo de la clave primaria (si no es integer)
+    protected $keyType = 'string';
+
+    // Define qué atributos pueden ser asignados masivamente (a través de métodos como create o update)
+    protected $fillable = ['name', 'email', 'password'];
+    // Contrario a $fillabel. Define qué atributos no pueden ser asignados masivamente
+    protected $guarded = ['is_admin'];
+
+    // Define los atributos a ocultar al serializar el modelo (a JSON o array)
+    protected $hidden = ['password', 'remember_token'];
+    // Contrario a $hidden, define los atributos que serán visibles al serializar
+    protected $visible = ['name', 'email'];
+
+    // Transformación automática de los atributos a un tipo específico
+    protected $casts = [
+        'is_admin' => 'boolean',
+        'settings' => 'array',
+    ];
+
+    // Indica si la tabla tiene los campos `created_at` y `updated_at`
+    public $timestamps = true;
+
+    // Defineix la conexión a la BDD
+    protected $connection = 'mysql';
+}
+```
+
+
+
 
 ### Recuperando datos
 
