@@ -227,7 +227,7 @@ El **Query Builder** de Laravel proporciona una interfaz fluida para construir y
 
 Es ideal para crear *consultas personalizadas* en las que el rendimiento es una prioridad y *consultas complejas* que no se pueden expresar fácilmente con Eloquent.
 
-**Ejemplos de consultas:**
+##### Ejemplos de consultas
 
 ```php
 <?php
@@ -259,7 +259,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-**Ejemplos de manipulación de datos:**
+##### Ejemplos de manipulación de datos
 
 ```php
 <?php
@@ -283,7 +283,7 @@ DB::table('users')
 DB::table('users')->truncate();
 ```
 
-## 8.5 Eloquent
+## 8.5 Eloquent: Modelos
 
 ### Introducción
 
@@ -445,53 +445,61 @@ class Example extends Model
 }
 ```
 
+### Ejemplo recuperar datos
 
-
-
-### Recuperando datos
-
-Ya tenemos nuestra base de datos creada con nuestras tablas migradas, ahora sólo falta rellenar esas tablas con datos para poder pintarlos en nuestro código HTML.
-
-Rellenamos las tablas a través del cliente de MySQL que más nos guste:
+Ya tenemos nuestra base de datos creada con las tablas migradas, ahora sólo falta rellenarlas con algunos datos de prueba a través del cliente de MySQL que más nos guste:
 
 - PHPMyAdmin
 - [MySQL Workbench](https://www.mysql.com/products/workbench/)
-- [HeidiSQL](https://www.heidisql.com/download.php) *
-- [SquirrelSQL](http://www.squirrelsql.org/#installation)
+- [HeidiSQL](https://www.heidisql.com/download.php)
 
-Ahora tendremos que irnos a una vista ya creada o creamos una nueva y solicitamos los datos desde el HTML.
+Vamos a ver cómo recuperar esos datos desde una vista y lo primero que vamos a necesitar va a ser un controlador para gestionar esas notas:
 
-¿Nos acordamos del `PagesController`? pues hacer uso de su magia junto con las rutas que creamos en `web.php`
-
-```php
-<?php
-
-// estamos en ▓▓▓ web.php 
-
-Route::get('notas', [ PagesController::class, 'notas' ]);
+```bash
+php artisan make:controller NotaController
 ```
 
-Antes de intentar entrar, debemos configurar nuestro controlador de la siguiente manera:
+Es recomendable seguir la convención de Laravel de nombres de rutas y funciones de controladores que viemos [aquí](https://elblo.github.io/dwes2425/07frameworks.html#controlador-de-recursos).
+
+##### 1. Rutas 
+
+Creamos la ruta en `web.php` que redirige a la función correspondiente del controlador para mostrar todas las notas o una en particular.
 
 ```php
 <?php
+// estamos en ▓▓▓ web.php 
+Route::get('notas', [ PagesController::class, 'index' ])->name('notas.index');
+Route::get('notas/{id?}', [ PagesController::class, 'show' ])->name('notas.show');
+```
 
-// estamos en ▓▓▓ PagesController.php 
+##### 2. Controlador
 
-public function notas() {
+Desde la función del controlador se llama al modelo para recuperar las notas y devuelve la vista pasándoselas.
+
+```php
+<?php
+// estamos en ▓▓▓ NotaController.php 
+
+// Muestra listado de notas
+public function index() {
   $notas = Nota::all();
-
-  return view('notas', compact('notas'));
+  return view('notas.index', compact('notas'));
 }
 
+// Muestra una nota en específico
+public function show($id) {
+  $nota = Nota::findOrFail($id);
+  return view('notas.show', compact('nota'));
+}
 ```
 
-El último paso sería, crear la vista con la tabla que pinte los datos a través de la variable que le pasamos por parámetro en la ruta que acabamos de describir.
+##### 3. Vistas
+
+`notas/index.blade.php`: Vista con la tabla que pinta los datos mediante las notas pasadadas como parámetro.
 
 ```php
 <?php
-
-// estamos en ▓▓▓ notas.blade.php 
+// estamos en ▓▓▓ notas/index.blade.php 
 
 <h1>Notas desde base de datos</h1>
 
@@ -500,80 +508,55 @@ El último paso sería, crear la vista con la tabla que pinte los datos a travé
         <tr>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Prioridad</th>
         </tr>
     </thead>
     
     @foreach ($notas as $nota)
         <tr>
-            <td>{{$nota -> nombre}}</td>
-            <td>{{$nota -> descripcion}}</td>
+            <td>{{$nota->titulo}}</td>
+            <td>{{$nota->descripcion}}</td>
+            <td>{{$nota->prioridad}}</td>
         </tr>
     @endforeach
 </table>
 
 ```
-Hay que fijarse bien en los nombres de las columnas que tienen nuestras bases de datos, es justo lo que va después de `->` y siempre rodeado por los símbolos `{{  }}` ya que estamos en un archivo de plantilla.
 
-
-¿Qué pasaría si sólo queremos acceder a un único elemento? como si hiciésemos un `SELECT * from usuarios where id = 1`
-
-Para éso, tenemos una instrucción específica en Eloquent que nos soluciona el problema. En este caso usaremos la instrucción `findOrFail` y como buenos usuarios de Laravel, lo utilizaremos dentro del controlador.
+``notas/show.blade.php`: Vista con el detalle de una nota en particular. Hace uso de la plantilla que teníamos y está dentro de la subcarpeta *notas*.
 
 ```php
 <?php
-
-// estamos en ▓▓▓ PagesController.php 
-
-public function detalle($id) {
-  $nota = Nota::findOrFail($id);
-
-  return view('notas.detalle', compact('nota'));
-}
-```
-
-Hay que acordarse que debemos configurar la ruta en nuestro archivo de rutas.
-
-```php
-<?php
-
-// estamos en ▓▓▓ web.php 
-
-Route::get('notas/{id?}', [ PagesController::class, 'detalle' ]) -> name('notas.detalle');
-```
-
-Y por último, debemos crear la plantilla, pero como es un archivo de detalle o que está relacionado con otra plantilla ya creada, podemos crear una carpeta con el nombre de la plantilla y dentro, el archivo de plantilla en cuestión.
-
-De tal manera que quedaría así `resources/views/notas/detalle.blade.php`
-
-```php
-<?php
-
-// estamos en ▓▓▓ detalle.blade.php
+// estamos en ▓▓▓ notas/show.blade.php
 
 @extends('plantilla')
 
 @section('apartado')
-    <h1>Detalle de la nota</h1>
+  <h1>Detalle de la nota</h1>
 
-    <h3>ID: {{ $nota -> id }}</h3>
-    <h3>Nombre: {{ $nota -> nombre }}</h3>
-    <h3>Descripción: {{ $nota -> descripcion }}</h3>    
+  <p>ID: {{ $nota->id }}</p>
+  <p>Nombre: {{ $nota->titulo }}</p>
+  <p>Descripción: {{ $nota->descripcion }}</p>    
+  <p>Prioridad: {{ $nota->prioridad }}</p>     
 @endsection
 ```
 
+!!! info "Ojo con los nombres"
+    Hay que fijarse bien en los nombres de las columnas que tienen nuestras tablas, porque serán los nombres de los atributos de los objetos del modelo que utilizaremos.
+
 ### Modificar tablas sin perder datos
 
-Uno de los dilemas que tenemos a la hora de manejar las bases de datos con Laravel y Eloquent, es que a veces cometemos errores y queremos introducir una nueva columna dentro de nuestra tabla o modificar una de esas columnas <span class="alert">***SIN PERDER LOS DATOS DE LA BASE DE DATOS***</span>.
+A veces cometemos errores de diseño y queremos introducir una nueva columna dentro de nuestra tabla o modificar una de esas columnas <span class="alert">***SIN PERDER LOS DATOS DE LA BASE DE DATOS***</span>.
 
 Imaginemos que en nuestra tabla `notas` queremos agregar una columna con el nombre `autor`.
 
-Lo primero de todo es crear una nueva migración para realizar este cambio. Para ello, haremos uso de nuestro querido `artisan` y debemos crear el nombre de esta migración con la siguiente fórmula `add_fields_to_` seguidamente del nombre de la tabla que queremos modificar.
+Lo primero de todo es crear una nueva migración para realizar este cambio mediante *Artisan* con el nombre `add_fields_to_` seguido del nombre de la tabla a modificar.
 
 ```console
 php artisan migrate add_fields_to_nota
 ```
 
-Seguidamente, nos metemos en el archivo de la migración que acabamos de crear y en el apartado up() debemos poner el cambio que queremos realizar y en la sección down() debemos hacer lo mismo pero tenemos que decirle a Eloquent que la elimine ¿por qué? para en caso de hacer migrate rollback, se cargue este nuevo campo que hemos creado.
+Seguidamente, abrimos el archivo de la migración que acabamos de crear y en la función `up()` ponemos el cambio que queremos realizar y en `down()` lo eliminamos para que en caso de hacer una migración rollback, se vuelva a quedar todo como estaba.
 
 ```php
 <?php
@@ -581,104 +564,103 @@ Seguidamente, nos metemos en el archivo de la migración que acabamos de crear y
 public function up()
 {
   Schema::table('notas', function (Blueprint $table) {
-      $table -> string('autor');
+      $table->string('autor');
   });
 }
 
 public function down()
 {
   Schema::table('notas', function (Blueprint $table) {
-      $table -> dropColumn('autor');
+      $table->dropColumn('autor');
   });
 }
 ```
 
-## Formularios
+## 8.6 Formularios
 
-Ahora que ya sabemos cómo cargar de una base de datos, vamos a ver cómo insertarlos con Laravel y sin escribir ni una sola línea de SQL.
+Ya sabemos cómo recuperar datos de una base de datos. Ahora toca ver cómo insertarlos, actualizaros y eliminarlos con Laravel y sin escribir ni una sola línea de SQL.
 
-Gracias al método `save()` de Laravel podremos guardar datos que provengan de un formulario desde nuestras plantillas. Para ello, lo primero que necesitamos lo siguiente:
+Es recomendable seguir la convención de Laravel de nombres de rutas y funciones de controladores que viemos [aquí](https://elblo.github.io/dwes2425/07frameworks.html#controlador-de-recursos).
 
-  - `formulario HTML` que recoja los datos que el usuario introduce
-  - Una `ruta` que sea la encargada de recibir los datos del formulario
-  - Método `POST` para enviar los datos al servidor
-  - Un método en nuestro `controlador` que procese los datos y los guarde a través de `save()`
-  - La cláusula de seguridad `@csrf` para evitar ataques desde otros sitios
+### Insertar datos
 
-Así pues, empecemos por el formulario
+Para insertar datos vamos a necesitar 2 rutas, 2 funciones en el controlador y 1 vista con el formulario:
 
-```html
-<form action="{{ route('notas.crear') }}" method="POST">
-    @csrf {{-- Cláusula para obtener un token de formulario al enviarlo --}}
+- Con la primera ruta `notas/create` llamaremos a la función *create* del controlador que abrirá el formulario para crear una nueva nota.
+- El formulario enviará los datos a la segunda ruta `notas` mediante POST, la cual llamará a la función *store* del controlador para crear la nota mediante el método *save()*.
 
-    <input type="text" name="nombre" placeholder="Nombre de la nota" class="form-control mb-2" autofocus>
-    <input type="text" name="descripcion" placeholder="Descripción de la nota" class="form-control mb-2">
+##### 1. Rutas
 
-    <button class="btn btn-primary btn-block" type="submit">
-      Crear nueva nota
-    </button>
-</form>
-```
-
-Como vemos, creamos 2 inputs relacionados con nuestras columnas dentro de la tabla, en este caso `nombre` y `descripción`
-
-El `action` del formulario debe apuntar a una nueva ruta que vayamos a crear y donde enviemos los datos mediante `POST`.
-
-Ahora crearemos la ruta en nuestro archivo de rutas `web.php`
+Creamos las rutas GET y POST con sus alias correspondientes en nuestro archivo de rutas `web.php`. Situar la ruta `notas/create` antes de la ruta `notas/{id?}` porque si no entraría siempre en esta última.
 
 ```php
 <?php
-
 // estamos en ▓▓▓ web.php
-
-Route::post('notas', [ PagesController::class, 'crear' ]) -> name('notas.crear');
+Route::get('notas/create', [ NotaController::class, 'create' ])->name('notas.create');
+Route::post('notas', [ NotaController::class, 'store' ])->name('notas.store');
 ```
 
-Si nos fijamos, ya no estamos haciendo uso del `get`sino del método `post` y como son métodos diferentes, podemos nombrar la ruta de la misma manera que en `get` ya que no habrá conflicto.
+##### 2. Controlador
 
-Por otro lado, necesitamos invocar nuestro `PagesController`famoso y decirle que vamos a utilizar el método `crear` que bueno, todavía no existe pero que vamos a crear a contnuación. No olvidemos crear un alias para poder vincularlo al `action`del formulario <span class="alert">***SUPER IMPORTANTE***</span>.
-
-Para terminar, editaremos nuetro archivo `PagesController.php` para que el controlador que estamos usando tenga el método que hemos nombrado previamente.
+En el controlador creamos los 2 métodos:
+- `create` para abrir el formulario.
+- `store` para crear la nueva nota con los datos que le llegan del formulario mediante *Request* y almacenarla medidante *save()* y volvemos a la página del formulario con el método *back()* añadiendo un mensaje con *with()*.
 
 ```php
 <?php
+// estamos en ▓▓▓ NotaController.php
 
-// estamos en ▓▓▓ PagesController.php
+// Muestra el formulario para crear una nueva nota
+public function create() {
+    return view('notas.create');
+}
 
-use App\Models\Nota;
-use Illuminate\Http\Request;
-
-public function crear(Request $request) {
-    $notaNueva = new Nota;
-
-    $notaNueva -> nombre = $request -> nombre;
-    $notaNueva -> descripcion = $request -> descripcion;
-
+// Crea una nota con la info del formuluario
+public function store(Request $request) {
+    $notaNueva = new Nota();
+    $notaNueva->titulo = $request->titulo;
+    $notaNueva->descripcion = $request->descripcion;
+    $notaNueva->prioridad = $request->prioridad;
     $notaNueva -> save();
 
-    return back() -> with('mensaje', 'Nota agregada exitósamente');
+    return back()->with('mensaje', 'Nota agregada exitósamente');
 }
 ```
 
-Nuestro método `crear` va a recibir un objeto llamado `$request` (el cual podemos cambiarle el nombre perfectamente) de tipo `Request` por lo que <span class="alert">***DEBEMOS IMPORTAR Request***</span> para poder utilizar dicha clase de Laravel.
+##### 3. Vista
 
-Dentro del método `crear` que acabamos de escribir, debemos hacer uso del modelo `Nota` que ya creamos en otros ejemplos e instanciarla a traves de una variable, en nuestro caso `$notaNueva`.
+`notas/create.blade.php`: Vista con el formulario para crear una nueva nota. En el *action* se indica la ruta a la que enviar los datos por POST.
 
-De esta manera, podremos aceder a los métodos y propiedades de la misma, por eso podemos utilizar `nombre` y `descripcion`.
-
-Así mismo, la variable `$request` está formada por los mismos nombres de `input` que hemos puesto en el formulario de la plantilla, si os acordáis eran `name="nombre"` y `name="descripcion"`.
-
-Finalmente usamos el método `save()` para guardar estos nuevos datos en la base de datos y retornamos a la página del formulario con el método `back()` añadiendo un mensaje con `with()`.
-
-Pero ¿dónde va a salir este mensaje? -- lo tenemos que declarar en nuestra plantilla
+- En el *action* se indica la ruta a la que enviar los datos por POST.
+- El atributo *name* de los inputs tiene que ser igual al del campo correspondiente de la tabla.
+- Se usa la cláusula de seguridad `@csrf` para evitar ataques desde otros sitios. [Más info](https://www.ionos.es/digitalguide/servidores/seguridad/cross-site-request-forgery/) sobre este ataque.
+- Con *session('mensaje')* mostramos el mensaje que viene del controlador.
 
 ```html
-@if (session('mensaje'))
-  <div class="mensaje-nota-creada">
-      {{ session('mensaje') }}
-  </div>
-@endif
+<form action="{{ route('notas.store') }}" method="POST">
+    @csrf {{-- Cláusula para obtener un token de formulario al enviarlo --}}
+
+    @if(session('mensaje'))
+    <div class="mensaje-nota-creada">
+        {{ session('mensaje') }}
+    </div>
+    @endif
+
+    <div>
+        <input type="text" name="titulo" placeholder="Título de la nota" class="form-control mb-2" autofocus />
+        <input type="text" name="descripcion" placeholder="Descripción de la nota" class="form-control mb-2" />
+        <input type="number" name="prioridad" placeholder="5" class="form-control mb-2" />
+
+        <button class="btn btn-primary btn-block" type="submit">Crear nueva nota</button>
+    </div>
+    <div>
+        <a href="{{ route('notas.index') }}" class="btn btn-success btn-block mt-2">Volver</a>
+    </div>
+</form>
 ```
+
+
+
 
 ### Validaciones
 
@@ -738,7 +720,7 @@ Para poder persistir los datos una vez enviados pero con algún error de campo r
 >
 ```
 
-### Editando registros
+### Editar datos
 
 Después de tener campos en la base de datos, lo interesante sería poder editarlos a través de un formulario.
 
@@ -853,7 +835,7 @@ public function actualizar(Request $request, $id) {
 }
 ```
 
-### Eliminando registros
+### Eliminar datos
 
 A la hora de eliminar un registro nuevo, no necesitamos crear una plantilla nueva ya que podemos mandar la instrucción directamente a través de otro formulario.
 
@@ -904,6 +886,10 @@ public function eliminar($id) {
 ```
 
 Si todo ha salido bien, habremos creado un sitio en Laravel y Eloquent que es capaz de hacer un ***CRUD*** validando campos en formularios e insertando datos reales en una base de datos.
+
+
+
+
 
 ## Paginación
 
