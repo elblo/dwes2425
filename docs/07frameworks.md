@@ -388,6 +388,14 @@ Route::resource('articles', ArticleController::class);
 
 Este método genera automáticamente las rutas para acciones como index, create, store, show, edit, update y destroy.
 
+!!! warning "Posible error al crear rutas"
+    A la hora de crear rutas, si no lo hacemos bien puede salirnos un error como el siguiente. Un error típico en rutas como `/usuario/{id}` es incluir el parámetro (id) con el $...
+
+    <figure style="align: center;">
+        <img src="imagenes/07/error-rutas.png">
+        <figcaption>Ejemplo de posible error al crear las rutas</figcaption>
+    </figure>
+
 !!! info "Ampliar sobre rutas"
     Para más información acerca de las rutas, parámetros y expresiones regulares en las rutas puedes echar un vistazo a la [documentación oficial de rutas](https://laravel.com/docs/11.x/routing) que contiene numerosos ejemplos.
 
@@ -921,8 +929,9 @@ El objetivo de este ejercicio es construir una aplicación Laravel para gestiona
 !!! info "Lanzar comandos Artisan"
     A la hora de ejecutar **Artisan** se hace mediante Laravel Sail, que es la opción seguida para crear la app. Si se hiciese mediante Herd o la instalación manual de Laravel, se lanzarían los comandos directamente con php. Ejemplos:
 
-    `./vendor/bin/sail artisan make:controller EquipoController` --> Laravel Sail
-    `php artisan make:controller EquipoController` --> Herd o manual
+    - `./vendor/bin/sail artisan make:controller EquipoController` --> Laravel Sail
+    
+    - `php artisan make:controller EquipoController` --> Herd o manual
 
 #### Paso 1: Configurar el proyecto
 
@@ -935,10 +944,13 @@ El objetivo de este ejercicio es construir una aplicación Laravel para gestiona
 y después terminamos la instalación:
 
 ```bash
-  cd futbol-femenio
+  cd futbol-femenino
   ./vendor/bin/sail up 
   ./vendor/bin/sail artisan migrate
 ```
+
+!!! info "Sobre la creación del proyecto"
+    Se ha utilizado la 3ª opción de las 3 vistas para crear el proyecto. Puedes utilizar cualquiera de las otras 2 (manual o mediante Herd) sin problemas.
 
 2. **Pregunta:** ¿Por qué es importante tener una estructura clara en el proyecto Laravel?
 
@@ -1547,12 +1559,16 @@ Para poder ir a todas las pantallas y cambiar las rutas a llamadas.
 
 --- 
 
-#### 9. Ampliar la guía de estadios con formulario
+#### 9. Ampliar la guía de estadios con formulario (opcional, se ve en el tema siguiente)
 
 1. Añadir una nueva ruta `/estadios/crear` para mostrar un formulario que permita añadir un nuevo estadio.
 2. Crear un controlador con un método `crear` que devuelva una vista con el formulario.
 3. Diseñar un formulario Blade que contenga campos para el nombre del estadio, ciudad, capacidad y equipo principal.
 4. Mostrar un mensaje de confirmación cuando el usuario haga clic en el botón de enviar.
+
+#### 10. Refactorizar añadiendo ids 
+
+En todo momento se ha utilizado como *id* de cada array su posición. Esto, como ya sabes, no es una forma correcta de tratar los datos y a partir del tema siguiente se corregirá. Pero, mientra tanto, ¿podriás refactorizar el código para incluir un campo *id* en cada array? En estadios, equipos, jugadoras y partidos. Y que todo siga funcionando...
 
 ---
 
@@ -1561,3 +1577,4 @@ Para poder ir a todas las pantallas y cambiar las rutas a llamadas.
 1. **Rutas:** ¿Por qué utilizamos un controlador para gestionar la lógica de esa funcionalidad?
 2. **Blade:** ¿Qué ocurre si intentamos acceder a una clave que no existe en un array?
 3. **CSS y Vite:** ¿Qué diferencia existe entre incluir un archivo CSS estático y utilizar `@vite`?
+
