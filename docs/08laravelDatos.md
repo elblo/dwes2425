@@ -360,7 +360,7 @@ Una vez tengamos listo nuestro esquema debemos lanzar `php artisan migrate` para
 
 #### Uso básico de un modelo
 
-**Recuperar datos**
+##### Recuperar datos
 
 ```php
 <?php
@@ -374,7 +374,7 @@ $notas = Nota::where('prioridad', '>', 5)->get();
 $nota = Nota::findOrFail($id);
 ```
 
-**Insertar datos**
+##### Insertar datos
 ```php
 <?php
 $nota = new Nota();
@@ -384,7 +384,7 @@ $nota->prioridad = 10;
 $nota->save();
 ```
 
-**Actualizar datos**
+##### Actualizar datos
 ```php
 <?php
 $nota = Nota::find($id);
@@ -392,7 +392,7 @@ $nota->titulo = "Nuevo título";
 $nota->save();
 ```
 
-**Eliminar datos**
+##### Eliminar datos
 ```php
 <?php
 $nota = Nota::find($id);
