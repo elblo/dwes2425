@@ -1587,5 +1587,7 @@ Descarga este [array de posts](recursos/posts.php) sobre frases célebres para u
 3. Se debe poder filtrar (mediante rutas) para mostrar los posts de una determinada categoría: Filosofía, Salud o Motivación.
 
 Recomendaciones:
+
 - Sigue las convenciones de Laravel en cuanto a nombres y flujo de trabajo: rutas -> controlador -> vistas.
 - Para la vista, crea un componente *post* que llamarás desde otras vistas como `<x-post>` pasándole los datos que estimes oportunos.
+- Utiliza tailwindcss para estilizar las vistas.
