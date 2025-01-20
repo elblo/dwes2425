@@ -1578,3 +1578,14 @@ En todo momento se ha utilizado como *id* de cada array su posición. Esto, como
 2. **Blade:** ¿Qué ocurre si intentamos acceder a una clave que no existe en un array?
 3. **CSS y Vite:** ¿Qué diferencia existe entre incluir un archivo CSS estático y utilizar `@vite`?
 
+### Práctica: Frases célebres
+
+Descarga este [array de posts](recursos/posts.php) sobre frases célebres para utilizar en esta práctica. Tienes total libertad para trabajar siguiendo los conceptos vistos durante el tema. Se pide:
+
+1. Que se muestre un listado con todos los posts.
+2. Al hacer clic en cada post lleve a una página con su vista en detalle con toda su información.
+3. Se debe poder filtrar (mediante rutas) para mostrar los posts de una determinada categoría: Filosofía, Salud o Motivación.
+
+Recomendaciones:
+- Sigue las convenciones de Laravel en cuanto a nombres y flujo de trabajo: rutas -> controlador -> vistas.
+- Para la vista, crea un componente *post* que llamarás desde otras vistas como `<x-post>` pasándole los datos que estimes oportunos.
