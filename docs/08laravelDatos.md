@@ -1086,7 +1086,5 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
 
-En los siguientes ejercicios de formularios vas a realizar un CRUD de usuarios, por lo que es importante que crees previamente el modelo *Usuario* y tabla asociada *usuarios* con los campos típicos: *nombre*, *email*, *password*.
-
 
 
