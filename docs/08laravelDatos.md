@@ -955,8 +955,138 @@ Aunqeu no es recomendable tocar la carpeta *vendor*, por practicar podríais mod
 
 ---
 
-## Actividades
+## 8.9 Actividades
 
-801. Crear el proyecto CholloSevero:
+A continuación, vas a realizar una serie de ejercicios sencillos sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
 
-  - Crea
+### Migraciones
+
+En este apartado vas a trabajar creando migraciones. Es importante, que aparte del código en sí, apuntes los comandos que utilizas para crearlas, eliminarlas, ejecutarlas...
+
+801. **Crear de una tabla básica**: Crea una tabla llamada productos con las siguientes columnas:
+
+- *id* (entero, clave primaria, auto-incremental)
+- *nombre* (string, longitud máxima de 255)
+- *precio* (decimal, 8 dígitos en total, 2 decimales)
+
+802. **Añadir columnas a una tabla existente**: Añade una columna *descripcion* (tipo texto) a la tabla productos.
+803. **Crear de una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
+804. **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
+805. **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
+806. **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos*.
+807. **Usar valores predeterminados en una columna**: Añade una columna *stock* con un valor por defecto de 0 a la tabla *productos*.
+808. **Crear tabla con datos iniciales**: Crear tabla *usuarios* con los siguientes campos:
+
+- *id*
+- *nombre* (string)
+- *email* (string, único)
+- *password* (string)
+- *created_at* y *pdated_at*
+
+Además, rellénala con datos iniciales mediante el seeder DatabaseSeeder (opcional, se ve en el tema siguiente).
+
+809. **Borrar y recrear la BDD**: Utiliza los comandos de Artisan necesarios para eliminar y volver a crear todas las tablas de la BDD.
+
+810. **Ejercicio completo: Crear un sistema de reservas**: Crea las siguientes tablas para un sistema de reservas:
+
+- *usuarios* (id, nombre, email, password)
+- *habitaciones* (id, nombre, capacidad)
+- *reservas* (id, usuario_id, habitacion_id, fecha_reserva)
+
+Incluye claves foráneas, valores predeterminados y relación de "cascade delete".
+
+### Query Builder
+
+En este apartado vas a trabajar haciendo consultas directamente sobre la BDD mediante *Query Builder*. 
+
+Para probar que funciona, se recomienda meter el código de cada ejercicio en una función independiente del controlador que se llamará con una ruta que te inventes (por ejemplo: `localhost/ejercicio820`).
+
+Para todos los ejercicios se va a utilizar la tabla *productos*. Si no la tienes, créala mediante una migración con los campos *id*, *nombre*, *precio*, *descripcion*.
+
+820. **Insertar registros**: Inserta un nuevo producto en la tabla. Puedes crear una ruta a la que se le pasen los parámetros *nombre*, *precio* y *descripcion*.
+821. **Actualizar registros**: Actualiza el *nombre* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+822. **Actualizar registros**: Actualiza el *precio* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+823. **Actualizar registros**: Actualiza la *descripcion* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+824. **Eliminar registros**: Elimina un producto según el *id* pasado por la ruta.
+825. **Eliminar registros**: Elimina los productos cuyo *precio* sea inferior a 20.
+826. **Obtener todos los registros**: Obtén todos los registros de la tabla *productos*. 
+827. **Obtener registro por id**: Obtén un registro por su *id* pasado por la ruta.
+828. **Seleccionar columnas específicas**: Obtén solo las columnas *nombre* y *precio* de todos los registros de *productos*.
+829. **Filtrar registros con where**: Obtén los productos cuyo precio sea mayor a 50.
+830. **Ordenar resultados**: Ordena los productos por precio de forma descendente.
+831. **Paginar resultados**: Pagina los productos mostrando 5 por página.
+832. **Consultas con varios where**: Obtén productos cuyo *precio* esté entre 50 y 100, y cuya *descripción* no sea nula.
+833. **Contar registros**: Cuenta cuántos productos tienen un **precio** mayor a 100.
+834. **Obtener el registro más caro**: Obtén el producto con el *precio* más alto.
+835. **Ejecutar consultas crudas**: Usa una consulta SQL cruda para obtener productos cuyo *nombre* contenga la palabra "Premium".
+836. **Consulta con uniones (join)**: Crea la migración corresponediente para crear la tabla *categorias* (*id*, *nombre*) y hacer que cada producto pertenezca a una categoría. Una vez hecho, mediante Query Builder obtén el *nombre del producto* junto al *nombre de su categoría*.
+837. **Agrupar resultados con groupBy y having**: Agrupa los productos por *categoría* y calcula el *precio promedio* por categoría, mostrando solo las categorías con un promedio mayor a 50.
+838. **Consultas anidadas**: Encuentra el producto más caro dentro de cada categoría.
+839. **Ejercicio completo: CRUD con Query Builder** Implementa un CRUD completo para la tabla *clientes* utilizando Query Builder:
+
+- *C*: Inserta nuevos clientes.
+- *R*: Obtén todos los clientes y filtra por email.
+- *U*: Actualiza el nombre de un cliente específico.
+- *D*: Elimina clientes con un email específico.
+
+### Eloquent: Modelos
+
+Antes has trabajado lanzando consultas mediante *Query Builder* directamente sobre la tabla *productos*. Ahora harás consultas parecidas, pero SIEMPRE desde el modelo mediante *Eloquent*.
+
+Para probar que funciona, se recomienda meter el código de cada ejercicio en una función independiente del controlador que se llamará con una ruta que te inventes (por ejemplo: `localhost/ejercicio841`).
+
+840. **Crear modelo y tabla asociada**: Crea el modelo *Producto* con su tabla asociada *productos* (ya la tienes del apartado anterior).
+841. **Inserta productos**: Inserta un producto con los campos *nombre*, *precio* y *descripcion* pasados mediante parámetro por la ruta.
+842. **Inserta productos**: Inserta un producto con los campos *nombre*, *precio* y *descripcion* pasados mediante parámetro por la ruta, pero validando previamente que su *precio* sea mayor que 50 para insertarlo realmente.
+843. **Actualizar productos**: Actualiza el *nombre* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+844.  **Actualizar productos**: Actualiza el *precio* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+845. **Actualizar productos**: Actualiza la *descripcion* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+846. **Actualizar múltiples productos**: Actualiza todos los productos cuyo precio sea menor que 50, cambiando su descripcion a 'producto económico'.
+847. **Eliminar productos**: Elimina un producto según el *id* pasado por la ruta.
+848. **Eliminar productos**: Elimina los productos cuyo *precio* sea inferior a 20.
+849. **Obtener todos los productos**: Obtén todos los productos de la tabla *productos*.
+850. **Obtener producto por id**: Obtén un producto por su *id* pasado por la ruta.
+851. **Filtrar con where**: Obtén los productos cuyo *precio* sea mayor a 50.
+852. **Contar el número de productos**: Cuenta cuántos productos tienen un *precio* mayor a 50.
+853. **Ordenar resultados**: Ordena los productos por *precio* de manera descendente.
+854. **Usar el método pluck** para obtener solo los nombres de los productos.
+855. **Usar el método firstOrCreate** para buscar un producto por su *nombre*, y si no existe, crea un nuevo producto
+856. **Usar el método updateOrCreate** para actualizar un producto existente por su *nombre*, o crear uno nuevo si no existe.
+857. **Limitar resultados**: Usa el método *take* para obtener solo los 5 primeros productos.
+858. **Paginación de resultados**: Página los productos mostrando 5 por página.
+859. **Consulta con where y orWhere**: Recupera todos los productos cuyo precio sea mayor que 100 o cuyo *nombre* contenga la palabra "Premium".
+860. **Ejercicio completo: CRUD con Eloquent** Implementa un CRUD completo mediante Eloquent para el modelo *Cliente* que crees asociado a la tabla *clientes*:
+
+- *C*: Crea nuevos clientes.
+- *R*: Obtén todos los clientes y filtra por email.
+- *U*: Actualiza el nombre de un cliente específico.
+- *D*: Elimina clientes con un email específico.
+
+### Formularios
+
+En los siguientes ejercicios de formularios vas a realizar un CRUD de productos continuando lo que hiciste en el apartado anterior. Si tienes las clases de Productos (Modelo y Controlador) muy extensas y prefieres empezar de 0, puedes hacer los ejercicios siguientes para gestionar *usuarios en vez de productos*. Tendrías que crear previamente el modelo *Usuario* y tabla asociada *usuarios* con los campos típicos: *nombre*, *email*, *password*.
+
+En cualquier caso, recuerda nombrar correctamente las rutas, funciones en controladores y vistas siguiendo las recomendaciones de Laravel.
+
+870. **Formulario para crear productos**: Crea un formulario en el que se pidan los campos necesarios para crear un producto. Se accederá mediante `GET /productos/create` y su vista estará en `productos/create.blade.php`. El formulario se procesará mediante `POST /productos/store` redirigiendo finalmente a `GET /productos` donde se muestra el listado de productos.
+871. **Formulario para editar productos**: Crea el formulario de edición de un producto. Se accederá mediante `GET /productos/{id}/edit` y su vista estará en `productos/edit.blade.php`. El formulario se procesará mediante `PUT /productos/update` redirigiendo finalmente a `GET /productos` donde se muestra el listado de productos.
+872. **Validación de datos**: En las funciones correspondientes del controlador donde se reciben los datos de los formularios anteriores, añade validación a cada uno de los campos:
+
+- *nombre*: Requerido, tipo cadena y valor máximo 255.
+- *precio*: Requerido, tipo numérico y valor mínimo 0.
+- *descripcion*: Tipo cadena y valor máximo 1000.
+
+En las vistas de los 2 formularios añade mensajes de error en el caso de que los campos no pasen la validación y asigna mediante *old* el valor antiguo del campo para que el usuario no tenga que volver a escribirlo.
+
+873. **Formulario de confirmación para eliminar productos**: Crear un formulario de confirmación para eliminar un recurso. Sól ocontendrá un mensaje de "¿Estás seguro que quieres eliminar el producto ID?" y un botón para proceder a eliminarlo. Se accederá mediante `GET /productos/{id}/destroy` y su vista estará en `productos/destroy.blade.php`. El formulario se procesará mediante `DELETE /productos/{id}` redirigiendo finalmente a `GET /productos` donde se muestra el listado de productos.
+874. **Ejercicio completo: CRUD con formularios**: Continúa el CRUD del apartado anterior para añadir funciones a la gestión de *clientes*:
+
+- *C*: Crea nuevos clientes.
+- *R*: Obtén todos los clientes y filtra por diferentes cmapos.
+- *U*: Actualiza los campos de un cliente específico.
+- *D*: Elimina clientes.
+
+En los siguientes ejercicios de formularios vas a realizar un CRUD de usuarios, por lo que es importante que crees previamente el modelo *Usuario* y tabla asociada *usuarios* con los campos típicos: *nombre*, *email*, *password*.
+
+
+
