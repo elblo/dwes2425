@@ -41,22 +41,11 @@ DB_USERNAME=usuario
 DB_PASSWORD=password
 ```
 
-Nota: El servidor MySQL debe estar funcionando con la base de datos <span class="alert">***ya creada***</span>
+Nota: El servidor MySQL debe estar funcionando con la base de datos <span class="alert">***ya creada***</span>.
 
-**Comprobar conexión:**
+**Proar conexión:**
 
-El siguiente comando confirma si Laravel puede conectarse a la base de datos configurada.
-
-`php artisan migrate:status`
-
-**Posibles problemas:**
-
-- La extensión del driver de la base de datos (como *pdo_mysql* o *pdo_pgsql*) debe estar habilitada en el `php.ini`.
-- Utilizar `php artisan config:clear` para borrar la caché de configuraciones si los cambios del `.env` no se reflejan.
-
-**Lanzar migraciones:**
-
-Si la conexión va bien, lanzamos las migraciones:
+Probamos la conexión ejecutando las migraciones:
 
 ```console
 php artisan migrate
@@ -71,6 +60,11 @@ Si todo ha salido bien obtendremos el siguiente resultado donde podremos observa
 Si nos vamos al cliente que utilicemos para manejar la base de datos (phpMyAdmin por ejemplo) veremos que en nuestra base de datos se han creado todas las tablas de la migración que hemos ejecutado y **además** una tabla que se llama <span class="success">***migrations***</span>.
 
 La tabla `migrations` es simplemente un registro de todas las migraciones llevadas a cabo.
+
+**Posibles problemas:**
+
+- La extensión del driver de la base de datos (como *pdo_mysql* o *pdo_pgsql*) debe estar habilitada en el `php.ini`.
+- Utilizar `php artisan config:clear` para borrar la caché de configuraciones si los cambios del `.env` no se reflejan.
 
 ## 8.3 Migraciones
 
@@ -1085,6 +1079,5 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *R*: Obtén todos los clientes y filtra por diferentes cmapos.
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
-
 
 
