@@ -43,7 +43,7 @@ DB_PASSWORD=password
 
 Nota: El servidor MySQL debe estar funcionando con la base de datos <span class="alert">***ya creada***</span>.
 
-**Proar conexión:**
+**Probar conexión:**
 
 Probamos la conexión ejecutando las migraciones:
 
