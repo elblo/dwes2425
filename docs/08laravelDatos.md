@@ -964,7 +964,7 @@ En este apartado vas a trabajar creando migraciones. Es importante, que aparte d
 - *precio* (decimal, 8 dígitos en total, 2 decimales)
 
 802. **Añadir columnas a una tabla existente**: Añade una columna *descripcion* (tipo texto) a la tabla productos.
-803. **Crear de una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
+803. **Crear una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
 804. **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
 805. **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
 806. **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos*.
@@ -975,7 +975,7 @@ En este apartado vas a trabajar creando migraciones. Es importante, que aparte d
 - *nombre* (string)
 - *email* (string, único)
 - *password* (string)
-- *created_at* y *pdated_at*
+- *created_at* y *updated_at*
 
 Además, rellénala con datos iniciales mediante el seeder DatabaseSeeder (opcional, se ve en el tema siguiente).
 
