@@ -225,6 +225,10 @@ Es ideal para crear *consultas personalizadas* en las que el rendimiento es una 
 
 ```php
 <?php
+// Los siguientes ejemplos irían en la función correspondiente del MODELO
+// Para pruebas, de momento también puedes ubicarlas en el CONTROLADOR
+use Illuminate\Support\Facades\DB;
+
 // Obtener todos los registros de users
 $users = DB::table('users')->get(); 
 
@@ -257,6 +261,8 @@ $users = DB::table('users')
 
 ```php
 <?php
+use Illuminate\Support\Facades\DB;
+
 // Insertar registro
 DB::table('users')->insert([
     'name' => 'John Doe',
@@ -324,10 +330,10 @@ php artisan make:model Nota -m
 
     - **-c**, --controller: Crea un controlador.
     - **-m**, --migration: Crea una migración.
-    - **-r**, --resource: Crea un controlador y una vista.
+    - **-r**, --resource: Crea un controlador de recursos.
     - **-f**, --factory: Crea un factory.
     - **-s**, --seed: Crea un seeder.
-    - **-a**, --all: Crea un controlador, una migración y una vista.
+    - **-a**, --all: Crea todo: un controlador de recursos, una migración, factoría...
   
     Por ejemplo, si queremos crear un modelo, una migración y un controlador, ejecutamos:
 
@@ -523,7 +529,7 @@ public function show($id) {
 
 ```
 
-``notas/show.blade.php`: Vista con el detalle de una nota en particular. Hace uso de la plantilla que teníamos y está dentro de la subcarpeta *notas*.
+`notas/show.blade.php`: Vista con el detalle de una nota en particular. Hace uso de la plantilla que teníamos y está dentro de la subcarpeta *notas*.
 
 ```php
 <?php
@@ -1079,6 +1085,4 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *R*: Obtén todos los clientes y filtra por diferentes cmapos.
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
-
-
 

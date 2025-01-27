@@ -225,6 +225,10 @@ Es ideal para crear *consultas personalizadas* en las que el rendimiento es una 
 
 ```php
 <?php
+// Los siguientes ejemplos irían en la función correspondiente del MODELO
+// Para pruebas, de momento también puedes ubicarlas en el CONTROLADOR
+use Illuminate\Support\Facades\DB;
+
 // Obtener todos los registros de users
 $users = DB::table('users')->get(); 
 
@@ -257,6 +261,8 @@ $users = DB::table('users')
 
 ```php
 <?php
+use Illuminate\Support\Facades\DB;
+
 // Insertar registro
 DB::table('users')->insert([
     'name' => 'John Doe',
@@ -523,7 +529,7 @@ public function show($id) {
 
 ```
 
-``notas/show.blade.php`: Vista con el detalle de una nota en particular. Hace uso de la plantilla que teníamos y está dentro de la subcarpeta *notas*.
+`notas/show.blade.php`: Vista con el detalle de una nota en particular. Hace uso de la plantilla que teníamos y está dentro de la subcarpeta *notas*.
 
 ```php
 <?php
@@ -995,17 +1001,160 @@ En este apartado vas a trabajar creando migraciones. Es importante, que aparte d
 
     ```php
     <?php
-    
+    public function up(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->text('descripcion')->nullable();
+        });
+    }
+
+    public function down(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropColumn('descripcion');
+        });
+    }
     ```
 
     Ejecuta: `php artisan migrate`
 
-1.   **Crear una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
-2.   **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
-3.   **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos*.
-4.   **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
-5.   **Usar valores predeterminados en una columna**: Añade una columna *stock* con un valor por defecto de 0 a la tabla *productos*.
-6.   **Crear tabla con datos iniciales**: Crear tabla *usuarios* con los siguientes campos:
+803. **Crear una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration create_categorias_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->timestamps();
+        });
+    }
+
+    public function down(){
+        Schema::dropIfExists('categorias');
+    }
+    ```
+
+    Como la tabla *productos* ya la tenemos creada, hacemos una migración que añada el campo necesario con la clave foránea a la tabla *categorias*.
+
+    Ejecuta: `php artisan make:migration add_categoria_id_to_productos_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->foreignId('categoria_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('categoria_id')->constrained([table: 'categorias', indexName: 'id'])->onDelete('cascade');
+        });
+    }
+
+    public function down(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropColumn('categoria_id');
+        });
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+804. **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration add_unique_to_nombre_in_categorias_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::table('categorias', function (Blueprint $table) {
+            $table->unique('nombre');
+        });
+    }
+
+    public function down(){
+        Schema::table('categorias', function (Blueprint $table) {
+            $table->dropUnique('categorias_nombre_unique'); // table_column_unique
+        });
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+805. **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos**.
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration drop_descripcion_from_productos_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropColumn('descripcion');
+        });
+    }
+
+    public function down(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->text('descripcion')->nullable();
+        });
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+806. **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration rename_productos_to_articulos`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::rename('productos', 'articulos');
+    }
+
+    public function down(){
+        Schema::rename('articulos', 'productos');
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+807. **Usar valores predeterminados en una columna**: Añade una columna *stock* con un valor por defecto de 0 a la tabla *productos*.
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration add_stock_to_productos_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->integer('stock')->default(0);
+        });
+    }
+
+    public function down(){
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropColumn('stock');
+        });
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+808. **Crear tabla con datos iniciales**: Crear tabla *usuarios* con los siguientes campos:
 
 - *id*
 - *nombre* (string)
@@ -1015,7 +1164,44 @@ En este apartado vas a trabajar creando migraciones. Es importante, que aparte d
 
 Además, rellénala con datos iniciales mediante el seeder DatabaseSeeder (opcional, se ve en el tema siguiente).
 
+??? info "Solución"
+    Ejecuta: `php artisan make:migration create_usuarios_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::create('usuarios', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamps();
+        });
+    }
+
+    public function down(){
+        Schema::dropIfExists('usuarios');
+    }
+    ```
+
+    Inserta en la función `run` de `database/seeders/DatabaseSeeder.php`:
+
+    ```php
+    <?php
+    DB::table('usuarios')->insert([
+        ['nombre' => 'Juan', 'email' => 'juan@example.com', 'password' => bcrypt('123456')],
+        ['nombre' => 'Ana', 'email' => 'ana@example.com', 'password' => bcrypt('123456')],
+    ]);
+    ```
+
+    Ejecuta: `php artisan migrate --seed`
+
 809. **Borrar y recrear la BDD**: Utiliza los comandos de Artisan necesarios para eliminar y volver a crear todas las tablas de la BDD.
+
+??? info "Solución"
+    Ejecuta: `php artisan migrate:fresh`
 
 810. **Ejercicio completo: Crear un sistema de reservas**: Crea las siguientes tablas para un sistema de reservas:
 
@@ -1024,6 +1210,18 @@ Además, rellénala con datos iniciales mediante el seeder DatabaseSeeder (opcio
 - *reservas* (id, usuario_id, habitacion_id, fecha_reserva)
 
 Incluye claves foráneas, valores predeterminados y relación de "cascade delete".
+
+??? info "Solución"
+    Ejecuta: ``
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    
+    ```
+
+    Ejecuta: `php artisan migrate`
 
 ### Query Builder
 
