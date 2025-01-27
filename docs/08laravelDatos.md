@@ -1086,3 +1086,7 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
 
+<!-- ### Ficheros? --> Añadir teoría
+
+Ejer de chatGPT 4 Formulario subida imagen -->
+

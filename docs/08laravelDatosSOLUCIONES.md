@@ -1227,18 +1227,105 @@ Incluye claves foráneas, valores predeterminados y relación de "cascade delete
 
 En este apartado vas a trabajar haciendo consultas directamente sobre la BDD mediante *Query Builder*. 
 
-Para probar que funciona, se recomienda meter el código de cada ejercicio en una función independiente del controlador que se llamará con una ruta que te inventes (por ejemplo: `localhost/ejercicio820`).
+Para probar que funciona, se recomienda meter el código de cada ejercicio en una función independiente del controlador que se llamará con una ruta que te inventes (por ejemplo: `localhost/ejercicio820`). Nota: Dicha función del controlador debería llamar a la función correspondiente del modelo y ahí es donde insertarías el código de Query Builder, pero por simplificar, puedes trabajar únicamente sobre el controlador.
 
-Para todos los ejercicios se va a utilizar la tabla *productos*. Si no la tienes, créala mediante una migración con los campos *id*, *nombre*, *precio*, *descripcion*.
+No olvides: `use Illuminate\Support\Facades\DB;` para que importe la BD.
+
+Para todos los ejercicios se va a utilizar la tabla *productos*. Si no la tienes, créala mediante una migración con los campos *id*, *nombre*, *precio*, *descripcion*. O si la renombraste a *articulos*, vuelve a crear una migración en la que le cambies el nombre.
 
 820. **Insertar registros**: Inserta un nuevo producto en la tabla. Puedes crear una ruta a la que se le pasen los parámetros *nombre*, *precio* y *descripcion*.
+
+??? info "Solución"
+    Las variables $nombre, $precio y $descripcion se han pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')->insert([
+        'nombre' => $nombre,
+        'precio' => $precio,
+        'descripcion' => $descripcion,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    ```
+
 821. **Actualizar registros**: Actualiza el *nombre* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+
+??? info "Solución"
+    Las variables $id y $nombre se han pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')
+        ->where('id', $id)
+        ->update(['nombre' => $nombre]);
+    ```
+
 822. **Actualizar registros**: Actualiza el *precio* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+
+??? info "Solución"
+    Las variables $id y $precio se han pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')
+        ->where('id', $id)
+        ->update(['precio' => $precio]);
+    ```
+
 823. **Actualizar registros**: Actualiza la *descripcion* de un producto por su *id* (ambos de pasan por parámetro a la ruta).
+
+??? info "Solución"
+    Las variables $id y $descripcion se han pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')
+        ->where('id', $id)
+        ->update(['descripcion' => $descripcion]);
+    ```
+
 824. **Eliminar registros**: Elimina un producto según el *id* pasado por la ruta.
+
+??? info "Solución"
+    Las variable $id se ha pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')->where('id', $id)->delete();
+    ```
+
 825. **Eliminar registros**: Elimina los productos cuyo *precio* sea inferior a 20.
+
+??? info "Solución"
+    Las variables $id y $precio se han pasado por la ruta.
+
+    ```php
+    <?php
+    DB::table('productos')->where('precio', '<', 20)->delete();
+    ```
+
 826. **Obtener todos los registros**: Obtén todos los registros de la tabla *productos*. 
+
+??? info "Solución"
+
+    ```php
+    <?php
+    $productos = DB::table('productos')->get();
+    ```
+
 827. **Obtener registro por id**: Obtén un registro por su *id* pasado por la ruta.
+
+??? info "Solución"
+    Las variable $id se ha pasado por la ruta.
+
+    ```php
+    <?php
+    $producto = DB::table('productos')->find($id);
+    //$producto = DB::table('productos')->where('id', $id)->get();
+    ```
+
+
 828. **Seleccionar columnas específicas**: Obtén solo las columnas *nombre* y *precio* de todos los registros de *productos*.
 829. **Filtrar registros con where**: Obtén los productos cuyo precio sea mayor a 50.
 830. **Ordenar resultados**: Ordena los productos por precio de forma descendente.
