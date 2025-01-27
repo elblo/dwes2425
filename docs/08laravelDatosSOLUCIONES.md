@@ -963,13 +963,49 @@ En este apartado vas a trabajar creando migraciones. Es importante, que aparte d
 - *nombre* (string, longitud máxima de 255)
 - *precio* (decimal, 8 dígitos en total, 2 decimales)
 
+??? info "Solución"
+    Ejecuta: `php artisan make:migration create_productos_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    public function up(){
+        Schema::create('productos', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->decimal('precio', 8, 2);
+            $table->timestamps();
+        });
+    }
+
+    public function down(){
+        Schema::dropIfExists('productos');
+    }
+    ```
+
+    Ejecuta: `php artisan migrate`
+
 802. **Añadir columnas a una tabla existente**: Añade una columna *descripcion* (tipo texto) a la tabla productos.
-803. **Crear una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
-804. **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
-805.  **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos*.
-806. **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
-807. **Usar valores predeterminados en una columna**: Añade una columna *stock* con un valor por defecto de 0 a la tabla *productos*.
-808. **Crear tabla con datos iniciales**: Crear tabla *usuarios* con los siguientes campos:
+
+??? info "Solución"
+    Ejecuta: `php artisan make:migration add_descripcion_to_productos_table`
+
+    Contenido del archivo de la migración:
+
+    ```php
+    <?php
+    
+    ```
+
+    Ejecuta: `php artisan migrate`
+
+1.   **Crear una tabla con claves foráneas**: Crea una tabla *categorias* y una tabla *productos* donde cada producto pertenece a una categoría.
+2.   **Modificar una tabla para añadir índices**: Añade un índice único a la columna *nombre* de la tabla *categorias*.
+3.   **Eliminar una columna de una tabla**: Elimina la columna *descripcion* de la tabla *productos*.
+4.   **Renombrar una tabla**: Cambia el nombre de la tabla *productos* a *articulos*.
+5.   **Usar valores predeterminados en una columna**: Añade una columna *stock* con un valor por defecto de 0 a la tabla *productos*.
+6.   **Crear tabla con datos iniciales**: Crear tabla *usuarios* con los siguientes campos:
 
 - *id*
 - *nombre* (string)
@@ -1080,5 +1116,7 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
 
+### Ficheros? --> Añadir teoría
 
+Ejer de chatGPT 4 Formulario subida imagen
 
