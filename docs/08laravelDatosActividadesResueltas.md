@@ -1,26 +1,6 @@
-<style>
-    img { margin: 20px 0; border-radius: 8px; }
-
-    .alert { color: #BD1550; }
-    .warning { color: #E97F02; }
-    .success { color: #8A9B0F; }
-
-    .center { text-align: center; }
-    .right { text-align: right; }
-
-    .img-small { max-width: 200px; margin: auto; }
-    .img-medium { max-width: 400px; margin: auto; }
-    .img-large { max-width: 800px; margin: auto; }
-
-    .leyenda {
-        font-size: small;
-        margin: 10px 0;
-    }
-</style>
-
 # Gestión de datos en Laravel
 
-## 8.9 Actividades resueltas
+## Actividades resueltas
 
 A continuación, vas a realizar una serie de ejercicios sencillos sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
 

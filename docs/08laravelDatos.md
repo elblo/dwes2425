@@ -1113,5 +1113,3 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *R*: Obtén todos los clientes y filtra por diferentes cmapos.
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
-
-
