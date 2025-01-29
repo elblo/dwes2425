@@ -1,10 +1,8 @@
-# Gestión de datos en Laravel
-
-## Actividades resueltas
+# Gestión de datos en Laravel: Actividades resueltas
 
 A continuación, vas a realizar una serie de ejercicios sencillos sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
 
-### Migraciones
+## Migraciones
 
 En este apartado vas a trabajar creando migraciones. Es importante, que aparte del código en sí, apuntes los comandos que utilizas para crearlas, eliminarlas, ejecutarlas...
 
@@ -268,7 +266,7 @@ Incluye claves foráneas, valores predeterminados y relación de "cascade delete
 
     Ejecuta: `php artisan migrate`
 
-### Query Builder
+## Query Builder
 
 En este apartado vas a trabajar haciendo consultas directamente sobre la BDD mediante *Query Builder*. 
 
@@ -490,7 +488,7 @@ Para todos los ejercicios se va a utilizar la tabla *productos*. Si no la tienes
 - *U*: Actualiza el nombre de un cliente específico.
 - *D*: Elimina clientes con un email específico.
 
-### Eloquent: Modelos
+## Eloquent: Modelos
 
 Antes has trabajado lanzando consultas mediante *Query Builder* directamente sobre la tabla *productos*. Ahora harás consultas parecidas, pero SIEMPRE desde el modelo mediante *Eloquent*.
 
@@ -722,7 +720,7 @@ Para probar que funciona, se recomienda meter el código de cada ejercicio en un
 - *U*: Actualiza el nombre de un cliente específico.
 - *D*: Elimina clientes con un email específico.
 
-### Formularios
+## Formularios
 
 En los siguientes ejercicios de formularios vas a realizar un CRUD de productos continuando lo que hiciste en el apartado anterior. Si tienes las clases de `Productos` (Modelo y Controlador) muy extensas y prefieres empezar de 0, puedes hacer los ejercicios siguientes para gestionar *usuarios en vez de productos*. Tendrías que crear previamente el modelo *Usuario* con su migración para crear su tabla asociada *usuarios* con los campos típicos: *nombre*, *email*, *password* y también el controlador *UsuarioController*.
 
