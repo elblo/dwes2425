@@ -67,19 +67,22 @@ Duración estimada: 76 horas
 
 Duración estimada: 86 horas
 
-1. Acceso a datos (28h)
-    * *SQL*
-    * *PDO*
-    * Ficheros CSV y PDF.
-2. Frameworks PHP. Laravel básico (24h)
-    * Rutas.
-    * Vistas.
+7. [Frameworks PHP - Laravel](07frameworks.md) (28h)
+    * Instalación y entornos de desarrollo
+    * Rutas
+    * Vistas y plantillas Blade
+    * Controladores
+8. [Gestion de datos en Laravel](08laravelDatos.md) (24h)
     * Migraciones e integración con el ORM *Eloquent*.
-3. Uso avanzado de Frameworks (22h)
-    * Plantillas con *Blade*.
-    * Autenticación y autorización.
-    * *i18n*.
-4. Servicios REST (12h)
+    * Query Builder
+    * Modelos
+    * Formulario sy validación
+9. [Uso avanzado de Laravel](09laravelAvanzado.md) (22h)
+    * Relaciones entre modelos
+    * Seeders y factorías
+    * Almacenamiento de ficheros (local y AWS S3)
+    * Autenticación y autorización
+10. [Servicios REST](10laravelRest.md) (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.
 

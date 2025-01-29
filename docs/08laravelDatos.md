@@ -350,7 +350,7 @@ Schema::create('notas', function (Blueprint $table) {
   $table->id();
   $table->timestamps();
   // Campos añadidos
-  $table->string('nombre'); 
+  $table->string('titulo'); 
   $table->text('descripcion');
   $table->integer('prioridad');
 });
@@ -371,32 +371,52 @@ $notas = Nota::all();
 $notas = Nota::where('prioridad', '>', 5)->get();
 
 // Registro único
-$nota = Nota::findOrFail($id);
+$nota = Nota::find($id); // devuelve el objeto o null
+$nota = Nota::findOrFail($id); // devuelve el objeto o una excepción, que por ejemplo redirige a una página 404 no encontrado en el caso de acceder a alguno de sus métodos como 'delete'
 ```
 
 ##### Insertar datos
 ```php
 <?php
+// Método 1
 $nota = new Nota();
 $nota->titulo = "Proyecto Laravel";
 $nota->descripcion = "Programar la parte de los modelos de la práctica de Fútbol Femenino.";
 $nota->prioridad = 10;
 $nota->save();
+
+// IMPORTANTE, para los siguientes métodos hay que definir en el modelo 'Nota':
+// protected $fillable = ['titulo', 'descripcion', 'prioridad'];
+
+// Método 2
+$nota = new Nota(['titulo' => $titulo, 'descripcion' => $descripcion, 'prioridad' => $prioridad]);
+$nota->save();
+
+// Método 3: Guardado automático en BDD
+Nota::create(['titulo' => $titulo, 'descripcion' => $descripcion, 'prioridad' => $prioridad]);
 ```
 
 ##### Actualizar datos
 ```php
 <?php
+// Método 1
 $nota = Nota::find($id);
 $nota->titulo = "Nuevo título";
 $nota->save();
+
+// Método 2: Guardado automático en BDD
+Nota::find($id)->update(['titulo' => 'Nuevo título']);
 ```
 
 ##### Eliminar datos
 ```php
 <?php
+// Método 1: 
 $nota = Nota::find($id);
-$nota->delete();
+$nota->delete(); // Devuelve true/false
+
+// Método 2: Devuelve el número de registros eliminados
+Nota::destroy($id); // admite un array de ids a eliminar: Nota::destroy([1, 2, 3]);
 ```
 
 #### Propiedades comunes de los modelos Eloquent
@@ -911,15 +931,23 @@ Mediante la directiva *@error* en la vista del formulario, mostramos los mensaje
 
 ### Mantener valor
 
-En caso de que haya un error podemos mantener el valor que tuviera el campo del formulario mediante el método *old()* de Laravel. Recibe el nombre del campo, y si hay un error, mostrará el valor que había introducido el usuario.
+En caso de que haya un error podemos mantener el valor que tuviera el campo del formulario mediante el método *old()* de Laravel. Recibe el nombre del campo, y si hay un error, mostrará el valor que había introducido el usuario. Admite como segundo parámetro, el valor inicial del campo.
 
 ```html
 <!-- estamos en ▓▓▓ notas.blade.php -->
-
 <input
   type="text"
   name="titulo"
   value="{{ old('titulo') }}"
+  placeholder="Título de la nota"
+  autofocus
+/>
+
+<!-- En formularios de actualización es interesante indicar el valor inicial del campo -->
+<input
+  type="text"
+  name="titulo"
+  value="{{ old('titulo', $nota->titulo) }}"
   placeholder="Título de la nota"
   autofocus
 />
@@ -1086,7 +1114,4 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
 
-<!-- ### Ficheros? --> Añadir teoría
-
-Ejer de chatGPT 4 Formulario subida imagen -->
 
