@@ -1123,6 +1123,7 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 #### Requisitos
 
 1.	Modelo Libro con los siguientes campos:
+
 - *titulo* (string): Nombre del libro.
 - *autor* (string): Nombre del autor.
 - *portada* (string): URL con la imagen del libro.
@@ -1137,17 +1138,20 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 - *fecha_prestamo* (date, nullable): Fecha en la que lo prestó (si aplica).
 
 2.	Funciones CRUD:
+
 - Agregar nuevos libros a la biblioteca.
 - Editar la información de un libro.
 - Eliminar libros.
 - Listar todos los libros con opciones de filtrado.
 
 3.	Vistas con Blade:
+
 - Listado de libros con opciones de borrado, búsqueda y filtros (por estado de lectura, género, formato, puntuación, favoritos, prestados...).
 - Formulario para añadir y editar libros.
 - Página de detalle de cada libro con su información completa.
 
 4.	Extras opcionales:
+
 - Mostrar una alerta si un libro lleva prestado más de 30 días.
 - Opción de paginar el listado de libros.
 - Gráfico simple con estadísticas de libros leídos vs pendientes.
