@@ -108,6 +108,7 @@ A cada criterio se le asigna un porcentaje del total de la nota final y va asoci
 
         * Referencias
             * [Documentación oficial de PHP](https://www.php.net/manual/es/)
+            * [Documentación oficial de Laravel](https://laravel.com/docs/11.x)
 
         * Recopilatorio
             * [Awesome PHP](https://github.com/ziadoz/awesome-php)
@@ -126,10 +127,16 @@ A cada criterio se le asigna un porcentaje del total de la nota final y va asoci
             * [Docker: Devilbox](https://devilbox.io/)
             * [Docker: Laradock](https://laradock.io/)
     
-    === "Cursos Openwebinars"
-        * PHP:
+    === "Cursos PHP"
+        * OpenWebinars:
             * [PHP: fundamentos](https://openwebinars.net/academia/aprende/curso-php-basico)
             * [PHP: Ampliando conceptos](https://openwebinars.net/academia/aprende/php-ampliar-conceptos)
             * [PHP y MySQL: Creando sitios dinámicos](https://openwebinars.net/academia/aprende/php-mysql)
-        * Frameworks:
+
+    === "Cursos Laravel"
+        * Laracasts (oficiales):
+            * [30 días para aprender Laravel (inglés)](https://laravel.com/docs/11.x)
+        * El rincón de Isma (Youtube):
+            * [Curso completo de Laravel 11](https://www.youtube.com/watch?v=Oa_pHsymaiA&list=PLbFjjy1sD3hr3ppWz9JndcXJErAQdpDHt)
+        * OpenWebinars:
             * [Desarrollo Web Moderno con Laravel: De la teoría a la práctica](https://openwebinars.net/academia/portada/desarrollo-web-moderno-laravel-teoria-practica/)

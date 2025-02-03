@@ -1113,3 +1113,74 @@ En las vistas de los 2 formularios añade mensajes de error en el caso de que lo
 - *R*: Obtén todos los clientes y filtra por diferentes cmapos.
 - *U*: Actualiza los campos de un cliente específico.
 - *D*: Elimina clientes.
+
+### Práctica: Gestión libros
+
+Desarrolla una app para gestionar la biblioteca personal de libros del usuario. La aplicación permitirá registrar los libros que ha leído o tiene pendientes, junto con información relevante como su opinión, el formato en el que lo posee, si lo han prestado a alguien...
+
+A continuación se detallan los requisitos. Deberás hacer las migraciones correspondientes, rutas, controlador, vistas... que necesites para su implementación.
+
+#### Requisitos
+
+1.	Modelo Libro con los siguientes campos:
+- *titulo* (string): Nombre del libro.
+- *autor* (string): Nombre del autor.
+- *portada* (string): URL con la imagen del libro.
+- *genero* (string): Género: novela, ciencia ficción, ensayo...
+- *año_publicacion* (integer): Año en que se publicó el libro.
+- *formato* (string): Formato del libro: físico, ebook, pdf...
+- *estado_lectura* (string): Estado actual del libro: pendiente, leyendo, leído, abandonado...
+- *puntuacion* (integer, 1-10): Puntuación personal sobre el libro.
+- *favorito* (boolean): Indica si está en la lista de favoritos del usuario.
+- *opinion* (string, nullable): Opinión personal del libro.
+- *prestado_a* (string, nullable): Nombre de la persona a la que ha prestado el libro (si aplica).
+- *fecha_prestamo* (date, nullable): Fecha en la que lo prestó (si aplica).
+
+2.	Funciones CRUD:
+- Agregar nuevos libros a la biblioteca.
+- Editar la información de un libro.
+- Eliminar libros.
+- Listar todos los libros con opciones de filtrado.
+
+3.	Vistas con Blade:
+- Listado de libros con opciones de borrado, búsqueda y filtros (por estado de lectura, género, formato, puntuación, favoritos, prestados...).
+- Formulario para añadir y editar libros.
+- Página de detalle de cada libro con su información completa.
+
+4.	Extras opcionales:
+- Mostrar una alerta si un libro lleva prestado más de 30 días.
+- Opción de paginar el listado de libros.
+- Gráfico simple con estadísticas de libros leídos vs pendientes.
+- Gráfico de barras de libros leídos por año.
+
+<!-- ### Práctica: Diario personal
+
+Desarrolla una app para llevar un diario personal digital. En esta aplicación, el usuario podrá realizar anotaciones en cualquier momento, organizarlas por categorías y visualizar un listado con opciones de filtrado. Una anotación puede ser cualquier cosa que se le pase por la cabeza, una idea, reflexión...
+
+A continuación se detallan los requisitos. Deberás hacer las migraciones correspondientes, rutas, controlador, vistas... que necesites para su implementación.
+
+#### Requisitos
+
+1.	Modelo Anotacion con los siguientes campos:
+- *titulo* (string): Título de la anotación.
+- *contenido* (text): Cuerpo de la anotación.
+- *categoria* (enum: "Personal", "Trabajo", "Ideas", "Otros"): Categoría de la anotación. INVESTIGA sobre cómo utilizar un tipo enumerado
+- *fecha* (date): Fecha en la que se creó la anotación.
+- *favorito* (boolean): Indica si es una anotación destacada.
+
+2.	Funciones CRUD:
+- Crear nuevas anotaciones.
+- Editar y actualizar anotaciones existentes.
+- Eliminar anotaciones.
+- Listar todas las anotaciones con opciones de filtrado.
+
+3.	Vistas con Blade:
+- Listado de anotaciones, con búsqueda y filtros por categoría, fecha o si está marcada como favorita.
+- Formulario para añadir anotaciones con fecha por defecto, la de hoy.
+- Formulario para editar anotaciones.
+- Vista de detalle de una anotación.
+
+4.	Extras opcionales:
+- Posibilidad de marcar una anotación como "favorita" y que se muestre destacada.
+- Ordenar las anotaciones por fecha (más recientes primero).
+- Implementar un calendario donde el usuario pueda ver qué días tiene anotaciones. -->

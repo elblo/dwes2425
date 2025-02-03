@@ -1,36 +1,5 @@
 # Uso avanzado de Frameworks
 
-## Plantillas con Blade
-
-## Integración de CSS y JS
-
-## Autenticación y autorización
-
-https://igomis.github.io/apunts/docs/4.8.Laravel.html
-
-!!! tip Proyecto
-    1. Pregunta
-    2. Respuesta
-    3. Relacion P-R
-    4. Autenticación
-    5. Relacion con usuario en modelo
-    6. Relacionar con migraciones
-    7. Relacionar en vistas
-    8. Proteger edit, update por Auth:id
-    9. página profile ... listado de preguntas y respuestas del usuario
-
-    Utilizar la fución diffForHumas para ellapsed time
-
-Antes se hacía así....
-
-Run scaffolding
-
-``` console
-php artisan make:auth
-```
-
-Crea el `HomeController`, que utiliza el middleware `auth`.
-
 ### Middleware
 
 Componente que se situa entre el enrutador y el controlador.
@@ -80,31 +49,59 @@ php artisan migrate
 
 
 
-## 8.9 Eloquent: Relaciones
+## 9.X Eloquent: Relaciones
 
-A través de Eloquent vamos a poder gestionar las relaciones entre nuestras tablas de la base de datos de una manera muy sencilla y sin sentencias SQL.
+A través de Eloquent vamos a poder gestionar las relaciones entre nuestras tablas de la base de datos de una manera muy sencilla y sin sentencias SQL. Más info sobre relaciones, como siempre, en la [documentación oficial](https://laravel.com/docs/11.x/eloquent-relationships).
 
-### Uno a uno (1 a 1)
+### Relaciones en BBDD
 
-Para crear este tipo de relaciones en Eloquent y Laravel, debemos tener creadas las tablas que vayamos a relacionar y establecer la relación entre ellas a través del método `hasOne`.
+En una base de datos relacional, las relaciones son las conexiones entre las tablas, que se establecen a través de las claves primarias y foráneas. Para obtener datos de varias tablas, podemos hacerlo de 2 formas:
+
+- *JOIN*: Unir las tablas a través de las claves primarias y foráneas.
+- *Relaciones*: Definir las relaciones en los modelos, y acceder a los datos a través de las relaciones.
+
+Las relaciones que existen en una base de datos relacional son:
+
+- **Uno a Uno**: Un registro de una tabla se relaciona con un único registro de otra tabla.
+- **Uno a Muchos**: Un registro de una tabla se relaciona con varios registros de otra tabla.
+- **Muchos a Muchos**: Varios registros de una tabla se relacionan con varios registros de otra tabla.
+- **Uno a Uno Polimórfica**: Un registro de una tabla puede relacionarse con un único registro de varias tablas.
+- **Uno a Muchos Polimórfica**: Un registro de una tabla puede relacionarse con varios registros de varias tablas.
+- **Muchos a Muchos Polimórfica**: Varios registros de una tabla pueden relacionarse con varios registros de varias tablas.
+
+Nota: Relaciones polimórficas son aquellas en las que una tabla se relaciona con varias tablas.
+
+### Relaciones en Eloquent
+
+Eloquent nos permite definir las relaciones entre los modelos, y acceder a los datos a través de ellas. Tipos:
+
+- **Uno a Uno**: `hasOne()`, `belongsTo()`
+- **Uno a Muchos**: `hasMany()`, `belongsTo()`
+- **Muchos a Muchos**: `belongsToMany()`
+- **Uno a Uno Polimórfica**: `morphOne()`, `morphTo()`
+- **Uno a Muchos Polimórfica**: `morphMany()`, `morphTo()`
+- **Muchos a Muchos Polimórfica**: `morphToMany()`, `morphedByMany()`
+
+El método a utilizar `hasOne()` o `belongsTo()` y similares dependerá de la tabla en la que se encuentre la clave foránea. Por ejemplo, si en una aplicación de Notas, la tabla notas tiene una clave foránea user_id, está utilizará belongsTo() y la tabla usuarios, hasOne(), hasMany() o lo que corresponda.
+
+### Relación Uno a uno (1 a 1)
+
+Para crear este tipo de relaciones en Eloquent y Laravel, debemos tener creadas las tablas que vayamos a relacionar y establecer la relación entre ellas a través del método `hasOne()` y `belongsTo()`.
 
 Supongamos que tenemos una tablas `usuario` que está relacionada con la tabla `telefono`.
 
 ```php
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Usuario extends Model
 {
-  /**
-   * Obtener el Teléfono asocioado con el Usuario
-   */
+  // Obtener el Teléfono asocioado con el Usuario
   public function telefono()
   {
-      return $this -> hasOne(Telefono::class);
+      return $this->hasOne(Telefono::class);
   }
 }
 
@@ -114,7 +111,6 @@ Una vez hecho ésto, para poder recuperar el dato relacionado, debemos utilizar 
 
 ```php
 <?php
-
 $telefono = Usuario::find(1)->telefono;
 ```
 
@@ -122,17 +118,15 @@ En este caso, Eloquent asume que en `Usuario` existe la clave ajena `usuario_id`
 
 ```php
 <?php
-
 return $this->hasOne(Telefono::class, 'clave_ajena');
 ```
 
-### Uno a Uno ***INVERSA***
+### Relación Uno a Uno ***INVERSA***
 
-Ahora que podemos acceder al modelo teléfono desde el modelo usuario, vamos a ver cómo hacerlo de manera inversa, es decir, cómo acceder desde el módelo `usuario` desdel el modelo `telefono` gracias al método `belongsTo()`.
+Ahora que podemos acceder al modelo teléfono desde el modelo usuario, vamos a ver cómo hacerlo de manera inversa, es decir, cómo acceder desde el modelo `telefono` al modelo `usuario` mediante el método `belongsTo()`.
 
 ```php
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -146,82 +140,77 @@ class Telefono extends Model
 }
 ```
 
-Al llamar el método de `usuario`, Eloquent intentará encontrar un modelo de usuario que tenga un `id` que coincida con la columna de `usuario_id` en el modelo de `telefono`.
+Al llamar el método de `usuario`, Eloquent intentará encontrar un modelo Usuario que tenga un `id` que coincida con la columna de `usuario_id` en el modelo de `telefono`.
 
 Eloquent determina el nombre de la clave externa examinando el nombre del método de relación y agregando el sufijo `_id` al nombre del método. Entonces, asume que el modelo `Telefono` tiene una columna `usuario_id`. Sin embargo, si no se llama de esa manera, puedes pasarle como argumento el nombre de la clave.
 
 ```php
 <?php
-
 public function usuario()
 {
     return $this -> belongsTo(Usuario::class, 'clave_ajena');
 }
 ```
 
-### Uno a Muchos (1 a MM)
+### Relación Uno a Muchos (1 a M)
 
-En este caso, las relaciones de 1 a muchos podemos decir que en una entrada de un blog, o en un post de Facebook, hay muchos comentarios relacionados a esa misma publicación.
+Por ejemplo, las entradas de un blog o un post tienen muchos comentarios.
 
-Para empezar, ya sabemos que debemos crear el modelo y en este caso usaremos el método `hasMany()` para obtener los datos relacionados con ese post o entrada en el blog
+Para empezar, ya sabemos que debemos crear ambas clases del modelo y en este caso, usaremos el método `hasMany()` para obtener los datos relacionados con ese post o entrada en el blog.
 
 ```php
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-  
   public function comentarios()
   {
-      return $this -> hasMany(Comentario::class);
+      return $this->hasMany(Comentario::class);
   }
 }
 ```
 
-Cuidado con las claves ajenas, que aquí pasa lo mismo... Eloquent establece por defecto el sufijo `_id` por lo tanto, en este ejemplo buscaría por `post_id`. Si no queremos éso o nuestra clave ajena tiene otro nombre, se lo pasamos por parámetro en el método `hasMany` como hacíamos más arriba.
+Cuidado con las claves ajenas, que aquí pasa lo mismo... Eloquent establece por defecto el sufijo `_id` por lo tanto, en este ejemplo buscaría por `post_id`. Si nuestra clave ajena tiene otro nombre, se lo pasamos por parámetro en el método `hasMany` como hacíamos más arriba.
 
-Ahora, al haber más de un dato, necesitamos iterar, por tanto debemos crear un bucle para poder sacar cada dato.
+Hay que tener en cuenta que `hasMany` devuelve un array de elemento.
 
 ```php
 <?php
 use App\Models\Post;
 
-$comentarios = Post::find(1) -> comentarios;
+$comentarios = Post::find(1)->comentarios;
 
 foreach ($comentarios as $comentario) {
-    // Lo que sea que hagamos con esos datos
+    // Lo que sea que hagamos con esos datos o pasar el array directamente a la vista
 }
 ```
 
 Además, como todas las relaciones son sentencias SQL, podemos anidar varios filtros en función de lo que queramos sacar.
 
 ```php
-$comentario = Post::find(1) -> comentarios()
+$comentario = Post::find(1)->comentarios()
     ->where('titulo', 'lo que sea')
     ->first();
 ```
 
-### Uno a Muchos ***INVERSA***
+### Relación Uno a Muchos ***INVERSA***
 
 Ahora que podemos acceder a todos los comentarios de una publicación, definamos una relación para permitir que un comentario acceda a su publicación principal.
 
 ```php
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Comentario extends Model
 {
-
   public function post()
   {
-      return $this -> belongsTo(Post::class);
+      return $this->belongsTo(Post::class);
   }
 }
 ```
@@ -230,23 +219,22 @@ Y ahora, a través de la propiedad de relación dinámica...
 
 ```php
 <?php
-
 use App\Models\Comentario;
 
 $comentario = Comentario::find(1);
 
-return $comentario -> post -> titulo;
+return $comentario->post->titulo;
 ```
 
 Pasaría lo mismo con el nombre de la clave ajena, si no se llama de la misma manera que Eloquent establece con el sufijo `_id` podemos pasarle como parámetro el nombre de la clave donde debe buscar.
 
-### Muchos a Muchos (MM a MM)
+### Relación Muchos a Muchos (MM a MM)
 
-Este tipo de relaciones son las más complicadas ya que, en un Blog del estilo Wordpress por ejemplo, un usuario puede tener muchos roles (lector, autor, administrador) pero un rol pueden tenerlo varios usuarios, es decir, puede haber muchos usuarios administradores, otros lectores y demás.
+Este tipo de relaciones son las más complicadas. Por ejemplo, en un blog como Wordpress, un usuario puede tener muchos roles (lector, autor, administrador) pero un rol pueden tenerlo varios usuarios, es decir, puede haber muchos usuarios administradores, otros lectores y demás.
 
 Para realizar este tipo de relaciones necesitaríamos 3 tablas diferentes.
 
-  - usuarios [ id, nombre]
+  - usuarios [id, nombre]
   - roles [id, nombre]
   - rol_usuario [usuario_id, rol_id] (Tabla Pivote)
 
@@ -256,7 +244,7 @@ Lo primero de todo, vamos a crear las tablas con sus modelos <span class="alert"
 php artisan make:migration create_rol_usuario_table --create=rol_usuario
 ```
 
-Y la estructura de dicha seria de la siguiente manera...
+Y la estructura de dicha tabla quedaría:
 
 ```php
 <?php
@@ -264,7 +252,7 @@ Y la estructura de dicha seria de la siguiente manera...
 public function up()
 {
     Schema::create('rol_usuario', function (Blueprint $table) {
-        $table->bigIncrements('id');
+        $table->bigIncrements('id'); // creates an auto-incrementing UNSIGNED BIGINT (primary key) equivalent column
         $table->unsignedInteger('usuario_id');
         $table->unsignedInteger('rol_id');
         $table->timestamps();
@@ -276,7 +264,6 @@ Ahora que ya tenemos todo listo, las relaciones de Muchos a Muchos vienen defini
 
 ```php
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -285,12 +272,14 @@ class Usuario extends Model
 {
     public function roles()
     {
-        return $this -> belongsToMany(Rol::class);
+        return $this->belongsToMany(Rol::class);
     }
 }
 ```
 
-Una vez que tengamos las relaciones definidas, accederemos a ellas mediante las propiedades dinámicas de `rol`
+Como 2º parámetro de `belongsToMany` se puede indicar la tabla intermedia de la relación `rol_usuario`. Útil, si se utiliza un nombre que Laravel no puede deducir a partir de los modelos.
+
+Una vez que tengamos las relaciones definidas, accederemos a ellas mediante las propiedades dinámicas de `roles`.
 
 ```php
 <?php
@@ -299,7 +288,7 @@ use App\Models\Usuario;
 
 $usuario = Usuario::find(1);
 
-foreach ($usuario -> roles as $rol) {
+foreach ($usuario->roles as $rol) {
     // nuestro código
 }
 ```
@@ -308,13 +297,12 @@ Acordaros que podemos encadenar comandos sql a través de los métodos de Eloque
 
 ```php
 <?php
-
-$roles = Usuario::find(1) -> roles() -> orderBy('nombre') -> get();
+$roles = Usuario::find(1)->roles()->orderBy('nombre')->get();
 ```
 
-### Muchos a Muchos ***INVERSA***
+### Relación Muchos a Muchos ***INVERSA***
 
-Para definir el "inverso" de una relación de muchos a muchos, debemos establecer un método en el modelo relacionado que también devuelva el resultado del método `belongsToMany `. Según el ejemplo que estamos siguiendo...
+Para definir la parte "inversa" de una relación de muchos a muchos, debemos establecer un método en el modelo relacionado que también devuelva el resultado del método `belongsToMany`. En este caso, se hace exactamente igual en ambas partes de la relación. Según el ejemplo que estamos siguiendo:
 
 ```php
 <?php
@@ -327,36 +315,63 @@ class Rol extends Model
 {
   public function usuarios()
   {
-      return $this -> belongsToMany(Usuario::class);
+      return $this->belongsToMany(Usuario::class);
   }
 }
 ```
+
+### Relaciones transitivas
+
+Las relaciones transitivas **Has One Through** y **Has Many Through** nos permiten una forma de acceder a tablas lejanas, que no están directamente relacionadas entre sí. Por ejemplo, Un Editor tiene muchos Post, y un Post tiene muchos Comment. Si queremos acceder a los Comment de un Editor, podemos hacerlo a través de la relación Has Many Through.
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Editor extends Model
+{
+  public function comments()
+  {
+      return $this->hasManyThrough(Comment::class, Post::Class);
+  }
+}
+```
+
+### Ejemplo completo
 
 Vamos a hacer un ejemplo con una APP que gestiones alumnos y asignaturas, de tal manera que MUCHOS ALUMNOS pueden cursar MUCHAS ASIGNATURAS
 
 ¿Qué necesitamos para este ejemplo?
 
-  - 3 migraciones para crear las tablas
-    - `Alumnos` /// `Materias` /// `AlumnoMateria`
+  - 2 **modelos**:  `Alumno` y `Materia`.
+  - 3 migraciones para crear las tablas: `alumnos`, `materias` y `alumno_materia` (tabla pivote).
+  - Modificar los archivos de las migraciones `create_alumnos_table` y `create_materias_table` añadiendo los campos que se necesiten.
+  - Ejecutar las migraciones.
+  - Rellenar la base de datos con alguna información de prueba.
+  - Método dentro de `Alumno` para crear la relación Alumno->Materia.
+  - Método dentro de `Materia` para crear la relación Materia->Alumno. 
+  - Crear las rutas necesarias para ambas peticiones.
+  - Crear las funciones necesarias en los controladores que redirijan a la vistas.
+  - Crear las vistas.
 
-  - Modificar los archivos de las migraciones `create_alumnos_table` y `create_materias_table`.
-  - Crear la base de datos `muchos_a_muchos`
-  - Ejecutar las Migraciones
-  - 2 **modelos** para `Alumnos` /// `Materias`
-  - Método dentro de `Alumno` para crear la relación Alumno -> Materia
-  - Crear el controlador para la vista
-  - Crear la ruta de nuestra vista
-  - Rellenar la base de datos
-  - Crear la vista con los datos
-  
-<span class="success">**3 MIGRACIONES**</span>
+#### 1. Crear los modelos
+```console
+php artisan make:model Alumno
+php artisan make:model Materia
+```
+
+#### 2. Crear las 3 migraciones
+
 ```console
 php artisan make:migration create_alumnos_table
 php artisan make:migration create_materias_table
 php artisan make:migration create_alumno_materia_table
 ```
 
-<span class="success">**MODIFICANDO LAS MIGRACIONES**</span>
+#### 3. Modificar las migraciones
 
 === "create_alumnos_table.php"
 
@@ -414,38 +429,62 @@ php artisan make:migration create_alumno_materia_table
     }
     ```
 
-<span class="success">**CREAMOS LA BASE DE DATOS**</span>
+#### 4. Ejecutar las migraciones
 
-Para este ejemplo, vamos a crear una base de datos que se llame `muchos_a_muchos` desde la consola de MySQL o MariaDB.
-
-``` console
-CREATE TABLE `muchos_a_muchos`
-```
-
-<span class="success">**EJECUTANDO LAS MIGRACIONES**</span>
-
-Ya tenemos las migraciones creadas y la base de datos lista para insertar el contenido de las migraciones que hemos escrito más arriba, lo que nos queda es `ejecutar las migraciones` para volcar toda la estructura en nuestra nueva base de datos.
+Lanzar las migraciones para que se creen las tablas en la BDD. Rellenar con alguna información de prueba.
 
 ``` console
 php artisan migrate
 ```
 
-<span class="success">**2 MODELOS PARA ALUMNOS Y MATERIAS**</span>
+#### 5. Rellenar la BDD con datos de prueba
 
-``` console
-php artisan make:model Alumno
-php artisan make:model Materia
-```
+Crear varios datos de prueba insertando por ejemplo, los siguientes registros mediante sentencias SQL.
 
-<span class="success">**MÉTODOS PARA CREAR LAS RELACIONES ALUMNO <-> MATERIA**</span>
+=== "Tabla Alumnos"
+
+    ``` sql
+      INSERT INTO alumnos (`nombre`) VALUES
+        ('Antonio'),
+        ('Laura'),
+        ('Marta'),
+        ('Pedro');
+    ```
+
+=== "Tabla Materias"
+
+    ``` sql
+      INSERT INTO materias (`nombre`) VALUES
+        ('Programacion'),
+        ('Interfaces'),
+        ('JavaScript'),
+        ('Sistemas');
+    ```
+
+=== "Tabla Alumno_Materia"
+
+    ``` sql
+      INSERT INTO alumno_materia (`alumno_id`, `materia_id`) VALUES
+        (1, 2),
+        (1, 4),
+        (3, 2),
+        (3, 1),
+        (2, 3),
+        (2, 4),
+        (4, 4),
+        (4, 1);
+    ```
+
+#### 6. Relación Alumno<->Materia
+
+En otro tipo de relaciones se podía indicar la clave ajena, en esta se indica la tabla intermedia de la relación `alumno_materia`.
 
 === "Alumno.php"
 
     ``` php
     <?php
-
     public function materias() {
-      return $this -> belongsToMany(Materia::class, 'alumno_materia');
+      return $this->belongsToMany(Materia::class, 'alumno_materia');
     }
     ```
 
@@ -453,108 +492,64 @@ php artisan make:model Materia
 
     ``` php
     <?php
-
     public function alumnos() {
-      return $this -> belongsToMany(Alumno::class, 'alumno_materia');
+      return $this->belongsToMany(Alumno::class, 'alumno_materia');
     }
     ```
 
-<span class="success">**CREANDO EL CONTROLADOR DE LA VISTA**</span>
+#### 7. Crear las rutas
 
-Necesitamos un controlador para redireccionar las rutas a las vistas que nosotros queramos, para ello crearemos el controlador `RelacionController`
-
-```console
-php artisan make:controller RelacionController
-```
-
-
-<span class="success">**CREANDO RUTAS**</span>
-
-Ahora que ya tenemos nuestro controlador, vamos a crear una única vista para mostrar el ejemplo de la relación MUCHOS a MUCHOS, en este caso un alumno determinado.
-
-Además, en nuestro controlador `RelacionController` vamos a escribir el código necesario para que nos devuelva los datos relacionados con el alumno con id `1` y la materia con id `2`.
+Vamos a crear las rutas para que dado el id de un alumno pasado por parámetro, devuelva un listado de sus asignaturas y viceversa.
 
 === "web.php"
 
     ``` php
     <?php
-
       use App\Http\Controllers\RelacionController;
       use Illuminate\Support\Facades\Route;
 
-      Route::get('muchos', [ RelacionController::class, 'index' ]);
+      Route::get('alumnos/{id}/materias', [AlumnoController::class, 'materias']);
     ```
 
-=== "RelacionController.php"
+Haz tú la ruta, para que dado el id de una asignatura pasada por parámetro, devuelva un listado de los alumnos que la cursan.
+
+#### 8. Crear el controlador
+
+Necesitamos controladores para redireccionar las rutas a las vistas que nosotros queramos, para ello empezamos creando el controlador `AlumnoController`.
+
+```console
+php artisan make:controller AlumnoController
+```
+
+=== "AlumnoController.php"
 
     ``` php
     <?php
-
       namespace App\Http\Controllers;
 
       use App\Models\Alumno;
-      use App\Models\Materia;
       use Illuminate\Http\Request;
 
-      class RelacionController extends Controller
+      class AlumnoController extends Controller
       {
-        public function index() {
-          $alumno = Alumno::find(1);
-          $materia = Materia::find(2);
+        public function materias(string $id) {
+          $materias = Alumno::find($id)->materias;
 
-          return view('muchos', compact('alumno', 'materia'));
+          return view('alumnos.materias', compact('materias'));
         }
       }
     ```
+  
+Haz tú ahora el controlador `MateriaController` con su función correspondiente para devolver a los alumnos que cursen una materia determinada.
 
-<span class="success">**RELLENANDO LA BASE DE DATOS**</span>
+#### 9. Crear la vista
 
-Necesitamos meter algunos registros en nuestra base de datos, por tanto, vamos a crear varios datos en nuestro sistema con las siguientes sentencias SQL.
-
-=== "Tabla Alumnos"
-
-    ``` sql
-      INSERT INTO alumnos (`nombre`) VALUES
-      ('Antonio'),
-      ('Laura'),
-      ('Marta'),
-      ('Pedro');
-    ```
-
-=== "Tabla Materias"
-
-    ``` sql
-      INSERT INTO materias (`nombre`) VALUES
-      ('Programacion'),
-      ('Interfaces'),
-      ('JavaScript'),
-      ('Sistemas');
-    ```
-
-=== "Tabla Alumno_Materia"
-
-    ``` sql
-      INSERT INTO alumno_materia (`alumno_id`, `materia_id`) VALUES
-      (1, 2),
-      (1, 4),
-      (3, 2),
-      (3, 1),
-      (2, 3),
-      (2, 4),
-      (4, 4),
-      (4, 1);
-    ```
-
-<span class="success">**CREANDO LA VISTA CON LOS DATOS**</span>
-
-El último paso que vamos a hacer es, listar los datos relacionados en una vista o plantilla `Blade` sencilla. Para ello nos creamos el archivo `muchos.blade.php` ya que es el nombre que hemos puesto en nuestro archivo de rutas.
-
-=== "Alumnos que cursan materias"
+Vamos a crar la vista que liste las materias de un usuario. Para ello creamos el archivo `alumnos/materias.blade.php`.
 
     ``` html
     <div class="row justify-content-center">
       <div class="col-auto">
-        <h3>Alumno {{ $alumno -> nombre }} está cursando las materias</h3>
+        <h3>Las materias que está cursando el alumno son:</h3>
 
         <table class="table table-striped table-hover">
           <thead class="bg-primary text-white">
@@ -562,10 +557,10 @@ El último paso que vamos a hacer es, listar los datos relacionados en una vista
           </thead>
 
           <tbody>
-            @foreach ($alumno -> materias as $registro)
+            @foreach ($materias as $materia)
               <tr>
                 <td>
-                    {{ $registro -> nombre }}
+                    {{ $materia->nombre }}
                  </td>
               </tr>
             @endforeach
@@ -575,31 +570,91 @@ El último paso que vamos a hacer es, listar los datos relacionados en una vista
     </div>
     ```
 
-=== "Materias cursadas por alumnos"
+¿Y si quisiéramos además dar información del propio alumno? Como su nombre por ejemplo, ¿qué más tendrías que pasar a la vista?
 
-    ``` html
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <h3>La materia {{ $materia -> nombre }} la están cursando los alumnos</h3>
+Haz tú ahora la vista correspondiente a los alumnos que cursan una determinada materia en el archivo `materias/alumnos.blade.php`.
 
-        <table class="table table-striped table-hover">
-          <thead class="bg-primary text-white">
-            <th>ALUMNOS</th>
-          </thead>
+### Añadir/eliminar elementos a la tabla pivote
 
-          <tbody>
-            @foreach ($materia -> alumnos as $registro)
-              <tr>
-                <td>
-                  {{ $registro -> nombre }}
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
-    </div>
-    ```
+Laravel proporciona una serie de métodos para añadir/eliminar elementos a la tabla pivote en las relaciones de Muchos a Muchos. Estos son:
+
+- `attach()`: Añade a la tabla pivote los elementos por su id.
+- `detach()`: Elimina de la tabla pivote los elementos por su id.
+- `toggle()`: Añade un elemento si no existe, y lo elimina si ya existe.
+- `sync()`: Deja en la tabla pivote sólo los elementos que se le pasen.
+
+Los métodos anteriores admiten un único id, un array de ids o el propio objeto. Ejemplos:
+
+```php
+<?php
+  use App\Models\Alumno;
+  use App\Models\Materia;
+
+  // Recuperar alumno con id 1
+  $alumno = Alumno::find(1);
+
+  // Añadirle materias por sus ids
+  $alumno->materias()->attach([1, 2, 3]);
+  // Quitarle materias por sus ids
+  $alumno->materias()->detach(2);
+  // Elimina el 1 (ya existía) y añade el 2 (no existía)
+  $alumno->materias()->toggle([1, 2]);
+  // Sincroniza con los elementos pasados (sólo deja estos en la tabla pivote)
+  $alumno->materias()->sync([1, 3]);
+
+  // También se pueden releacionar mediante el propio objeto
+  $materia = Materia::find(1);
+  $alumno->materias()->attach($materia); // En este caso da error porque ya tiene dicha materia (1)
+```
+
+## 9.2 Mutadores y accesores
+
+Los **mutatores** permiten transformar datos antes de guardarlos y los **accesores** los transforman al recuperarlos.
+
+Ejemplo sobre el atributo password:
+
+- El mutador (set) encripta la contraseña con bcrypt().
+- El accesor (get) devuelve "********" para ocultar la contraseña al acceder al modelo.
+
+```php
+<?php
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => '********', // Oculta la contraseña al acceder
+            set: fn ($value) => bcrypt($value), // Encripta al guardar
+        );
+    }
+}
+```
+
+Uso:
+
+```php
+<?php
+$user = new User();
+
+// Establecemos la contraseña (Laravel la encripta automáticamente)
+$user->password = 'mi_contraseña_segura';
+echo $user->password; // Salida: ******** (accesor oculta el valor)
+
+$user->save();
+
+// Verificamos en la base de datos
+echo $user->getAttributes()['password']; // Salida: $2y$10$...
+```
+
+Más info en [mutadores y accesores](https://laravel.com/docs/11.x/eloquent-mutators#defining-an-accessor).
+
+## 9.3 Seeders y factorías
+
+
+
 
 ---
 
