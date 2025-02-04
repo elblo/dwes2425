@@ -15,7 +15,8 @@ nav:
   # - "9.- Laravel Avanzado": "09laravelAvanzado.md"
   # - "10.- Servicios REST": "10laravelRest.md"
   - "Actividades resueltas": # Importante al ser categoría, NO enlazar a ningún md
-    - "Tema 8": "08laravelDatosActividadesResueltas.md"
+    - "Tema 8": "08actividadesResueltas.md"
+  #  - "Tema 9": "09actividadesResueltas.md"
 
 
 

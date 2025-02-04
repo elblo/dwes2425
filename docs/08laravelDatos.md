@@ -1106,7 +1106,7 @@ En cualquier caso, recuerda nombrar correctamente las rutas, funciones en contro
 
 En las vistas de los 2 formularios añade mensajes de error en el caso de que los campos no pasen la validación y asigna mediante *old* el valor antiguo del campo para que el usuario no tenga que volver a escribirlo.
 
-873. **Formulario de confirmación para eliminar productos**: Crear un formulario de confirmación para eliminar un recurso. Sól ocontendrá un mensaje de "¿Estás seguro que quieres eliminar el producto ID?" y un botón para proceder a eliminarlo. Se accederá mediante `GET /productos/{id}/destroy` y su vista estará en `productos/destroy.blade.php`. El formulario se procesará mediante `DELETE /productos/{id}` redirigiendo finalmente a `GET /productos` donde se muestra el listado de productos.
+873. **Formulario de confirmación para eliminar productos**: Crear un formulario de confirmación para eliminar un recurso. Sólo contendrá un mensaje de "¿Estás seguro que quieres eliminar el producto ID?" y un botón para proceder a eliminarlo. Se accederá mediante `GET /productos/{id}/destroy` y su vista estará en `productos/destroy.blade.php`. El formulario se procesará mediante `DELETE /productos/{id}` redirigiendo finalmente a `GET /productos` donde se muestra el listado de productos.
 874. **Ejercicio completo: CRUD con formularios**: Continúa el CRUD del apartado anterior para añadir funciones a la gestión de *clientes*:
 
 - *C*: Crea nuevos clientes.
@@ -1154,6 +1154,7 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 
 - Mostrar una alerta si un libro lleva prestado más de 30 días.
 - Opción de paginar el listado de libros.
+- Exportar datos a fichero CSV descargable.
 - Gráfico simple con estadísticas de libros leídos vs pendientes.
 - Gráfico de barras de libros leídos por año.
 

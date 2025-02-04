@@ -1,55 +1,8 @@
-# Uso avanzado de Frameworks
+# Uso avanzado de Laravel
 
-### Middleware
+> Duración estimada: 10 sesiones
 
-Componente que se situa entre el enrutador y el controlador.
-
-Explicar
-
-Ejecutar las migraciones
-
-Explorar los ficheros generados
-
-Auth:routes() ???
-
-
-## Laravel Breeze
-
-Laravel Breeze es un *starter kit* que se compone de un conjunto de rutas, controladores y vistas necesarias para regitrar y autenticar usuarios en cualquier aplicación.
-
-Las vistas están creadas con Laravel y los estilos con Tailwind CSS.
-
-Primero hemos de añadir la dependencia mediante Composer:
-
-``` console
-composer require laravel/breeze --dev
-```
-
-Tras ello, ejecutaremos el comando `breeze:install` para generar todo el contenido necesario (rutas, vistas, controladores, recursos, ...), compilaremos todos los *assets* CSS y generaremos las migraciones:
-
-``` console
-php artisan breeze:install
-
-npm install
-npm run dev
-php artisan migrate
-```
-
-
-!!! tip "Mailtrap"
-    Para poder probar el envío de correo
-    mailtrap.io, servidor de correo para pruebas para equipos de desarrollo (realmente no está envíando los correos)
-
-## i18n
-
-
-
-
-
-
-
-
-## 9.X Eloquent: Relaciones
+## 9.1 Eloquent: Relaciones
 
 A través de Eloquent vamos a poder gestionar las relaciones entre nuestras tablas de la base de datos de una manera muy sencilla y sin sentencias SQL. Más info sobre relaciones, como siempre, en la [documentación oficial](https://laravel.com/docs/11.x/eloquent-relationships).
 
@@ -135,7 +88,7 @@ class Telefono extends Model
 {
   public function usuario()
   {
-      return $this -> belongsTo(Usuario::class);
+      return $this->belongsTo(Usuario::class);
   }
 }
 ```
@@ -148,7 +101,7 @@ Eloquent determina el nombre de la clave externa examinando el nombre del métod
 <?php
 public function usuario()
 {
-    return $this -> belongsTo(Usuario::class, 'clave_ajena');
+    return $this->belongsTo(Usuario::class, 'clave_ajena');
 }
 ```
 
@@ -653,6 +606,160 @@ Más info en [mutadores y accesores](https://laravel.com/docs/11.x/eloquent-muta
 
 ## 9.3 Seeders y factorías
 
+Los seeders y factorías permiten generar datos de prueba de forma fácil y rápida, útiles durante el desarrollo para simular datos iniciales en una aplicación.
+
+### Seeders
+
+Los seeders son clases especiales que permiten "sembrar" datos en la base de datos.
+
+#### Crear un seeder
+
+Mediante el siguiente comando crearmos un seeder con nombre `BooksSeeder` en el directorio *database/seeders*:
+
+```console
+php artisan make:seeder BooksSeeder
+```
+
+En el método `run` añadimos los elementos que queremos crear:
+
+```php
+<?php
+class BooksSeeder extends Seeder
+{
+    public function run()
+    {
+        // Ejemplo: Crear un libro
+        $book = new Book();
+        $book->title = "Laravel for Beginners";
+        $book->author = "John Doe";
+        $book->save();
+    }
+}
+```
+
+#### Añadir el seeder a DatabaseSeeder
+
+El seeder recién creado hay que añadirlo al `DatabaseSeeder`. Por ejemplo:
+
+```php
+<?php
+class DatabaseSeeder extends Seeder
+{
+    public function run()
+    {
+        $this->call([
+            BooksSeeder::class,
+            AuthorsSeeder::class,
+            // ...
+        ]);
+    }
+}
+```
+
+#### Ejecutar el seeder
+
+Podemos hacer varias cosas, según nos interese:
+
+- `php artisan db:seed` : Ejecutar todos los seeders.
+- `php artisan db:seed --class=BooksSeeder` : Ejecutar un seeder escífico.
+- `php artisan migrate:fresh --seed` : Reiniciar las migraciones y ejecutar todos los seeders.
+
+### Factorías
+
+Las factorías permiten crear grandes cantidades de datos "fake" de forma rápida y dinámica. Utiliza la librería [Faker](https://fakerphp.org/) para ello.
+
+#### Crear una factoría
+
+Mediante el siguiente comando creamos una factoría con nombre `AuthorFactory` asociada al modelo `Author` en el directorio *database/factories*:
+
+```console
+php artisan make:factory AuthorFactory -m Author
+```
+
+En el método `definition` devolvemos un array asociativo con los campos del objeto que queremos crear.
+
+```php
+<?php
+namespace Database\Factories;
+
+use App\Models\Author;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class AuthorFactory extends Factory
+{
+    // Asociación de la factoría con el modelo (en este caso se podría omitir porque Laravel la deduce por el nombre)
+    protected $model = Author::class; 
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name,
+            'birth_year' => $this->faker->year,
+        ];
+    }
+}
+```
+
+#### Asociar factoría al modelo
+
+Hay que asociar la factoría con el modelo tanto en la factoría como en el modelo.
+
+- En la **parte de la factoría** se realiza con convención, por lo que si la factoría se llama AuthorFactory, el modelo asociado será Author. Y en caso de que queramos indicar esta asociación de forma explícita, lo podemos hacer a través de la propiedad `$model` como en el ejemplo anterior.
+- En la **parte del modelo**, si lo hemos creamos a mano, hay que indicar que usa una factoría mediante el [trait](https://www.php.net/manual/en/language.oop5.traits.php) `HasFactory`:
+
+```php
+<?php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Author extends Model
+{
+    use HasFactory;
+    //...  
+}
+```
+
+#### Utilizar una factoría
+
+```php
+<?php
+// Donde nos interese, por ejemplo en el controlador, modelo...
+use App\Models\Author;
+
+// Crear un autor
+Author::factory()->create();
+
+// Crear 10 autores
+Author::factory()->count(10)->create();
+```
+
+#### Integración con seeders
+
+Combinar factorías con seeders se pueden crear datos dinámicos de forma sencilla. No olvidar incluir los seeders en `DatabaseSeeder`.
+
+```php
+<?php
+class AuthorsSeeder extends Seeder
+{
+    public function run()
+    {
+        Author::factory()->count(10)->create();
+    }
+}
+
+// Utilizar factorías con datos relacionados
+class BooksSeeder extends Seeder
+{
+    public function run()
+    {
+        $authors = Author::factory()->count(5)->create();
+
+        $authors->each(function ($author) {
+            Book::factory()->count(2)->create(['author_id' => $author->id]);
+        });
+    }
+}
+```
 
 
 
@@ -723,11 +830,136 @@ public function notas() {
 Si visitamos esta ruta con nuestro login y password, nos aparecerá por pantalla toda la información de nuestro `user` a excepción de la contraseña y, aunque así fuera porque se lo forzamos, ésta aparecerá encriptada.
 
 
+### Middleware
+
+Componente que se situa entre el enrutador y el controlador.
+
+Explicar
+
+Ejecutar las migraciones
+
+Explorar los ficheros generados
+
+Auth:routes() ???
+
+
+## Laravel Breeze
+
+Laravel Breeze es un *starter kit* que se compone de un conjunto de rutas, controladores y vistas necesarias para regitrar y autenticar usuarios en cualquier aplicación.
+
+Las vistas están creadas con Laravel y los estilos con Tailwind CSS.
+
+Primero hemos de añadir la dependencia mediante Composer:
+
+``` console
+composer require laravel/breeze --dev
+```
+
+Tras ello, ejecutaremos el comando `breeze:install` para generar todo el contenido necesario (rutas, vistas, controladores, recursos, ...), compilaremos todos los *assets* CSS y generaremos las migraciones:
+
+``` console
+php artisan breeze:install
+
+npm install
+npm run dev
+php artisan migrate
+```
+
+
+!!! tip "Mailtrap"
+    Para poder probar el envío de correo
+    mailtrap.io, servidor de correo para pruebas para equipos de desarrollo (realmente no está envíando los correos)
+
+## i18n
+
+
+
 ---
 
 ## Actividades
 
-801. Crear el proyecto CholloSevero:
+A continuación, vas a realizar una serie de ejercicios sencillos sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
+
+### Eloquent: Relaciones
+
+En este apartado vas a crear diferentes relaciones entre modelos.
+
+901. **Relación 1 a 1**. 
+
+- Crea los modelos `Usuario` y `Perfil`. Cada usuario tiene un perfil, y cada perfil pertenece a un único usuario.
+- En las migraciones asegúrate que las tablas tienen los siguientes campos:
+  - `usuarios`: campos `id`, `nombre`, `email`.
+  - `perfiles`: campos `id`, `usuario_id`, `telefono`, `direccion`.
+- Define la relación en los modelos.
+- Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
+- Consulta los datos de un usuario y muestra su perfil. Para ello, crea una ruta `usuario/{id}` que redirija a la función `show` del controlador y llame a la vista `usuario.show.blade.php` para los datos del usuario con su perfil.
+
+902. **Relación 1 a Muchos**. 
+
+- Crea los modelos `Categoria` y `Producto`. Cada categoría tiene muchos productos, pero un producto sólo perteneca una determinada categoría.
+- En las migraciones asegúrate que las tablas tienen los siguientes campos:
+  - `categorias`: campos `id`, `nombre`.
+  - `productos`: campos `id`, `nombre`, `categoria_id`.
+- Define la relación en los modelos.
+- Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
+- Consulta el nombre de una categoría mostrando sus productos. Para ello, crea una ruta `categoria/{id}` que redirija a la función `show` del controlador y llame a la vista `categoria.show.blade.php`.
+- Mediante Eloquent agrega un nuevo producto a la categoría con id pasado por parámetro. Para ello, crea una ruta `categoria/{id}/addproduct/{nombre}` que redirija a la función `addProduct` del controlador y redirija a la ruta `show` anterior que llama a la vista `categoria.show.blade.php`.
+
+903. **Relación Muchos a Muchos**. 
+
+- Crea los modelos `Estudiante` y `Asignatura`. Cada estudiante puede estár matriculado en muchas asignaturas y una asignatura la cursan muchos estudiantes.
+- En las migraciones asegúrate que las tablas tienen los siguientes campos:
+  - `estudiantes`: campos `id`, `nombre`.
+  - `asignaturas`: campos `id`, `nombre`.
+  - `asignatura_estudiante` (tabla pivote): `estudiante_id`, `asignatura_id`.
+- Define la relación en los modelos.
+- Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
+- Consulta todas las asignaturas de un estudiante por su id. Para ello, crea una ruta `estudiante/{id}` que redirija a la función `show` del controlador y llame a la vista `estudiante.show.blade.php`.
+- Consulta ahora todos los estudiantes que cursen una asignatura por su id. Para ello, crea una ruta `asignatura/{id}` que redirija a la función `show` del controlador y llame a la vista `asignatura.show.blade.php`.
+- Mediante Eloquent matricula a un estudiante en un curso determinado. Para ello, crea una ruta `estudiante/{id}/matricula/{idCurso}` que redirija a la función `matricula` del controlador y redirija a la ruta `show` de estudiante que llama a la vista `estudiante.show.blade.php`.
+- Mediante Eloquent desmatricula a un estudiante en un curso determinado. Para ello, crea una ruta `estudiante/{id}/desmatricula/{idCurso}` que redirija a la función `desmatricula` del controlador y redirija a la ruta `show` de estudiante que llama a la vista `estudiante.show.blade.php`.
+
+904. **Ejercicio completo**: CRUD con varias relaciones y formularios.
+
+- Implementa un sistema de gestión de posts con sus respectivos comentarios mediante los modelos `Autor`, `Post` y `Comentario`.
+- Piensa bien las relaciones a utilizar. Un autor puede escribir muchos posts y comentarios. Un post puede tener muchos comentarios. Un comentario sólo pertenece a un post y está escrito por un autor.
+- De un *autor* interesa saber su imagen, nombre y email.
+- De un *post* interesa saber su título, fecha y descripción.
+- De un *comentario* interesa saber su texto y fecha.
+- Crea los CRUDs necesarios para cada modelo con sus rutas específicas, controladores, vistas (con formularios)...
+
+### Mutadores y accesores
+
+910. **Formatear nombres y convertir números**: En el modelo `Producto` del ejercicio anterior, crea:
+
+- Un mutador que almacene el nombre en minúsculas y un accesor que los devuelva con la primera letra en mayúscula.
+- Un mutador que almacene el precio convertido a céntimos y un accesor que lo devuelva de nuevo en euros.
+
+911. **Slug automático**: Un slug es una versión formateada de un texto, generalmente usada en URLs por gestores de contenidos. Un slug se crea eliminando caracteres especiales, convirtiendo espacios en guiones y pasando a minúsculas el texto. Por ejemplo: "Hola Mundo Laravel" tendría de slug "hola-mundo-laravel".
+
+En el modelo `Post` del ejercicio anterior:
+
+- Crea la migración correspondiente para añadir el campo `slug` de tipo string.
+- Investiga cómo usar `Str::slug` para generar slugs.
+- Crea un mutador que convierta el título a slug y lo almacene en el campo `slug`.
+
+912. **Formatear fechas de creación**: En el modelo `Estudiante` del ejercicio anterior:
+
+- Investiga cómo usar la biblioteca `Carbon` para trabajar con fechas incluida en Laravel.
+- Crea un accesor que formatee la fecha de creación (created_at) en formato "d/m/Y - H:i".
+
+### Seeders y factories
+
+920. **Seeder básico**: Crea un nuevo modelo `Usuario` con campos `nombre`, `email` y `password` (en su migración) y crea un seeder `UsuarioSeeder` que inserte 3 usuarios de prueba en la base de datos.
+921. **Factoría con seeder**: Crea una factoría `UsuarioFactory` con datos fake y en el seeder `UsuarioSeeder` crea 10 usuarios mediante la factoría.
+922. **Seeders con modelos relacionados**: Crea el modelo `Publicacion` con los campos `titulo`, `contenido` y `usuario_id` (en su migración) y modifica los modelos para que un usuario se relacione con muchas publicaciones. Crea las factorías `UsuarioFactory` (ya la tienes) y `PublicacionFactory` con datos fake para utilizar en el seeder `UsuarioPublicacionSeeder` para crear 10 usuarios que tentan entre 1 y 5 publicaciones cada uno.
+
+
+
+
+### Práctica: FernanChollo 
+
+901. Crear el proyecto FernanChollo:
 
   - Crea un nuevo repositorio para el proyecto
   - Configura el `.gitignore` para no incluir en el repo los siguientes archivos y carpetas:
@@ -755,7 +987,7 @@ Como ya hemos visto, hay ciertos elementos que siempre se muestran en todas las 
 
   - Logo del sitio y el título `Chollo ░▒▓ Severo`
   - `Inicio` | `Nuevos` | `Destacados`
-  - Un footer con vuestro nombre y algún dato copyright del tipo `©CholloSevero 2022` donde el año debe ser calculado a través de la fecha del servidor.
+  - Un footer con vuestro nombre y algún dato copyright del tipo `©FernanChollo 2025` donde el año debe ser calculado a través de la fecha del servidor.
 
 `::: Pagína principal` <br>
 Además del listado de todos los chollos de la base de datos debe contener el menú de navegación:

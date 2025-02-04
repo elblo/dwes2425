@@ -135,7 +135,7 @@ A cada criterio se le asigna un porcentaje del total de la nota final y va asoci
 
     === "Cursos Laravel"
         * Laracasts (oficiales):
-            * [30 días para aprender Laravel (inglés)](https://laravel.com/docs/11.x)
+            * [30 días para aprender Laravel (inglés)](https://laracasts.com/series/30-days-to-learn-laravel-11)
         * El rincón de Isma (Youtube):
             * [Curso completo de Laravel 11](https://www.youtube.com/watch?v=Oa_pHsymaiA&list=PLbFjjy1sD3hr3ppWz9JndcXJErAQdpDHt)
         * OpenWebinars:
