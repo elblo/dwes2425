@@ -1167,6 +1167,7 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 #### Requisitos
 
 1.	Modelo Anotacion con los siguientes campos:
+
 - *titulo* (string): Título de la anotación.
 - *contenido* (text): Cuerpo de la anotación.
 - *categoria* (enum: "Personal", "Trabajo", "Ideas", "Otros"): Categoría de la anotación. INVESTIGA sobre cómo utilizar un tipo enumerado
@@ -1174,18 +1175,21 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 - *favorito* (boolean): Indica si es una anotación destacada.
 
 2.	Funciones CRUD:
+
 - Crear nuevas anotaciones.
 - Editar y actualizar anotaciones existentes.
 - Eliminar anotaciones.
 - Listar todas las anotaciones con opciones de filtrado.
 
 3.	Vistas con Blade:
+
 - Listado de anotaciones, con búsqueda y filtros por categoría, fecha o si está marcada como favorita.
 - Formulario para añadir anotaciones con fecha por defecto, la de hoy.
 - Formulario para editar anotaciones.
 - Vista de detalle de una anotación.
 
 4.	Extras opcionales:
+
 - Posibilidad de marcar una anotación como "favorita" y que se muestre destacada.
 - Ordenar las anotaciones por fecha (más recientes primero).
 - Implementar un calendario donde el usuario pueda ver qué días tiene anotaciones.
