@@ -1158,7 +1158,7 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 - Gráfico simple con estadísticas de libros leídos vs pendientes.
 - Gráfico de barras de libros leídos por año.
 
-<!-- ### Práctica: Diario personal
+### Práctica: Diario personal
 
 Desarrolla una app para llevar un diario personal digital. En esta aplicación, el usuario podrá realizar anotaciones en cualquier momento, organizarlas por categorías y visualizar un listado con opciones de filtrado. Una anotación puede ser cualquier cosa que se le pase por la cabeza, una idea, reflexión...
 
@@ -1188,4 +1188,4 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 4.	Extras opcionales:
 - Posibilidad de marcar una anotación como "favorita" y que se muestre destacada.
 - Ordenar las anotaciones por fecha (más recientes primero).
-- Implementar un calendario donde el usuario pueda ver qué días tiene anotaciones. -->
+- Implementar un calendario donde el usuario pueda ver qué días tiene anotaciones.

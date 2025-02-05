@@ -761,6 +761,217 @@ class BooksSeeder extends Seeder
 }
 ```
 
+## 9.4 Request y Response
+
+Las peticiones y respuestas permiten interactuar con la solicitud HTTP que llega y que se devuelve, por lo que se suelen utilizar en alguna función del controlador al que dirige una ruta determinada. Más info en la [documentación oficial](https://laravel.com/docs/11.x/requests).
+
+### Request
+
+La clase `Illuminate\Http\Request` de Laravel proporciona una forma orientada a objetos de interactuar con la solicitud HTTP actual que maneja la aplicación, así como también de recuperar la entrada, las cookies y los archivos que se enviaron con la solicitud.
+
+#### Acceso a los datos del a petición
+
+Se pueden obtener los elementos enviados a la petición de diferentes formas. Recuerda que se recuperan por el campo `name` que hayas especificado en el formulario.
+
+```php
+<?php
+$input = $request->all(); //Acceder a todos los inputs
+$name = $request->input('name'); //Obtener un input específico
+$age = $request->input('age', 18); //Especificar valores por defecto
+$id = $request->route('id'); //Acceder a parámetros de ruta
+```
+
+También es posible comprobar si en la petición se han recibido ciertos elementos, si vienen rellenos, excluirlos...
+
+```php
+<?php
+if ($request->has('email')) {
+    // Input 'email' se ha recibido
+}
+if ($request->filled('name')) {
+    // Input 'name' no está vacío
+}
+$filtered = $request->only(['name', 'email']); // Filtrar inputs específicos
+$excluded = $request->except(['password']); // Excluir ciertos inputs
+```
+
+#### Tratamiento de archivos
+
+Los archivos se tratan de forma similar.
+
+```php
+<?php
+// Comprobar si se ha recibido el archivo con name 'photo'
+if ($request->hasFile('photo')) { 
+    $file = $request->file('photo');
+}
+// Almacenar el archivo en el storage configurado
+$path = $request->file('photo')->store('photos'); 
+```
+
+### Response
+
+Una instancia de Response hereda de la clase `Symfony\Component\HttpFoundation\Response` y proporciona una variedad de métodos para personalizar el código de estado HTTP y los encabezados de la respuesta.
+
+#### Crear respuestas
+
+```php
+<?php
+// Respuesta básica
+return response('Hello World', 200); 
+// Respuesta en formato JSON
+return response()->json([
+    'name' => 'John',
+    'status' => 'success'
+]); 
+ // Redirección
+return redirect('dashboard');
+// Redicrección pasando la variable 'status'
+return redirect('login')->with('status', 'Sesión iniciada'); 
+```
+
+#### Manipular cabeceras
+
+```php
+<?php
+// Respuesta añadiendo 1 cabecera
+return response('Hello')->header('Content-Type', 'text/plain');
+// Respuesta añadiendo múltiples cabeceras
+return response('Hello')
+  ->header('Content-Type', 'application/json')
+  ->header('Cache-Control', 'no-cache');
+```
+
+#### Respuestas de archivos
+
+```php
+<?php
+return response()->download($pathToFile); // Descarga archivo
+return response()->file($pathToFile); // Mostrar archivo
+```
+
+## 9.5 Manejo de ficheros
+
+Laravel proporciona una API sencilla y potente para trabajar con ficheros mediante el uso del sistema de almacenamiento basado en **Flysystem**. Esto permite interactuar con el sistema de archivos local y servicios en la nube como Amazon S3 o Dropbox de manera uniforme.
+
+### Configuración del almacenamiento
+
+Laravel usa la configuración del sistema de archivos en `config/filesystems.php`. El driver por defecto es `local`, pero se pueden configurar otros como `s3` o `public`.
+
+```php
+<?php
+// Configuración del disco local
+return [
+    'default' => env('FILESYSTEM_DISK', 'local'),
+    'disks' => [
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+    ],
+];
+```
+
+### Almacenar archivos
+
+Para subir y guardar archivos en Laravel, se utiliza `Illuminate\Support\Facades\Storage`.
+
+```php
+<?php
+use Illuminate\Support\Facades\Storage;
+
+// Guardar un archivo en 'storage/app/archivos/'
+$path = Storage::put('archivos', $request->file('archivo'));
+echo "Archivo guardado en: " . $path;
+
+// Guardar archivo con nombre específico
+Storage::putFileAs('archivos', $request->file('archivo'), 'mi_archivo.pdf');
+```
+
+### Obtener archivos
+
+```php
+<?php
+// Obtener el contenido de un archivo
+$contenido = Storage::get('archivos/mi_archivo.pdf');
+echo $contenido;
+
+// Verificar si un archivo existe
+if (Storage::exists('archivos/mi_archivo.pdf')) {
+    echo "El archivo existe.";
+}
+
+// Descargar un archivo
+return Storage::download('archivos/mi_archivo.pdf');
+
+```
+
+### Eliminar archivos
+
+```php
+<?php
+// Eliminar un archivo
+Storage::delete('archivos/mi_archivo.pdf');
+// Eliminar múltiples archivos
+Storage::delete(['archivos/archivo1.pdf', 'archivos/archivo2.pdf']);
+
+```
+
+### Listar archivos y directorios
+
+```php
+<?php
+// Obtener todos los archivos de un directorio
+$archivos = Storage::files('archivos');
+print_r($archivos);
+// Obtener todos los archivos de un directorio incluyendo subdirectorios
+$archivos = Storage::allFiles('archivos');
+print_r($archivos);
+// Obtener sólo los directorios
+$directorios = Storage::directories('archivos');
+print_r($directorios);
+```
+
+### Crear enlace simbólico
+
+Para acceder a archivos almacenados en `storage/app` desde public, se debe crear un enlace simbólico:
+
+```console
+php artisan storage:link
+```
+
+### Subida de archivos con formulario
+
+En la vista:
+
+```html
+<form action="{{ route('subir.archivo') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <input type="file" name="archivo">
+    <button type="submit">Subir</button>
+</form>
+```
+
+En el controlador:
+
+```php
+<?php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+public function subirArchivo(Request $request) {
+    $request->validate([
+        'archivo' => 'required|file|max:2048',
+    ]);
+    
+    $path = $request->file('archivo')->store('archivos');
+    return "Archivo subido a: " . $path;
+}
+```
+
+
+
+
 
 
 ---
