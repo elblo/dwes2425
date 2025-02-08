@@ -78,10 +78,11 @@ Duración estimada: 86 horas
     * Modelos
     * Formulario sy validación
 9. [Uso avanzado de Laravel](09laravelAvanzado.md) (22h)
+    * Almacenamiento de ficheros (local y AWS S3)
+    * Request y responses
     * Relaciones entre modelos
     * Seeders y factorías
-    * Almacenamiento de ficheros (local y AWS S3)
-    * Autenticación y autorización
+    * Mutadores y accesores
 10. [Servicios REST](10laravelRest.md) (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.

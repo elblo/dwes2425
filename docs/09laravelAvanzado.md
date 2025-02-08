@@ -2,7 +2,279 @@
 
 > Duración estimada: 10 sesiones
 
-## 9.1 Eloquent: Relaciones
+## 9.1 Manejo de ficheros
+
+Laravel proporciona una API sencilla y potente para trabajar con ficheros mediante el uso del sistema de almacenamiento basado en **Flysystem**. Esto permite interactuar con el sistema de archivos local y servicios en la nube como Amazon S3 o Dropbox de manera uniforme.
+
+### Configuración del almacenamiento
+
+Laravel usa la configuración del sistema de archivos en `config/filesystems.php`. El driver por defecto es `local`, pero se pueden configurar otros como `s3` o `public`.
+
+```php
+<?php
+// Configuración del disco local privado, público y o s3
+return [
+    'default' => env('FILESYSTEM_DISK', 'local'), // local | public | s3
+
+       'disks' => [
+
+          'local' => [
+              'driver' => 'local',
+              'root' => storage_path('app/private'),
+              'serve' => true,
+              'throw' => false,
+              'report' => false,
+          ],
+
+          'public' => [
+              'driver' => 'local',
+              'root' => storage_path('app/public'),
+              'url' => env('APP_URL').'/storage',
+              'visibility' => 'public',
+              'throw' => false,
+              'report' => false,
+          ],
+
+          's3' => [
+              'driver' => 's3',
+              'key' => env('AWS_ACCESS_KEY_ID'), // Definidas en .env
+              'secret' => env('AWS_SECRET_ACCESS_KEY'),
+              'region' => env('AWS_DEFAULT_REGION'),
+              'bucket' => env('AWS_BUCKET'),
+              'url' => env('AWS_URL'),
+              'endpoint' => env('AWS_ENDPOINT'),
+              'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+              'throw' => false,
+              'report' => false,
+          ],
+      ],
+];
+```
+
+### Almacenar archivos
+
+Para subir y guardar archivos en Laravel, se utiliza `Illuminate\Support\Facades\Storage`.
+
+```php
+<?php
+use Illuminate\Support\Facades\Storage;
+
+// 'imagen' es el atributo name del input type file del formulario
+$request->validate([
+    'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:20048',
+]);
+
+// Opción 1: Guardar un archivo en el disco 'local' ('storage/app/private/archivos/'). Storage siempre a local por defecto 
+$path = Storage::put('archivos', $request->file('imagen'));
+$path = Storage::disk('public')->put('archivos', $request->file('imagen')); // Elegir el disco al que guardar con Storage
+
+// Opción 2: Guardar archivo con nombre específico
+$path = Storage::putFileAs('archivos', $request->file('imagen'), 'mi_imagen.jpg');
+
+ // Opción 3: Eligiendo el disco. Si no se le indica en el 2º parámetro como opción el disco del filesystem (local, public o s3) coge el de por defecto 
+$path = $request->file('imagen')->store('archivos'); // 'local' --> Guarda en 'storage/app/private/archivos/'
+$path = $request->file('imagen')->store('archivos', 'public'); // 'public' --> Guarda en 'storage/app/public/archivos/'
+
+return back()->with('success', 'Imagen subida con éxito a la ruta:' . $path); // Vuelve atrás pasando la variable 'success' por la sesión  
+```
+
+### Obtener archivos
+
+Cuando accedamos al **storage** siempre va a buscar a partir del directorio correspondiente al disco configurado en filesystem.
+
+```php
+<?php
+// Obtener el contenido de un archivo (con ficheros de texto, no imágenes)
+$contenido = Storage::get('archivos/mi_archivo.pdf');
+echo $contenido;
+
+// Verificar si un archivo existe del disco 'local' o del 'public'
+if (Storage::exists('archivos/mi_archivo.pdf')) echo "El archivo existe.";
+if (Storage::disk('public')->exists('archivos/mi_archivo.pdf')) echo "El archivo existe.";
+
+// Descargar un archivo
+return Storage::download('archivos/mi_archivo.pdf');
+```
+
+### Eliminar archivos
+
+```php
+<?php
+// Eliminar un archivo del disco 'local' o del 'public'
+Storage::delete('archivos/mi_archivo.pdf');
+Storage::disk('public')->delete('archivos/mi_archivo.pdf');
+// Eliminar múltiples archivos
+Storage::delete(['archivos/archivo1.pdf', 'archivos/archivo2.pdf']);
+```
+
+### Listar archivos y directorios
+
+```php
+<?php
+// Obtener todos los archivos de un directorio del disco 'local' o del 'public'
+$archivos = Storage::files('archivos');
+$archivos = Storage::disk('public')->files('archivos');
+print_r($archivos);
+// Obtener todos los archivos de un directorio incluyendo subdirectorios
+$archivos = Storage::allFiles('archivos');
+print_r($archivos);
+// Obtener sólo los directorios
+$directorios = Storage::directories('archivos');
+print_r($directorios);
+```
+
+### Crear enlace simbólico
+
+Para acceder a archivos desde el navegador mediante su ruta y poder incluirlos en las vistas, es necesario crear un enlace simbólico en `/public` que apunte a  `/storage/app/public` (o donde mande el disco configurado). Para ello, desde la raíz del proyecto ejecuta:
+
+```console
+php artisan storage:link
+```
+
+En `/public` se habrá creado el enlace símbolico **storage**, que en la práctica es como si tuviésemos ahí los archivos. 
+
+### Ejemplo subir archivo
+
+En la vista:
+
+```html
+<form action="{{ route('subir.archivo') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <input type="file" name="archivo">
+    <button type="submit">Subir</button>
+</form>
+```
+
+En el controlador:
+
+```php
+<?php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+public function subirArchivo(Request $request) {
+    $request->validate([
+        'archivo' => 'required|file|max:2048',
+    ]);
+    
+    $path = $request->file('archivo')->store('archivos');
+    return "Archivo subido a: " . $path;
+}
+```
+
+### Ejemplo archivos en vistas
+
+En el controlador:
+
+```php
+<?php
+public function muestraArchivos(){
+      $paths = Storage::disk('public')->allFiles('archivos');
+      return view('archivos.muestra', compact('paths')); 
+  }
+```
+
+En la vista:
+
+```html
+<div>
+  <h1>Listado de imágenes</h1>
+  @foreach ($paths as $path)
+      <p><img src="{{ Storage::url($path) }}" /></p>
+  @endforeach
+</div>
+```
+
+## 9.2 Request y Response
+
+Las peticiones y respuestas permiten interactuar con la solicitud HTTP que llega y que se devuelve, por lo que se suelen utilizar en alguna función del controlador al que dirige una ruta determinada. Más info en la [documentación oficial](https://laravel.com/docs/11.x/requests).
+
+### Request
+
+La clase `Illuminate\Http\Request` de Laravel proporciona una forma orientada a objetos de interactuar con la solicitud HTTP actual que maneja la aplicación, así como también de recuperar la entrada, las cookies y los archivos que se enviaron con la solicitud.
+
+#### Acceso a los datos de la petición
+
+Se pueden obtener los elementos enviados a la petición de diferentes formas. Recuerda que se recuperan por el campo `name` que hayas especificado en el formulario.
+
+```php
+<?php
+$input = $request->all(); //Acceder a todos los inputs
+$name = $request->input('name'); //Obtener un input específico
+$age = $request->input('age', 18); //Especificar valores por defecto
+$id = $request->route('id'); //Acceder a parámetros de ruta
+```
+
+También es posible comprobar si en la petición se han recibido ciertos elementos, si vienen rellenos, excluirlos...
+
+```php
+<?php
+if ($request->has('email')) {
+    // Input 'email' se ha recibido
+}
+if ($request->filled('name')) {
+    // Input 'name' no está vacío
+}
+$filtered = $request->only(['name', 'email']); // Filtrar inputs específicos
+$excluded = $request->except(['password']); // Excluir ciertos inputs
+```
+
+#### Tratamiento de archivos
+
+Los archivos se tratan de forma similar.
+
+```php
+<?php
+// Comprobar si se ha recibido el archivo con name 'photo'
+if ($request->hasFile('photo')) { 
+    $file = $request->file('photo');
+}
+// Almacenar el archivo en el storage configurado
+$path = $request->file('photo')->store('photos'); 
+```
+
+### Response
+
+Una instancia de Response hereda de la clase `Symfony\Component\HttpFoundation\Response` y proporciona una variedad de métodos para personalizar el código de estado HTTP y los encabezados de la respuesta.
+
+#### Crear respuestas
+
+```php
+<?php
+// Respuesta básica
+return response('Hello World', 200); 
+// Respuesta en formato JSON
+return response()->json([
+    'name' => 'John',
+    'status' => 'success'
+]); 
+ // Redirección
+return redirect('dashboard');
+// Redicrección pasando la variable 'status'
+return redirect('login')->with('status', 'Sesión iniciada'); 
+```
+
+#### Manipular cabeceras
+
+```php
+<?php
+// Respuesta añadiendo 1 cabecera
+return response('Hello')->header('Content-Type', 'text/plain');
+// Respuesta añadiendo múltiples cabeceras
+return response('Hello')
+  ->header('Content-Type', 'application/json')
+  ->header('Cache-Control', 'no-cache');
+```
+
+#### Respuestas de archivos
+
+```php
+<?php
+return response()->download($pathToFile); // Descarga archivo
+return response()->file($pathToFile); // Mostrar archivo
+```
+
+## 9.3 Eloquent: Relaciones
 
 A través de Eloquent vamos a poder gestionar las relaciones entre nuestras tablas de la base de datos de una manera muy sencilla y sin sentencias SQL. Más info sobre relaciones, como siempre, en la [documentación oficial](https://laravel.com/docs/11.x/eloquent-relationships).
 
@@ -560,7 +832,7 @@ Los métodos anteriores admiten un único id, un array de ids o el propio objeto
   $alumno->materias()->attach($materia); // En este caso da error porque ya tiene dicha materia (1)
 ```
 
-## 9.2 Mutadores y accesores
+## 9.4 Mutadores y accesores
 
 Los **mutatores** permiten transformar datos antes de guardarlos y los **accesores** los transforman al recuperarlos.
 
@@ -604,7 +876,7 @@ echo $user->getAttributes()['password']; // Salida: $2y$10$...
 
 Más info en [mutadores y accesores](https://laravel.com/docs/11.x/eloquent-mutators#defining-an-accessor).
 
-## 9.3 Seeders y factorías
+## 9.5 Seeders y factorías
 
 Los seeders y factorías permiten generar datos de prueba de forma fácil y rápida, útiles durante el desarrollo para simular datos iniciales en una aplicación.
 
@@ -761,341 +1033,58 @@ class BooksSeeder extends Seeder
 }
 ```
 
-## 9.4 Request y Response
-
-Las peticiones y respuestas permiten interactuar con la solicitud HTTP que llega y que se devuelve, por lo que se suelen utilizar en alguna función del controlador al que dirige una ruta determinada. Más info en la [documentación oficial](https://laravel.com/docs/11.x/requests).
-
-### Request
-
-La clase `Illuminate\Http\Request` de Laravel proporciona una forma orientada a objetos de interactuar con la solicitud HTTP actual que maneja la aplicación, así como también de recuperar la entrada, las cookies y los archivos que se enviaron con la solicitud.
-
-#### Acceso a los datos del a petición
-
-Se pueden obtener los elementos enviados a la petición de diferentes formas. Recuerda que se recuperan por el campo `name` que hayas especificado en el formulario.
-
-```php
-<?php
-$input = $request->all(); //Acceder a todos los inputs
-$name = $request->input('name'); //Obtener un input específico
-$age = $request->input('age', 18); //Especificar valores por defecto
-$id = $request->route('id'); //Acceder a parámetros de ruta
-```
-
-También es posible comprobar si en la petición se han recibido ciertos elementos, si vienen rellenos, excluirlos...
-
-```php
-<?php
-if ($request->has('email')) {
-    // Input 'email' se ha recibido
-}
-if ($request->filled('name')) {
-    // Input 'name' no está vacío
-}
-$filtered = $request->only(['name', 'email']); // Filtrar inputs específicos
-$excluded = $request->except(['password']); // Excluir ciertos inputs
-```
-
-#### Tratamiento de archivos
-
-Los archivos se tratan de forma similar.
-
-```php
-<?php
-// Comprobar si se ha recibido el archivo con name 'photo'
-if ($request->hasFile('photo')) { 
-    $file = $request->file('photo');
-}
-// Almacenar el archivo en el storage configurado
-$path = $request->file('photo')->store('photos'); 
-```
-
-### Response
-
-Una instancia de Response hereda de la clase `Symfony\Component\HttpFoundation\Response` y proporciona una variedad de métodos para personalizar el código de estado HTTP y los encabezados de la respuesta.
-
-#### Crear respuestas
-
-```php
-<?php
-// Respuesta básica
-return response('Hello World', 200); 
-// Respuesta en formato JSON
-return response()->json([
-    'name' => 'John',
-    'status' => 'success'
-]); 
- // Redirección
-return redirect('dashboard');
-// Redicrección pasando la variable 'status'
-return redirect('login')->with('status', 'Sesión iniciada'); 
-```
-
-#### Manipular cabeceras
-
-```php
-<?php
-// Respuesta añadiendo 1 cabecera
-return response('Hello')->header('Content-Type', 'text/plain');
-// Respuesta añadiendo múltiples cabeceras
-return response('Hello')
-  ->header('Content-Type', 'application/json')
-  ->header('Cache-Control', 'no-cache');
-```
-
-#### Respuestas de archivos
-
-```php
-<?php
-return response()->download($pathToFile); // Descarga archivo
-return response()->file($pathToFile); // Mostrar archivo
-```
-
-## 9.5 Manejo de ficheros
-
-Laravel proporciona una API sencilla y potente para trabajar con ficheros mediante el uso del sistema de almacenamiento basado en **Flysystem**. Esto permite interactuar con el sistema de archivos local y servicios en la nube como Amazon S3 o Dropbox de manera uniforme.
-
-### Configuración del almacenamiento
-
-Laravel usa la configuración del sistema de archivos en `config/filesystems.php`. El driver por defecto es `local`, pero se pueden configurar otros como `s3` o `public`.
-
-```php
-<?php
-// Configuración del disco local
-return [
-    'default' => env('FILESYSTEM_DISK', 'local'),
-    'disks' => [
-        'local' => [
-            'driver' => 'local',
-            'root' => storage_path('app'),
-        ],
-    ],
-];
-```
-
-### Almacenar archivos
-
-Para subir y guardar archivos en Laravel, se utiliza `Illuminate\Support\Facades\Storage`.
-
-```php
-<?php
-use Illuminate\Support\Facades\Storage;
-
-// Guardar un archivo en 'storage/app/archivos/'
-$path = Storage::put('archivos', $request->file('archivo'));
-echo "Archivo guardado en: " . $path;
-
-// Guardar archivo con nombre específico
-Storage::putFileAs('archivos', $request->file('archivo'), 'mi_archivo.pdf');
-```
-
-### Obtener archivos
-
-```php
-<?php
-// Obtener el contenido de un archivo
-$contenido = Storage::get('archivos/mi_archivo.pdf');
-echo $contenido;
-
-// Verificar si un archivo existe
-if (Storage::exists('archivos/mi_archivo.pdf')) {
-    echo "El archivo existe.";
-}
-
-// Descargar un archivo
-return Storage::download('archivos/mi_archivo.pdf');
-
-```
-
-### Eliminar archivos
-
-```php
-<?php
-// Eliminar un archivo
-Storage::delete('archivos/mi_archivo.pdf');
-// Eliminar múltiples archivos
-Storage::delete(['archivos/archivo1.pdf', 'archivos/archivo2.pdf']);
-
-```
-
-### Listar archivos y directorios
-
-```php
-<?php
-// Obtener todos los archivos de un directorio
-$archivos = Storage::files('archivos');
-print_r($archivos);
-// Obtener todos los archivos de un directorio incluyendo subdirectorios
-$archivos = Storage::allFiles('archivos');
-print_r($archivos);
-// Obtener sólo los directorios
-$directorios = Storage::directories('archivos');
-print_r($directorios);
-```
-
-### Crear enlace simbólico
-
-Para acceder a archivos almacenados en `storage/app` desde public, se debe crear un enlace simbólico:
-
-```console
-php artisan storage:link
-```
-
-### Subida de archivos con formulario
-
-En la vista:
-
-```html
-<form action="{{ route('subir.archivo') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <input type="file" name="archivo">
-    <button type="submit">Subir</button>
-</form>
-```
-
-En el controlador:
-
-```php
-<?php
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
-public function subirArchivo(Request $request) {
-    $request->validate([
-        'archivo' => 'required|file|max:2048',
-    ]);
-    
-    $path = $request->file('archivo')->store('archivos');
-    return "Archivo subido a: " . $path;
-}
-```
-
-
-
-
-
-
----
-
-
-
-
-
-
-## Autenticación
-
-Para la utenticación de usuarios necesitamos instalar unas cuantas dependencias ya preparadas para ello.
-
-No es necesarios crear un proyecto nuevo pero nosotros vamos a hacerlo para tener uno con autenticación y otro no, el que ya hicimos al principio.
-
-Primero de todo, vamos a crear un nuevo proyecto en Laravel que se llame `notas_auth` y nos metemos dentro de la carpeta del mismo cuando el script haya terminado.
-
-Dentro de la carpeta `notas_auth` lanzamos los siguientes comandos.
-
-```console
-composer require laravel/ui
-php artisan ui vue --auth
-```
-
-Para terminar, lanzaremos el comando `migrate` que ya conocemos... <span class="alert">**SI ESTÁS WINDOWS**</span> fuera de la imagen de Docker (utilizando xampp o parecidos) debes crear una nueva base de datos y posteriormente modificiar el archivo `.env` poniendo el nombre de esa base de datos que acabas de crear.
-
-```console
-php artisan migrate
-```
-
-Si todo ha salido bien, podrás ver en la carpeta `resources/views` una carpeta que se llama **auth** y un controlador nuevo que llama `HomeController`
-
-### Restringir una ruta
-
-Si nos fijamos, en el nuevo controlador que se ha creado `HomeController` podemos ver unas líneas al principio del archivo que son las que determinan si la ruta está restringida a usuarios registrados y logueados.
-
-```php
-<?php
-public function __construct()
-{
-    $this->middleware('auth');
-}
-```
-
-Mediante el uso del `middleware` llamado `auth` establecemos que todas las rutas que hagan uso de este controlador deban pasar por el login para mostrar el contenido.
-
-Por lo tanto, en nuestros proyectos es recomendable utilizar diferentes controladores para diferentes vistas; las que estén reestringidas por el login y las que no.
-
-### Datos del usuario
-
-Siempre que queramos acceder a cualquier dato del usuario logueado, utilizaremos el método `auth()` para sacar por pantalla la información o para utilizar lógica a la hora de guardar datos en la base de datos en función de un usuario, un email o el campo que sea.
-
-Imaginemos que tenemos una ruta donde accedemos a dicha información
-
-```php
-<?php
-
-public function notas() {
-  return auth()->user();
-  
-  // return auth()->user() -> name;
-  // return auth()->user() -> email;
-  // ...
-}
-```
-
-Si visitamos esta ruta con nuestro login y password, nos aparecerá por pantalla toda la información de nuestro `user` a excepción de la contraseña y, aunque así fuera porque se lo forzamos, ésta aparecerá encriptada.
-
-
-### Middleware
-
-Componente que se situa entre el enrutador y el controlador.
-
-Explicar
-
-Ejecutar las migraciones
-
-Explorar los ficheros generados
-
-Auth:routes() ???
-
-
-## Laravel Breeze
-
-Laravel Breeze es un *starter kit* que se compone de un conjunto de rutas, controladores y vistas necesarias para regitrar y autenticar usuarios en cualquier aplicación.
-
-Las vistas están creadas con Laravel y los estilos con Tailwind CSS.
-
-Primero hemos de añadir la dependencia mediante Composer:
-
-``` console
-composer require laravel/breeze --dev
-```
-
-Tras ello, ejecutaremos el comando `breeze:install` para generar todo el contenido necesario (rutas, vistas, controladores, recursos, ...), compilaremos todos los *assets* CSS y generaremos las migraciones:
-
-``` console
-php artisan breeze:install
-
-npm install
-npm run dev
-php artisan migrate
-```
-
-
-!!! tip "Mailtrap"
-    Para poder probar el envío de correo
-    mailtrap.io, servidor de correo para pruebas para equipos de desarrollo (realmente no está envíando los correos)
-
-## i18n
-
-
-
----
-
 ## Actividades
 
-A continuación, vas a realizar una serie de ejercicios sencillos sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
+A continuación, vas a realizar una serie de ejercicios sobre cada uno de los apartados vistos en el tema. Puedes crear un proyecto nuevo o reutilizar uno existente.
+
+### Manejo de ficheros
+
+Para practicar con los ficheros vas a crear una galería de imágenes con posibilidad de subir nuevas, eliminar y acceder a su vista en detalle. También vas a implementar un "Mini Drive" para gestionar archivos. En ambos casos, vas a trabajar sin modelos para centrarte exclusivamente en el manejo de ficheros, pero en una app real, además sería recomendable trabajar con una BDD que almacene la información necesaria de los archivos.
+
+901. **Formulario de subida**: Crea un formulario para subir una imagen. La ruta que lleva al formulario por GET será `imagen/create` y la vista del mismo será `imagen/create.blade.php`. El formulario se enviará por POST a la ruta `imagen/storage`. Además del propio input de la imagen, el formulario tendrá un radio button para seleccionar si la imagen se almacenará de forma privada o pública en el storage.
+
+902. **Almacenar archivos**: Crea la función correspondiente en el controlador para recibir la imagen del formulario anterior validando que sea del tipo imagen, requerida y con un tamaño máximo de 2MB. Y según la opción del formulario, almacena la imagen de forma privada o pública en el storage. Después redirecciona a la página anterior enviando un mensaje del tipo "Imagen NOMBRE almacenada correctamente en el storage privado|público" que mostrarás justo encima del formulario.
+
+903. **Mostrar archivos**: Mediante la ruta por GET `imagen` que lleva a la vista `imagen/index.blade.php` muestra una galería con todas las imágenes en miniatura. Puedes utilizar flexbox o grid layout para posicionarlas unas al lado de las otras. **Importante**: No olvides crear el enlace simbólico para poder acceder a las imágenes. Crea un enlace "Subir imagen" que lleve al formulario del primer punto y en dicho formulario, un enlace para volver aquí, al listado.
+
+904. **Mostrar imagen completa**: Mediante la ruta por GET `imagen/{name}` que lleva a la vista `imagen/show.blade.php` muestra la vista en tamaño completo de la imagen. Muestra un párrafo con su ruta completa y un enlace para volver al listado.
+    
+905. **Eliminar archivos**: Mediante la ruta por GET `imagen/{name}/destroy` elimina la imagen que corresponda. A esta ruta podrás llegar mediante un enlace de la vista en detalle de la imagen. Una vez eliminada, se redirige automáticamente al listado enviando con 'with' un mensaje del tipo "Imagen NOMBRE eliminada correctamente del storage público".
+
+906. **Almacenamiento en S3** (opcional): Con tu cuenta de estudiante de AWS, crea un bucket S3 con acceso público. Configura el proyecto actual para utilizar el disco 's3' por defecto o bien utilízalo de forma explícita en cada interacciíon que realices con el Storage.
+
+907. **Mini Drive**: De forma similar a lo que acabas de hacer con la galería, crea un sistema de almecenamiento de archivos que admita archivos de diferente tipo (imágenes, videos, documentos...). Deberás mostrar un listado con un icono según el tipo de archivo, su nombre, tamaño y opciones (eliminar), un formulario para subirlo con un campo en el que recojas el nombre con el que almacennarlo. Y en vez de la vista en detalle, al pulsar sobre el archivo en la vista del listado, se descargará directamente. Sigue las recomendaciones de los puntos anteriores.
+
+908. **Mini Drive con directorios** (opcional): Investiga cómo crear directorios y mover archivos entre ellos. Ofrece en la interfaz que has creado, las opciones correspondientes para crear un nuevo directorio, para cambiar el nobmre a un archivo (si no existe uno ya con dicho nombre) y moverlo a un directorio determinado. 
+
+### Request y response
+
+En los siguientes ejercicios vas a trabajar con `Request`y `Response` en las funciones de los controladores. El primero ya lo has utilizado para recoger los datos recibidos de un formulario. Vas a repasar su uso y sobre todo, vas a conocer el segundo.
+
+910. **Obtener y validar datos con Request**: Crea un pequeño formulario para recoger "Nombre" y "Email" del usuario. Recoge sus datos en una función del controlador y valídalos. Si pasan la validación, símplemente devuelve un mensaje "Se ha pasado la validación" y si no, captura los errores en la vista del formulario.
+
+911. **Redireccionar la respuesta**: Modifica el ejercicio anterior para redireccionar la respuesta a otra ruta.
+
+912. **Respuesta JSON**: Crea una ruta GET `/api/usuarios` que devuelva un array de usuarios (id, nombre, email) en formato JSON.
+
+913. **Respuesta JSON error**: Crea una ruta GET `/api/error` que devuelva un array (error y mensaje) en formato JSON y además, el código de estado 400 para indicar al cliente que ha enviado una petición inválida.
+
+914. **Modificar cabeceras de la respuesta**: Crea una ruta GET `/archivo/descargar` que devuelva un archivo descargable y modifique los encabezados de la respuesta. En el controlador, usa *response()->download()* para devolver el archivo estableciendo un encabezado personalizado.
+
+915. **Ejercicio completo: API Rest**: Con lo visto hasta ahora, implementa una API RESTful para manejar usuarios:
+
+- **C**: Crear un usuario mediante POST `/api/usuarios`.
+- **R**: Listar usuarios con GET `/api/usuarios`.
+- **U**: Actualizar un usuario con PUT `/api/usuarios/{id}`.
+- **D**: Eliminar un usuario con DELETE `/api/usuarios/{id}`.
+
+Asegúrate de devolver respuestas adecuadas en JSON y manejar los errores correctamente.
 
 ### Eloquent: Relaciones
 
 En este apartado vas a crear diferentes relaciones entre modelos.
 
-901. **Relación 1 a 1**. 
+920. **Relación 1 a 1**. 
 
 - Crea los modelos `Usuario` y `Perfil`. Cada usuario tiene un perfil, y cada perfil pertenece a un único usuario.
 - En las migraciones asegúrate que las tablas tienen los siguientes campos:
@@ -1105,7 +1094,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
 - Consulta los datos de un usuario y muestra su perfil. Para ello, crea una ruta `usuario/{id}` que redirija a la función `show` del controlador y llame a la vista `usuario.show.blade.php` para los datos del usuario con su perfil.
 
-902. **Relación 1 a Muchos**. 
+921. **Relación 1 a Muchos**. 
 
 - Crea los modelos `Categoria` y `Producto`. Cada categoría tiene muchos productos, pero un producto sólo perteneca una determinada categoría.
 - En las migraciones asegúrate que las tablas tienen los siguientes campos:
@@ -1116,7 +1105,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Consulta el nombre de una categoría mostrando sus productos. Para ello, crea una ruta `categoria/{id}` que redirija a la función `show` del controlador y llame a la vista `categoria.show.blade.php`.
 - Mediante Eloquent agrega un nuevo producto a la categoría con id pasado por parámetro. Para ello, crea una ruta `categoria/{id}/addproduct/{nombre}` que redirija a la función `addProduct` del controlador y redirija a la ruta `show` anterior que llama a la vista `categoria.show.blade.php`.
 
-903. **Relación Muchos a Muchos**. 
+922. **Relación Muchos a Muchos**. 
 
 - Crea los modelos `Estudiante` y `Asignatura`. Cada estudiante puede estár matriculado en muchas asignaturas y una asignatura la cursan muchos estudiantes.
 - En las migraciones asegúrate que las tablas tienen los siguientes campos:
@@ -1130,7 +1119,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Mediante Eloquent matricula a un estudiante en un curso determinado. Para ello, crea una ruta `estudiante/{id}/matricula/{idCurso}` que redirija a la función `matricula` del controlador y redirija a la ruta `show` de estudiante que llama a la vista `estudiante.show.blade.php`.
 - Mediante Eloquent desmatricula a un estudiante en un curso determinado. Para ello, crea una ruta `estudiante/{id}/desmatricula/{idCurso}` que redirija a la función `desmatricula` del controlador y redirija a la ruta `show` de estudiante que llama a la vista `estudiante.show.blade.php`.
 
-904. **Ejercicio completo**: CRUD con varias relaciones y formularios.
+923. **Ejercicio completo**: CRUD con varias relaciones y formularios.
 
 - Implementa un sistema de gestión de posts con sus respectivos comentarios mediante los modelos `Autor`, `Post` y `Comentario`.
 - Piensa bien las relaciones a utilizar. Un autor puede escribir muchos posts y comentarios. Un post puede tener muchos comentarios. Un comentario sólo pertenece a un post y está escrito por un autor.
@@ -1141,7 +1130,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 
 ### Mutadores y accesores
 
-910. **Formatear nombres y convertir números**: En el modelo `Producto` del ejercicio anterior, crea:
+930. **Formatear nombres y convertir números**: En el modelo `Producto` del ejercicio anterior, crea:
 
 - Un mutador que almacene el nombre en minúsculas y un accesor que los devuelva con la primera letra en mayúscula.
 - Un mutador que almacene el precio convertido a céntimos y un accesor que lo devuelva de nuevo en euros.
@@ -1154,20 +1143,25 @@ En el modelo `Post` del ejercicio anterior:
 - Investiga cómo usar `Str::slug` para generar slugs.
 - Crea un mutador que convierta el título a slug y lo almacene en el campo `slug`.
 
-912. **Formatear fechas de creación**: En el modelo `Estudiante` del ejercicio anterior:
+931. **Formatear fechas de creación**: En el modelo `Estudiante` del ejercicio anterior:
 
 - Investiga cómo usar la biblioteca `Carbon` para trabajar con fechas incluida en Laravel.
 - Crea un accesor que formatee la fecha de creación (created_at) en formato "d/m/Y - H:i".
 
 ### Seeders y factories
 
-920. **Seeder básico**: Crea un nuevo modelo `Usuario` con campos `nombre`, `email` y `password` (en su migración) y crea un seeder `UsuarioSeeder` que inserte 3 usuarios de prueba en la base de datos.
-921. **Factoría con seeder**: Crea una factoría `UsuarioFactory` con datos fake y en el seeder `UsuarioSeeder` crea 10 usuarios mediante la factoría.
-922. **Seeders con modelos relacionados**: Crea el modelo `Publicacion` con los campos `titulo`, `contenido` y `usuario_id` (en su migración) y modifica los modelos para que un usuario se relacione con muchas publicaciones. Crea las factorías `UsuarioFactory` (ya la tienes) y `PublicacionFactory` con datos fake para utilizar en el seeder `UsuarioPublicacionSeeder` para crear 10 usuarios que tentan entre 1 y 5 publicaciones cada uno.
+940. **Seeder básico**: Crea un nuevo modelo `Usuario` con campos `nombre`, `email` y `password` (en su migración) y crea un seeder `UsuarioSeeder` que inserte 3 usuarios de prueba en la base de datos.
 
+941. **Factoría con seeder**: Crea una factoría `UsuarioFactory` con datos fake y en el seeder `UsuarioSeeder` crea 10 usuarios mediante la factoría.
 
+942. **Seeders con modelos relacionados**: Crea el modelo `Publicacion` con los campos `titulo`, `contenido` y `usuario_id` (en su migración) y modifica los modelos para que un usuario se relacione con muchas publicaciones. Crea las factorías `UsuarioFactory` (ya la tienes) y `PublicacionFactory` con datos fake para utilizar en el seeder `UsuarioPublicacionSeeder` para crear 10 usuarios que tentan entre 1 y 5 publicaciones cada uno.
 
+<!-- 
+### Práctica guiada: Fútbol femenino
 
+-->
+
+<!-- 
 ### Práctica: FernanChollo 
 
 901. Crear el proyecto FernanChollo:
@@ -1237,3 +1231,5 @@ Muy parecida a la de Crear un chollo pero que puedas editar un Chollo en funció
 - Ve haciendo commits en función de las tareas que vayas acabando o que veas que el commit tiene sentido. No es buena práctica subir los camios de un archivo y el siguiente commit volver a subir más cambios del mismo archivo (a no ser que nos hayamos saltado o equivocado en algo).
 
 - El proyecto es individual y después se presentará, uno por uno al profesor para que evalúe todos los aspectos del mismo. Se harán preguntas de cómo se ha hecho cierta cosa o por qué se ha determinado cierto flujo de trabajo así que, <span class="alert">***no os copiéis porque se evalúa también la presentación del proyecto***</span>
+
+-->
