@@ -53,27 +53,31 @@ return [
 
 ### Almacenar archivos
 
-Para subir y guardar archivos en Laravel, se utiliza `Illuminate\Support\Facades\Storage`.
+Para subir y guardar archivos en Laravel, se utiliza la clase `Illuminate\Support\Facades\Storage`. A sus métodos se les pasa el *path* y *nombre* del archivo con el que operar. Hay que tener en cuenta que el *path* se indica a partir del disco configurado en el punto anterior, así que, si por ejemplo queremos almacenar un archivo en `/storage/app/private/archivos` únicamente habría que indicar como path `archivos`.
 
 ```php
 <?php
+// Función 'storage' en controlador que recibe los datos del formulario
 use Illuminate\Support\Facades\Storage;
 
 // 'imagen' es el atributo name del input type file del formulario
 $request->validate([
-    'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:20048',
+    'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
 ]);
 
-// Opción 1: Guardar un archivo en el disco 'local' ('storage/app/private/archivos/'). Storage siempre a local por defecto 
-$path = Storage::put('archivos', $request->file('imagen'));
-$path = Storage::disk('public')->put('archivos', $request->file('imagen')); // Elegir el disco al que guardar con Storage
+// Opción 1.1 Guardar un archivo en el disco 'local' ('storage/app/private/archivos/')
+$path = Storage::put('archivos', $request->file('imagen')); // Storage siempre a `local` por defecto 
+$path = Storage::disk('public')->put('archivos', $request->file('imagen')); // Elegir el disco al que guardar 
 
-// Opción 2: Guardar archivo con nombre específico
+// Opción 1.2: Guardar archivo con nombre específico
 $path = Storage::putFileAs('archivos', $request->file('imagen'), 'mi_imagen.jpg');
 
- // Opción 3: Eligiendo el disco. Si no se le indica en el 2º parámetro como opción el disco del filesystem (local, public o s3) coge el de por defecto 
-$path = $request->file('imagen')->store('archivos'); // 'local' --> Guarda en 'storage/app/private/archivos/'
+ // Opción 2.1: Guardar desde $request
+$path = $request->file('imagen')->store('archivos'); // 'local' por defecto --> Guarda en 'storage/app/private/archivos/'
 $path = $request->file('imagen')->store('archivos', 'public'); // 'public' --> Guarda en 'storage/app/public/archivos/'
+
+// Opción 2.2: Guardar desde $request con nombre específico
+$path = $request->file('archivo')->storeAs('archivos', 'nuevonombre.jpg', 'public');
 
 return back()->with('success', 'Imagen subida con éxito a la ruta:' . $path); // Vuelve atrás pasando la variable 'success' por la sesión  
 ```
