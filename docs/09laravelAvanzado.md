@@ -1053,11 +1053,11 @@ Para practicar con los ficheros vas a crear una galería de imágenes con posibi
 
 904. **Mostrar imagen completa**: Mediante la ruta por GET `imagen/{name}` que lleva a la vista `imagen/show.blade.php` muestra la vista en tamaño completo de la imagen. Muestra un párrafo con su ruta completa y un enlace para volver al listado.
     
-905. **Eliminar archivos**: Mediante la ruta por GET `imagen/{name}/destroy` elimina la imagen que corresponda. A esta ruta podrás llegar mediante un enlace de la vista en detalle de la imagen. Una vez eliminada, se redirige automáticamente al listado enviando con 'with' un mensaje del tipo "Imagen NOMBRE eliminada correctamente del storage público".
+905. **Eliminar archivos**: Mediante la ruta por GET `imagen/{name}/destroy` elimina la imagen que corresponda. A esta ruta podrás llegar mediante un enlace de la vista en detalle de la imagen. Una vez eliminada, se redirige automáticamente al listado enviando con 'with' un mensaje del tipo "Imagen NOMBRE eliminada correctamente del storage público". Si lo prefieres, en lugar del enlace a eliminar, puedes hacerlo mediante un formulario que lleve a una ruta DELETE `imagen/{name}`.
 
 906. **Almacenamiento en S3** (opcional): Con tu cuenta de estudiante de AWS, crea un bucket S3 con acceso público. Configura el proyecto actual para utilizar el disco 's3' por defecto o bien utilízalo de forma explícita en cada interacciíon que realices con el Storage.
 
-907. **Mini Drive**: De forma similar a lo que acabas de hacer con la galería, crea un sistema de almecenamiento de archivos que admita archivos de diferente tipo (imágenes, videos, documentos...). Deberás mostrar un listado con un icono según el tipo de archivo, su nombre, tamaño y opciones (eliminar), un formulario para subirlo con un campo en el que recojas el nombre con el que almacennarlo. Y en vez de la vista en detalle, al pulsar sobre el archivo en la vista del listado, se descargará directamente. Sigue las recomendaciones de los puntos anteriores.
+907. **Mini Drive**: De forma similar a lo que acabas de hacer con la galería, crea un sistema de almecenamiento de archivos que admita archivos de diferente tipo (imágenes, videos, documentos...). Deberás mostrar un listado con un icono según el tipo de archivo, su nombre, tamaño y opciones (eliminar), un formulario para subirlo con un campo en el que recojas el nombre con el que almacenarlo. Y en vez de la vista en detalle, al pulsar sobre el archivo en la vista del listado, se descargará directamente. Sigue las recomendaciones de los puntos anteriores. Recuerda que cada archivo no va a tener un modelo asociado, por lo que el nombre, tamaño... deberás obtenerlo de la información del propio archivo.
 
 908. **Mini Drive con directorios** (opcional): Investiga cómo crear directorios y mover archivos entre ellos. Ofrece en la interfaz que has creado, las opciones correspondientes para crear un nuevo directorio, para cambiar el nobmre a un archivo (si no existe uno ya con dicho nombre) y moverlo a un directorio determinado. 
 
@@ -1139,7 +1139,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Un mutador que almacene el nombre en minúsculas y un accesor que los devuelva con la primera letra en mayúscula.
 - Un mutador que almacene el precio convertido a céntimos y un accesor que lo devuelva de nuevo en euros.
 
-911. **Slug automático**: Un slug es una versión formateada de un texto, generalmente usada en URLs por gestores de contenidos. Un slug se crea eliminando caracteres especiales, convirtiendo espacios en guiones y pasando a minúsculas el texto. Por ejemplo: "Hola Mundo Laravel" tendría de slug "hola-mundo-laravel".
+931. **Slug automático**: Un slug es una versión formateada de un texto, generalmente usada en URLs por gestores de contenidos. Un slug se crea eliminando caracteres especiales, convirtiendo espacios en guiones y pasando a minúsculas el texto. Por ejemplo: "Hola Mundo Laravel" tendría de slug "hola-mundo-laravel".
 
 En el modelo `Post` del ejercicio anterior:
 
@@ -1147,7 +1147,7 @@ En el modelo `Post` del ejercicio anterior:
 - Investiga cómo usar `Str::slug` para generar slugs.
 - Crea un mutador que convierta el título a slug y lo almacene en el campo `slug`.
 
-931. **Formatear fechas de creación**: En el modelo `Estudiante` del ejercicio anterior:
+932. **Formatear fechas de creación**: En el modelo `Estudiante` del ejercicio anterior:
 
 - Investiga cómo usar la biblioteca `Carbon` para trabajar con fechas incluida en Laravel.
 - Crea un accesor que formatee la fecha de creación (created_at) en formato "d/m/Y - H:i".
