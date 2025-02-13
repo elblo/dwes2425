@@ -110,6 +110,7 @@ A cada criterio se le asigna un porcentaje del total de la nota final y va asoci
         * Referencias
             * [Documentación oficial de PHP](https://www.php.net/manual/es/)
             * [Documentación oficial de Laravel](https://laravel.com/docs/11.x)
+            * [LaravelDocs - Documentación no oficial de Laravel en español](https://laravel-docs.com/es/docs/10.x)
 
         * Recopilatorio
             * [Awesome PHP](https://github.com/ziadoz/awesome-php)
