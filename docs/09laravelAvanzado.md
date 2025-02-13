@@ -205,6 +205,7 @@ Se pueden obtener los elementos enviados a la petición de diferentes formas. Re
 <?php
 $input = $request->all(); //Acceder a todos los inputs
 $name = $request->input('name'); //Obtener un input específico
+$name = $request->name; //Obtener un input específico
 $age = $request->input('age', 18); //Especificar valores por defecto
 $id = $request->route('id'); //Acceder a parámetros de ruta
 ```
