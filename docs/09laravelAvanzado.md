@@ -1161,6 +1161,46 @@ En el modelo `Post` del ejercicio anterior:
 
 942. **Seeders con modelos relacionados**: Crea el modelo `Publicacion` con los campos `titulo`, `contenido` y `usuario_id` (en su migración) y modifica los modelos para que un usuario se relacione con muchas publicaciones. Crea las factorías `UsuarioFactory` (ya la tienes) y `PublicacionFactory` con datos fake para utilizar en el seeder `UsuarioPublicacionSeeder` para crear 10 usuarios que tentan entre 1 y 5 publicaciones cada uno.
 
+### Práctica: Directorio trabajadores
+
+Desarrolla una app que muestre a los trabajadores de una empresa con sus datos de contacto. Se incorporará un buscador que filtrará por varios de los campos y se darán opciones de ordenación.
+
+A continuación se detallan los requisitos. Deberás hacer las migraciones correspondientes, rutas, controlador, vistas... que necesites para su implementación.
+
+#### Requisitos
+
+1.	Modelo Trabajador con los siguientes campos:
+
+- *nombre* (string): Nombre del trabajador.
+- *apellidos* (string): Apellidos del trabajador.
+- *telefono* (string): Teléfono profesional.
+- *email* (string): Correo electrónico.
+- *foto* (string): Nombre de la imagen del trabajador.
+- *departamento* (string): Departamento al que pertenece (Ejemplo: Copmras, Ventas, RRHH, I+D...).
+- *cargos* (array): Array de strings con los cargos del empleado (Ejemplo: Jefe departamento, coordinador área, director...).
+- *fecha_nacimiento* (date): Fecha nacimiento.
+- *sustituto* (boolean): Indica si está sustituyendo a otro trabajador.
+- *mayor55* (boolean): Indica si es mayor de 55 años.
+
+2.	Funciones CRUD:
+
+- Crear nuevos trabajadores.
+- Editar y actualizar trabajadores existentes.
+- Eliminar trabajadores.
+- Listar todos los trabajadores con opciones de búsqueda filtrado.
+
+3.	Vistas con Blade:
+
+- Listado de trabajadores, con búsqueda y filtros por nombre, apellidos, departamento, cargos y si son o no sustitutos o mayortes de 55 años.
+- Formulario para añadir trabajadores.
+- Formulario para editar trabajadores.
+- Vista de detalle de un trabajador con toda su información.
+
+4.	Extras opcionales:
+
+- Ordenar los trabajadores por fecha de nacimiento (más recientes primero).
+- Destacar el trabajador que cumpla años en el día de hoy poniéndole por ejemplo un icono de churros al lado del nombre para la invitación... 😜
+  
 <!-- 
 ### Práctica guiada: Fútbol femenino
 
