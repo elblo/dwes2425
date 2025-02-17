@@ -458,6 +458,8 @@ return $comentario->post->titulo;
 
 Pasaría lo mismo con el nombre de la clave ajena, si no se llama de la misma manera que Eloquent establece con el sufijo `_id` podemos pasarle como parámetro el nombre de la clave donde debe buscar.
 
+
+
 ### Relación Muchos a Muchos (MM a MM)
 
 Este tipo de relaciones son las más complicadas. Por ejemplo, en un blog como Wordpress, un usuario puede tener muchos roles (lector, autor, administrador) pero un rol pueden tenerlo varios usuarios, es decir, puede haber muchos usuarios administradores, otros lectores y demás.
@@ -489,7 +491,7 @@ public function up()
 
         // También se podían haber definido como cláves foráneas
         // $table->foreignId('usuario_id')->constrained('usuarios');
-        // $table->foreignId('rol_id')->constrained('rols');
+        // $table->foreignId('rol_id')->constrained('rols'); // Ojo con el nombre
     });
 }
 ```
@@ -552,6 +554,42 @@ class Rol extends Model
       return $this->belongsToMany(Usuario::class, 'rol_usuario');
   }
 }
+```
+
+### Añadir/eliminar elementos a la tabla pivote
+
+Laravel proporciona una serie de métodos para añadir/eliminar elementos a la tabla pivote en las relaciones de Muchos a Muchos. Estos son:
+
+- `attach()`: Añade a la tabla pivote los elementos pasados.
+- `detach()`: Elimina de la tabla pivote los elementos pasados.
+- `toggle()`: Añade un elemento si no existe, y lo elimina si ya existe.
+- `sync()`: Deja en la tabla pivote sólo los elementos que se le pasen.
+
+Los métodos anteriores admiten un único **id**, un **array de ids** o el propio **objeto**. Ejemplos:
+
+```php
+<?php
+  use App\Models\Usuario;
+  use App\Models\Rol;
+
+  // Recuperar usuario con id 1
+  $usuario = Usuario::find(1);
+
+  // Añadirle roles por sus ids
+  $usuario->roles()->attach([1, 2, 3]);
+
+  // Quitarle roles por sus ids
+  $usuario->roles()->detach(2);
+
+  // Elimina el 1 (ya existía) y añade el 2 (no existía)
+  $usuario->roles()->toggle([1, 2]);
+  
+  // Sincroniza con los elementos pasados (sólo deja estos en la tabla pivote)
+  $usuario->roles()->sync([1, 3]);
+
+  // También se pueden releacionar mediante el propio objeto
+  $rol = Rol::find(1);
+  $usuario->roles()->attach($rol); // En este caso da error porque ya tiene dicho rol (1)
 ```
 
 ### Relaciones transitivas
@@ -807,42 +845,6 @@ Vamos a crar la vista que liste las materias de un usuario. Para ello creamos el
 ¿Y si quisiéramos además dar información del propio alumno? Como su nombre por ejemplo, ¿qué más tendrías que pasar a la vista?
 
 Haz tú ahora la vista correspondiente a los alumnos que cursan una determinada materia en el archivo `materias/alumnos.blade.php`.
-
-### Añadir/eliminar elementos a la tabla pivote
-
-Laravel proporciona una serie de métodos para añadir/eliminar elementos a la tabla pivote en las relaciones de Muchos a Muchos. Estos son:
-
-- `attach()`: Añade a la tabla pivote los elementos por su id.
-- `detach()`: Elimina de la tabla pivote los elementos por su id.
-- `toggle()`: Añade un elemento si no existe, y lo elimina si ya existe.
-- `sync()`: Deja en la tabla pivote sólo los elementos que se le pasen.
-
-Los métodos anteriores admiten un único id, un array de ids o el propio objeto. Ejemplos:
-
-```php
-<?php
-  use App\Models\Alumno;
-  use App\Models\Materia;
-
-  // Recuperar alumno con id 1
-  $alumno = Alumno::find(1);
-
-  // Añadirle materias por sus ids
-  $alumno->materias()->attach([1, 2, 3]);
-
-  // Quitarle materias por sus ids
-  $alumno->materias()->detach(2);
-
-  // Elimina el 1 (ya existía) y añade el 2 (no existía)
-  $alumno->materias()->toggle([1, 2]);
-  
-  // Sincroniza con los elementos pasados (sólo deja estos en la tabla pivote)
-  $alumno->materias()->sync([1, 3]);
-
-  // También se pueden releacionar mediante el propio objeto
-  $materia = Materia::find(1);
-  $alumno->materias()->attach($materia); // En este caso da error porque ya tiene dicha materia (1)
-```
 
 ## 9.4 Mutadores y accesores
 
