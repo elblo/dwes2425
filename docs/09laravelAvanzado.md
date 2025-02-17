@@ -318,7 +318,7 @@ El método a utilizar `hasOne()` o `belongsTo()` y similares dependerá de la ta
 
 Para crear este tipo de relaciones en Eloquent y Laravel, debemos tener creadas las tablas que vayamos a relacionar y establecer la relación entre ellas a través del método `hasOne()` y `belongsTo()`.
 
-Supongamos que tenemos una tablas `usuario` que está relacionada con la tabla `telefono`.
+Supongamos que tenemos una tabla `usuario` que está relacionada con la tabla `telefono`.
 
 ```php
 <?php
@@ -486,6 +486,10 @@ public function up()
         $table->unsignedInteger('usuario_id');
         $table->unsignedInteger('rol_id');
         $table->timestamps();
+
+        // También se podían haber definido como cláves foráneas
+        // $table->foreignId('usuario_id')->constrained('usuarios');
+        // $table->foreignId('rol_id')->constrained('rols');
     });
 }
 ```
@@ -502,7 +506,7 @@ class Usuario extends Model
 {
     public function roles()
     {
-        return $this->belongsToMany(Rol::class);
+        return $this->belongsToMany(Rol::class, 'rol_usuario');
     }
 }
 ```
@@ -545,7 +549,7 @@ class Rol extends Model
 {
   public function usuarios()
   {
-      return $this->belongsToMany(Usuario::class);
+      return $this->belongsToMany(Usuario::class, 'rol_usuario');
   }
 }
 ```
@@ -572,7 +576,7 @@ class Editor extends Model
 
 ### Ejemplo completo
 
-Vamos a hacer un ejemplo con una APP que gestiones alumnos y asignaturas, de tal manera que MUCHOS ALUMNOS pueden cursar MUCHAS ASIGNATURAS
+Vamos a hacer un ejemplo con una APP que gestione alumnos y asignaturas, de tal manera que **muchos alumnos pueden cursar muchas asignaturas**.
 
 ¿Qué necesitamos para este ejemplo?
 
@@ -825,10 +829,13 @@ Los métodos anteriores admiten un único id, un array de ids o el propio objeto
 
   // Añadirle materias por sus ids
   $alumno->materias()->attach([1, 2, 3]);
+
   // Quitarle materias por sus ids
   $alumno->materias()->detach(2);
+
   // Elimina el 1 (ya existía) y añade el 2 (no existía)
   $alumno->materias()->toggle([1, 2]);
+  
   // Sincroniza con los elementos pasados (sólo deja estos en la tabla pivote)
   $alumno->materias()->sync([1, 3]);
 
@@ -1094,7 +1101,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Crea los modelos `Usuario` y `Perfil`. Cada usuario tiene un perfil, y cada perfil pertenece a un único usuario.
 - En las migraciones asegúrate que las tablas tienen los siguientes campos:
   - `usuarios`: campos `id`, `nombre`, `email`.
-  - `perfiles`: campos `id`, `usuario_id`, `telefono`, `direccion`.
+  - `perfiles`: campos `id`, `usuario_id` (clave foránea), `telefono`, `direccion`.
 - Define la relación en los modelos.
 - Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
 - Consulta los datos de un usuario y muestra su perfil. Para ello, crea una ruta `usuario/{id}` que redirija a la función `show` del controlador y llame a la vista `usuario.show.blade.php` para los datos del usuario con su perfil.
@@ -1104,7 +1111,7 @@ En este apartado vas a crear diferentes relaciones entre modelos.
 - Crea los modelos `Categoria` y `Producto`. Cada categoría tiene muchos productos, pero un producto sólo perteneca una determinada categoría.
 - En las migraciones asegúrate que las tablas tienen los siguientes campos:
   - `categorias`: campos `id`, `nombre`.
-  - `productos`: campos `id`, `nombre`, `categoria_id`.
+  - `productos`: campos `id`, `nombre`, `categoria_id` (clave foránea).
 - Define la relación en los modelos.
 - Rellena con 2 ó 3 registros manualmente o mediante Eloquent en ambas tablas/modelos.
 - Consulta el nombre de una categoría mostrando sus productos. Para ello, crea una ruta `categoria/{id}` que redirija a la función `show` del controlador y llame a la vista `categoria.show.blade.php`.
