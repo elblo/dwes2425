@@ -1455,7 +1455,7 @@ menu.blade.php
 
 ### Práctica: Guía de estadios de fútbol
 
-El objetivo de este ejercicio es crear una extensión de la guía de equipos de fútbol femenino para incluir una nueva funcionalidad: un listado de estadios de fútbol. Los alumnos implementarán rutas, controladores y vistas para mostrar estadios y sus características.
+El objetivo de este ejercicio es crear una extensión de la guía de equipos de fútbol femenino para incluir una nueva funcionalidad: un listado de estadios de fútbol. Implementarás rutas, controladores y vistas para mostrar estadios y sus características.
 
 <figure style="align: center;">
     <img src="imagenes/07/futbol-femenino.gif">

@@ -453,12 +453,43 @@ use App\Models\Comentario;
 
 $comentario = Comentario::find(1);
 
-return $comentario->post->titulo;
+return $comentario->post()->titulo;
 ```
 
 Pasaría lo mismo con el nombre de la clave ajena, si no se llama de la misma manera que Eloquent establece con el sufijo `_id` podemos pasarle como parámetro el nombre de la clave donde debe buscar.
 
+### Añadir/eliminar elementos relacionados
 
+En las relaciones de 1 a muchos hay varias formas de añadir elementos relacionados:
+
+1. Asignación manual mediante clave ajena.
+2. Asignar un un objeto existente.
+3. Asignar un objeto creándolo.
+
+En el siguiente ejemplo de 1 post que tiene muchos comentarios se ven las 3 formas:
+
+```php
+<?php
+$post = new Post();
+$post->titulo = "Fundamentos de programación en Laravel";
+$post->save();
+
+$comentario = new Comentario();
+$comentario->texto = "Me parecen muy interesantes los conceptos tratados en el post.";
+$comentario->autor = "John Doe";
+$comentario->post_id = $post->id; // Forma 1 de asignar 1 comentario a 1 post (directamente mediante su clave ajena)
+$comentario->save();
+
+// Forma 2 de asignar 1 comentario a 1 post (si ya EXISTE el comentario)
+$post->comentario()->save($comentario);
+
+// Forma 3 de asignar 1 comentario a 1 post (CREANDO del tirón el comentario) --> fillable en Comentario.php
+$post->comentario()->create([
+    'texto' => 'Me parecen muy interesantes los conceptos tratados en el post.',
+    'autor' => 'John Doe',
+]);
+
+```
 
 ### Relación Muchos a Muchos (MM a MM)
 
@@ -638,9 +669,9 @@ php artisan make:model Materia
 #### 2. Crear las 3 migraciones
 
 ```console
-php artisan make:migration create_alumnos_table
-php artisan make:migration create_materias_table
-php artisan make:migration create_alumno_materia_table
+php artisan make:migration create_alumnos_table --create=alumnos
+php artisan make:migration create_materias_table --create=materias
+php artisan make:migration create_alumno_materia_table --create=alumno_materia
 ```
 
 #### 3. Modificar las migraciones
@@ -962,7 +993,7 @@ Mediante el siguiente comando creamos una factoría con nombre `AuthorFactory` a
 php artisan make:factory AuthorFactory -m Author
 ```
 
-En el método `definition` devolvemos un array asociativo con los campos del objeto que queremos crear.
+En el método `definition` devolvemos un array asociativo con los campos del objeto que queremos crear. Cada campo lo creamos mediante `fake()` o también `$this->faker`.
 
 ```php
 <?php
@@ -979,14 +1010,16 @@ class AuthorFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'birth_year' => $this->faker->year,
+            'name' => fake()->name,
+            'birth_year' => fake()->year,
+            // 'name' => $this->faker->name, // equivalente a fake()
+            // 'birth_year' => $this->faker->year, // equivalente a fake()
         ];
     }
 }
 ```
 
-#### Asociar factoría al modelo
+#### Asociar factoría al modelo
 
 Hay que asociar la factoría con el modelo tanto en la factoría como en el modelo.
 
@@ -1005,7 +1038,7 @@ class Author extends Model
 }
 ```
 
-#### Utilizar una factoría
+#### Utilizar una factoría
 
 ```php
 <?php
@@ -1021,7 +1054,7 @@ Author::factory()->count(10)->create();
 
 #### Integración con seeders
 
-Combinar factorías con seeders se pueden crear datos dinámicos de forma sencilla. No olvidar incluir los seeders en `DatabaseSeeder`.
+Combinando factorías con seeders se pueden crear datos dinámicos de forma sencilla. No olvidar incluir los seeders en `DatabaseSeeder`.
 
 ```php
 <?php
@@ -1210,10 +1243,7 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 - Ordenar los trabajadores por fecha de nacimiento (más recientes primero).
 - Destacar el trabajador que cumpla años en el día de hoy poniéndole por ejemplo un icono de churros al lado del nombre para la invitación... 😜
   
-<!-- 
-### Práctica guiada: Fútbol femenino
 
--->
 
 <!-- 
 ### Práctica: FernanChollo 

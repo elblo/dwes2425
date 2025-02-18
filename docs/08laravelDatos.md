@@ -419,6 +419,23 @@ $nota->delete(); // Devuelve true/false
 Nota::destroy($id); // admite un array de ids a eliminar: Nota::destroy([1, 2, 3]);
 ```
 
+??? info "Otros métodos: updateOrCreate, firstOrCreate, firstOrNew..."
+    Anímate a buscar en la documentación oficial, hay muchos más métodos para trabajar con los modelos de Eloquent, como:
+
+    - `updateOrCreate()`: Busca un registro, si lo encuentra lo actualiza, si no lo crea.
+    - `firstOrCreate()`: Busca un registro, si lo encuentra lo devuelve, si no lo crea.
+    - `firstOrNew()`: Busca un registro, si lo encuentra lo devuelve, si no devuelve una instancia nueva sin guardar en la BD.
+
+    Por ejemplo: Si ya existe un usuario con ese email, actualizará name y password. Si no, creará un nuevo usuario con esos datos.
+
+    ```
+    <?php
+    User::updateOrCreate(
+        ['email' => 'ejemplo@email.com'], // Buscar usuario con este email
+        ['name' => 'Nuevo Nombre', 'password' => bcrypt('secreto')]
+    );
+    ```
+
 #### Propiedades comunes de los modelos Eloquent
 
 En los modelos podemos definir varias propiedades para configurar el comportamiento de la interacción con la base de datos. A continuación se detallan las más importantes:
