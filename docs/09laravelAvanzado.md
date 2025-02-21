@@ -1243,7 +1243,833 @@ A continuación se detallan los requisitos. Deberás hacer las migraciones corre
 - Ordenar los trabajadores por fecha de nacimiento (más recientes primero).
 - Destacar el trabajador que cumpla años en el día de hoy poniéndole por ejemplo un icono de churros al lado del nombre para la invitación... 😜
   
+### Práctica guiada: Guía de equipos de fútbol femenino
 
+El objetivo de este ejercicio es extender la Guía de Equipos de Fútbol Femenino para utilizar una base de datos relacional. Crearás tablas con migraciones, modelos para gestionar los datos y a integrarlos con controladores y vistas.
+
+#### Paso 1: Migración
+
+Mediante una migración se va a crear la tabla `equipos` con la siguiente estructura:
+
+- `id`: Clave primaria, autoincremental.
+- `nombre`: Nombre del equipo (cadena, único, obligatorio).
+- `estadio`: Nombre del estadio del equipo (cadena, obligatorio).
+- `titulos`: Número de títulos ganados (entero, predeterminado 0).
+- `created_at` y `updated_at`: Campos de timestamps generados automáticamente.
+
+1. Ejecuta:
+
+```bash
+php artisan make:migration create_equipos_table --create=equipos
+```
+
+2. Modifica el archivo de la migración para incluir la estructura pedida:
+
+```php
+<?php
+public function up()
+{
+    Schema::create('equipos', function (Blueprint $table) {
+        $table->id();
+        $table->string('nombre')->unique();
+        $table->string('estadio');
+        $table->integer('titulos')->default(0);
+        $table->timestamps();
+    });
+}
+```
+
+3. Ejecuta la migración para crear la tabla:
+
+```bash
+php artisan migrate
+```
+
+#### Paso 2: Modelo y seeder
+
+Seguimos con la creación del modelo `Equipo` y el seeder `EquiposSeeder`. 
+
+1. Crear el modelo asociado a la tabla anterior.
+
+```bash
+php artisan make:model Equipo
+```
+
+2. Modifica el modelo `Equipo` en `app/Models/Equipo.php` para definir en `$fillable` los campos que se pueden rellenar mediante asignación masiva y opcionalmente la tabla a la que hace referencia el modelo (no es necesario, pero así repasas):
+
+```php
+<?php
+protected $fillable = ['nombre', 'estadio', 'titulos'];
+protected $table = 'equipos'; // Aquí no es necesario porque Laravel la deduce por el nombre del modelo y la tabla
+```
+
+3. Crea un seeder para la tabla `equipos`:
+
+```bash
+php artisan make:seeder EquiposSeeder
+```
+
+4. Modifica el seeder `EquiposSeeder` para generar los datos de ejemplo:
+
+```php
+<?php
+public function run()
+{
+    DB::table('equipos')->insert([
+        ['nombre' => 'Barcelona', 'estadio' => 'Camp Nou', 'titulos' => 30],
+        ['nombre' => 'Real Madrid', 'estadio' => 'Santiago Bernabeu', 'titulos' => 10],
+        ['nombre' => 'Sevilla', 'estadio' => 'Ramón Sánchez Pizjuán', 'titulos' => 8],
+        ['nombre' => 'Valencia', 'estadio' => 'Mestalla', 'titulos' => 6],
+        ['nombre' => 'Atlético de Madrid', 'estadio' => 'Wanda Metropolitano', 'titulos' => 5],
+    ]);
+}
+```
+
+5. Añade el seeder `EquiposSeeder` a la función `run` de `DatabaseSeeder`:
+
+```php
+<?php
+public function run()
+{
+    $this->call([
+        EquiposSeeder::class,
+    ]);
+}
+```
+
+6. Ejecuta los seeders para rellenar la tabla `equipos` con los datos de ejemplo:
+
+```bash
+php artisan db:seed
+```
+
+#### Paso 3: Controladores y CRUD
+
+1. En el controlador `EquipoController` ya creado, modifica los métodos `index`, `show`, `create`, `edit` y `destroy` para obtener los equipos desde la base de datos:
+
+```php
+<?php
+public function index() {
+     $equipos = Equipo::all();
+     return view('equipos.index', compact('equipos'));
+ }
+
+ public function show($id) {
+     $equipo = Equipo::find($id);
+     return view('equipos.show', compact('equipo'));
+ }
+
+ public function create() {
+     return view('equipos.create');
+ }
+
+ public function edit(Equipo $equipo) {
+     return view('equipos.edit', compact('equipo'));
+ }
+
+ public function destroy($id) {
+     $equipo = Equipo::find($id);
+     $equipo->delete();
+     return redirect()->route('equipos.index')->with('success', 'Equipo eliminado correctamente!');
+ }
+```
+
+#### Paso 4: Relaciones entre modelos
+
+En este punto vamos a crear la tabla `estadios` mediante una migración, con un seeder la rellenaremos y crearemos el modelo `Estadio` que lo relacionaremos con `Equipo`.
+
+1. Crear la migración para crear la tabla `estadios`:
+
+```bash
+php artisan make:migration create_estadios_table
+```
+
+2. Rellenarla con los siguientes datos:
+
+```php
+<?php
+ public function up(): void
+    {
+        Schema::create('estadios', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre')->unique();
+            $table->string('ciudad');
+            $table->integer('capacidad');
+            $table->timestamps();
+        });
+    }
+```
+
+3. Crear la migración para añadir la clave foránea `estadio_id` a la tabla `equipos`:
+
+```bash
+php artisan make:migration add_estadio_id_to_equipos_table
+```
+
+4. Rellenarla con los siguientes datos:
+
+```php
+<?php
+public function up(): void
+  {
+      Schema::table('equipos', function (Blueprint $table) {
+          $table->dropColumn('estadio'); // Elimina el campo estadio
+          $table->foreignId('estadio_id')->constrained(); // Añade la clave foránea
+      });
+  }
+  
+public function down(): void
+  {
+      Schema::table('equipos', function (Blueprint $table) {
+          $table->string('estadio');
+          $table->dropForeign(['estadio_id']);
+          $table->dropColumn('estadio_id');
+      });
+  }
+```
+
+5. Crear el modelo `Estadio`:
+
+```bash
+php artisan make:model Estadio
+```
+
+6. Añade en el modelo la relación con `Equipo` teniendo en cuenta que en 1 estadio pueden jugar muchos equipos y un equipo sólo juega en 1 estadio:
+
+```php
+<?php
+    protected $fillable = ['nombre', 'ciudad', 'capacidad'];
+
+    public function equipos(){
+        return $this->hasMany(Equipo::class);
+    }
+```
+
+7. En el modelo `Equipo` añade la relación:
+
+```php
+<?php
+    public function estadio(){
+        return $this->belongsTo(Estadio::class);
+    }
+```
+
+8. Crea el seeder `EstadiosSeeder`:
+
+```bash
+php artisan make:seeder EstadiosSeeder
+```
+
+9. Y rellénalo con los datos de prueba:
+
+```php
+<?php
+public function run(): void
+  {
+      DB::table('estadios')->insert([
+          ['nombre' => 'Camp Nou', 'ciudad' => 'Barcelona', 'capacidad' => 99000],
+          ['nombre' => 'Wanda Metropolitano', 'ciudad' => 'Madrid', 'capacidad' => 68000],
+          ['nombre' => 'Santiago Bernabéu', 'ciudad' => 'Madrid', 'capacidad' => 81000],
+      ]);
+  }
+```
+
+10.  En el archivo `DatabaseSeeder` llama también al seeder recién creado y **en primer lugar**:
+
+```php
+<?php
+public function run()
+{
+    $this->call([
+        EstadiosSeeder::class, // Ojo, llamar en primer lugar
+        EquiposSeeder::class,
+    ]);
+}
+```
+
+11. Modifica el seeder `EquiposSeeder` para asginar equipos a estadios existentes:
+
+```php
+<?php
+public function run()
+{
+    $estadio = Estadio::where('nombre', 'Camp Nou')->first();
+    $estadio->equipos()->create([
+        'nombre' => 'Barça Femenino',
+        'titulos' => 30,
+    ]);
+    $estadio = Estadio::where('nombre', 'Wanda Metropolitano')->first();
+    $estadio->equipos()->create([
+        'nombre' => 'Atlético de Madrid',
+        'titulos' => 10,
+    ]);
+    $estadio = Estadio::where('nombre', 'Santiago Bernabéu')->first();
+    $estadio->equipos()->create([
+        'nombre' => 'Real Madrid Femenino',
+        'titulos' => 5,
+    ]);
+}
+```
+
+12. Ejecuta los seeders para llenar las tablas `estadios` y `equipos`:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+13. Modifica la vista `equipos.index` para mostrar correctamente el estadio de cada equipo:
+
+```php
+<?php
+@foreach($equipos as $key => $equipo)
+    <tr class="hover:bg-gray-100">
+        <td class="border border-gray-300 p-2">
+            <a href="{{ route('equipos.show', $equipo->id) }}" class="text-blue-700 hover:underline">{{ $equipo->nombre }}</a>
+        </td>
+        <td class="border border-gray-300 p-2">{{ $equipo->estadio->nombre }}</td>
+        <td class="border border-gray-300 p-2">{{ $equipo->titulos }}</td>
+    </tr>
+@endforeach
+```
+
+14. Crea la vista `equipos.create` con el formulario para crear un equipo que incluya una lista desplegable con los estadios disponibles:
+
+```html
+@extends('layouts.app')
+@section('title', "Guía de equipos")
+@section('content')
+<form action="{{ route('equipos.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+    @csrf
+    <div class="mb-4">
+        <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="mb-4">
+        <label for="titulos" class="block text-sm font-medium text-gray-700 mb-1">Títulos:</label>
+        <input type="number" name="titulos" id="titulos" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="mb-4">
+        <label for="estadio_id" class="block text-sm font-medium text-gray-700 mb-1">Estadio:</label>
+        <select name="estadio_id" id="estadio_id" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            @foreach ($estadios as $estadio)
+                <option value="{{ $estadio->id }}">{{ $estadio->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <button type="submit"
+        class="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-lg shadow hover:bg-blue-600 focus:ring focus:ring-blue-300">
+        Crear Equipo
+    </button>
+</form>
+@endsection 
+```
+
+15. En la vista `equipos.index` incluir justo después de la tabla un botón que vaya a la ruta anterior:
+
+```html
+<p class="mt-10 text-center">
+    <a href="/equipos/create" class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-full">Crear equipo</a>
+</p>
+```
+
+16. En el controlador `EquipoController` modificar la función `create` para recuperar y pasar a la vista los estadios. Y también la función `store` para recibir los datos del formulario y crear el equipo:
+
+
+```php
+<?php
+public function create() {
+    $estadios = Estadio::all();
+    return view('equipos.create', compact('estadios'));
+}
+
+public function store(Request $request){
+    $validated = $request->validate([
+        'nombre' => 'required|unique:equipos',
+        'titulos' => 'integer|min:0',
+        'estadio_id' => 'required|exists:estadios,id',
+    ]);
+    Equipo::create($validated);
+    return redirect()->route('equipos.index')->with('mensaje', 'Equipo creado correctamente!');
+}
+```
+
+16. Para que la asignación másiva funcione, en el modelo `Equipo` hay que modificar el atributo `$fillable` cambiando el antiguo string `estadio` por el nuevo `estadio_id`:
+
+```php
+<?php
+protected $fillable = ['nombre', 'estadio_id', 'titulos'];
+```
+
+17. Crea la vista `equipos.edit` con el formulario para editar un equipo que incluya una lista desplegable con los estadios disponibles:
+
+```html
+@extends('layouts.app')
+@section('title', "Guía de equipos")
+@section('content')
+<form action="{{ route('equipos.update', $equipo->id) }}" method="POST" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+    @csrf
+    @method('PUT')
+
+    <div class="mb-4">
+        <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $equipo->nombre) }}" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 
+            @error('nombre') border-red-500 @enderror" />
+        @error('nombre')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="mb-4">
+        <label for="titulos" class="block text-sm font-medium text-gray-700 mb-1">Títulos:</label>
+        <input type="number" name="titulos" id="titulos" value="{{ old('titulos', $equipo->titulos) }}" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 
+            @error('titulos') border-red-500 @enderror" />
+        @error('titulos')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="mb-4">
+        <label for="estadio_id" class="block text-sm font-medium text-gray-700 mb-1">Estadio:</label>
+        <select name="estadio_id" id="estadio_id" required
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 
+            @error('estadio_id') border-red-500 @enderror">
+            @foreach ($estadios as $estadio)
+                <option value="{{ $estadio->id }}" {{ $estadio->id == $equipo->estadio_id ? 'selected' : '' }}>
+                    {{ $estadio->nombre }}
+                </option>
+            @endforeach
+        </select>
+        @error('estadio_id')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <button type="submit"
+        class="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-lg shadow hover:bg-blue-600 focus:ring focus:ring-blue-300">
+        Actualizar Equipo
+    </button>
+</form>
+@endsection 
+```
+
+18. Añade en la vista `equipos.index` los enlaces para eliminar un equipo y mostrar el formulario de actualizar anterior. Algo así:
+
+```html
+<td class="border border-gray-300 p-2 text-center">
+    <a href="{{ route('equipos.edit', $equipo->id) }}" class="text-blue-700 hover:underline">📝</a>
+    <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="text-red-700 hover:underline">❌</button>
+    </form>
+</td>
+```
+
+19. En el controlador `EquipoController` modificar la función `edit` para recuperar y pasar a la vista los estadios. Y también la función `update` para recibir los datos del formulario y actualizar el equipo:
+
+```php
+<?php
+  public function edit($id) {
+      $equipo = Equipo::find($id);
+      $estadios = Estadio::all();
+      return view('equipos.edit', compact('equipo', 'estadios'));
+  }
+
+  public function update(Request $request, $id){
+      $validated = $request->validate([
+          'nombre' => 'required|unique:equipos,nombre,'.$id,
+          'titulos' => 'integer|min:0',
+          'estadio_id' => 'required|exists:estadios,id',
+      ]);
+      $equipo = Equipo::findOrFail($id);
+      $equipo->update($validated);
+      return redirect()->route('equipos.index')->with('mensaje', 'Equipo actualizado correctamente!');
+  }
+
+  public function destroy($id) {
+      $equipo = Equipo::find($id);
+      $equipo->delete();
+      return redirect()->route('equipos.index')->with('mensaje', 'Equipo eliminado correctamente!');
+  }
+```
+
+20. En la vista `equipos.index` podemos mejorar la experiencia de usuario añadiendo un "Toast" propio en el que se muestren los mensajes de confirmación cuando se añaden, modifican o eliminan equipos. Justo antes de la tabla de equipos, añade:
+
+```html
+@if (session('mensaje'))
+<div id='toast' class="fixed bottom-5 right-5 flex items-center bg-green-600 text-white text-sm font-semibold px-6 py-3 rounded-lg shadow-lg animate-slide-in">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+    </svg>
+    {{ session('mensaje') }}
+</div>
+
+<!-- Script para desaparecer el toast después de 3 segundos -->
+<script>
+    setTimeout(() => {
+        document.getElementById('toast').classList.add('opacity-0');
+        setTimeout(() => document.getElementById('toast').remove(), 500);
+    }, 3000); 
+</script>
+@endif
+```
+
+#### Paso 5: Añadir un escudo al equipo
+
+A continuación vas a realizar los pasos necesarios para poder subir una imagen como escudo de cada equipo.
+
+1. Crea la migración para añadir el campo `escudo` a la tabla `equipos`:
+
+```bash
+php artisan make:migraton add_escudo_to_equipos_table
+```
+
+2. En el archivo de migración creado, añade el campo `escudo`:
+
+```php
+<?php
+public function up()
+{
+    Schema::table('equipos', function (Blueprint $table) {
+        $table->string('escudo')->nullable();
+    });
+}
+public function down()
+{
+    Schema::table('equipos', function (Blueprint $table) {
+        $table->dropColumn('escudo');
+    });
+}
+```
+
+3. Ejecutar la migración:
+
+```bash
+php artisan migrate
+```
+
+4. Modifica el modelo `Equipo` para añadir el campo `escudo` a `$fillable`:
+
+```php
+<?php
+protected $fillable = ['nombre', 'estadio_id', 'titulos', 'escudo'];
+```
+
+5. Modifica la vista `equipos.create` para incluir un campo de archivo para subir el escudo del equipo:
+
+```html
+<div class="mb-4">
+    <label for="escudo" class="block text-sm font-medium text-gray-700 mb-1">Escudo:</label>
+    <input type="file" name="escudo" id="escudo"
+        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+</div>
+```
+
+6. Modifica la vista `equipos.edit` para incluir un campo de archivo para actualizar el escudo del equipo:
+
+```html
+<div class="mb-4">
+    <label for="escudo" class="block text-sm font-medium text-gray-700 mb-1">Escudo:</label>
+    <input type="file" name="escudo" id="escudo" 
+        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    @if ($equipo->escudo)
+        <p class="mt-2 text-sm text-gray-500">Escudo actual:</p>
+        <img src="{{ asset('storage/' . $equipo->escudo) }}" alt="Escudo de {{ $equipo->nombre }}" class="h-16 mt-2">
+    @endif
+</div>
+```
+
+7. Añade `enctype="multipart/form-data"` a los dos formularios:
+
+```html
+<form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+
+<form action="{{ route('equipos.update', $equipo->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+```
+
+8. Para acceder a archivos desde el navegador mediante su ruta y poder incluirlos en las vistas, es necesario crear un enlace simbólico en `/public` que apunte a `/storage/app/public` (o donde mande el disco configurado). Ejecuta:
+
+```bash
+php artisan storage:link
+```
+
+9. Actualiza el método `store` del controlador para guardar la imagen del escudo  en el subdirectorio `escudos` en el disco público `/storage/app/public`:
+
+```php
+<?php
+public function store(Request $request){
+    $validated = $request->validate([
+        'nombre' => 'required|unique:equipos',
+        'titulos' => 'integer|min:0',
+        'estadio_id' => 'required|exists:estadios,id',
+        'escudo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validación del fichero
+    ]);
+
+    if ($request->hasFile('escudo')) {
+        $path = $request->file('escudo')->store('escudos', 'public'); // Guardar en directorio 'escudos' en disco 'public'
+        $validated['escudo'] = $path;
+    }
+
+    Equipo::create($validated);
+    return redirect()->route('equipos.index')->with('mensaje', 'Equipo creado correctamente!');
+}
+```
+
+10. Actualiza el método `update` del controlador para actualizar la imagen del escudo en el subdirectorio `escudos` en el disco público `/storage/app/public` eliminando el fichero anterior si existiera:
+
+```php
+<?php
+public function update(Request $request, $id){
+    $validated = $request->validate([
+        'nombre' => 'required|unique:equipos,nombre,'.$id,
+        'titulos' => 'integer|min:0',
+        'estadio_id' => 'required|exists:estadios,id',
+        'escudo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validación del fichero
+    ]);
+
+    $equipo = Equipo::findOrFail($id);
+
+    if ($request->hasFile('escudo')) {
+        if ($equipo->escudo) {
+            Storage::disk('public')->delete($equipo->escudo); // Borra el fichero anterior si lo tuviera
+        }
+        $path = $request->file('escudo')->store('escudos', 'public'); // Guardar en directorio 'escudos' en disco 'public'
+        $validated['escudo'] = $path;
+    }
+
+    $equipo->update($validated);
+    return redirect()->route('equipos.index')->with('mensaje', 'Equipo actualizado correctamente!');
+}
+```
+
+11. Actualiza el método `destroy` para eliminar también de disco el escudo:
+
+```php
+<?php
+public function destroy($id) {
+    $equipo = Equipo::find($id);
+    if ($equipo->escudo) {
+        Storage::disk('public')->delete($equipo->escudo);
+    }
+    $equipo->delete();
+    return redirect()->route('equipos.index')->with('mensaje', 'Equipo eliminado correctamente!');
+}
+```
+
+#### Paso 6: Mostrar el escudo del equipo en la vista en detalle
+
+Para mostrar la imagen del escudo en la vista en detalle del equipo hay que modificar el componente de la vista `Equipo` que se creó en su día. También se podría haber mostrado directamente en la vista sin necesidad de crear el componente. Paso a paso, realiza las siguientes acciones.
+
+1. En el controlador `EquipoController` modfica la función `show` para pasar el nombre del estadio:
+
+```php
+<?php
+public function show($id) {
+    $equipo = Equipo::find($id);
+    $estadio = $equipo->estadio->nombre;
+    return view('equipos.show', compact('equipo', 'estadio'));
+}
+```
+
+2.  Modifica el componente de la vista `equipos.show` para mostrar la imagen del escudo del equipo. En el caso de que un equipo no tenga escudo (null), se le pasa la cadena vacía '' para que se construya bien el componente porque requiere string y fallaría con null:
+
+```html
+<x-equipo
+   :nombre="$equipo['nombre']"
+   :estadio="$estadio"
+   :titulos="$equipo['titulos']"
+   :escudo="$equipo['escudo'] ?? ''" 
+/>
+```
+
+Otra opción hubiera sido poner una imagen de escudo por defecto, quedando esa línea así: ` :escudo="$equipo['escudo'] ?? 'escudos/default.png'"`.
+
+3. En el constructor del componente de la vista `Equipo`, añadir el campo escudo. Está en `app/View/Components/Equipo.php`:
+
+```php
+<?php
+public function __construct(
+    public string $nombre,
+    public string $estadio,
+    public int $titulos,
+    public string $escudo ) { }
+```
+
+4. En la vista del componente de la vista `Equipo`, añadir la imagen. Está en `resources/views/components/equipo.blade.php`:
+
+```html
+<div class="equipo border rounded-lg shadow-md p-4 bg-white">
+    @if ($escudo)
+       <p>
+            <img src="{{ asset('storage/' . $escudo) }}" alt="Escudo de {{ $nombre }}" class="h-8 w-8 object-cover rounded-full">
+        </p>
+    @endif
+    <h2 class="text-xl font-bold text-blue-800">{{ $nombre }}</h2>
+    <p><strong>Estadio:</strong> {{ $estadio }}</p>
+    <p><strong>Títulos:</strong> {{ $titulos }}</p>
+</div>
+```
+
+#### Paso 7: Utilizar factorías para datos de ejemplo
+
+1. Crea una factoría para el modelo `Estadio`:
+
+```bash
+php artisan make:factory EstadioFactory --model=Estadio
+```
+
+2. Modifica la factoría para crear datos aleatorios:
+
+```php
+<?php
+public function definition(): array
+{
+    return [
+        'nombre' => fake()->unique()->city.' Stadium',
+        'ciudad' => fake()->unique()->city,
+        'capacidad' => fake()->numberBetween(10000, 100000),
+    ];
+}
+```
+
+3. Actualiza el seeder `EstadiosSeeder` para utilizar la factoría:
+
+```php
+<?php
+public function run()
+{
+    //...
+    Estadio::factory()->count(5)->create();
+}
+```
+
+4. Modifica el modelo `Estadio` para permitir factorías:
+
+```php
+<?php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Estadio extends Model
+{
+    use HasFactory;
+    // ...
+}
+```
+
+1. Repetimos el proceso, ahora para `Equipo`. Crea su factoría:
+
+```bash
+php artisan make:factory EquipoFactory --model=Equipo
+```
+
+6. Modifica la factoría para crear datos aleatorios:
+
+```php
+<?php
+public function definition(): array
+{
+    return [
+        'nombre' => fake()->unique()->company,
+        'titulos' => fake()->numberBetween(0, 50),
+        'estadio_id' => \App\Models\Estadio::factory(), // Crea un estadio mediante su factoría
+        'escudo' => 'escudos/default.png', // Imagen por defecto
+      ];
+}
+```
+
+!!! info "Atención"
+    Al llamar a la factoría de `Estadio` en el punto anterior, ya no es necesario llamar llamar en `DatabaseSeeder` al seeder `EstadiosSeeder` que a su vez llama a la factoría. Directamente se crearían los estadios al llamar al seeder `EquiposSeeder` siguiente.
+
+7. Actualiza el seeder `EquiposSeeder` para utilizar la factoría:
+
+```php
+<?php
+public function run()
+{
+    //...
+    Equipo::factory()->count(10)->create();
+}
+```
+
+8. Modifica el modelo `Equipo` para permitir factorías:
+
+```php
+<?php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Equipo extends Model
+{
+    use HasFactory;
+    // ...
+}
+```
+
+#### Resultado de la aplicación
+
+<figure style="align: center;">
+    <img src="imagenes/09/futbol-femenino-tema9.gif">
+    <figcaption>Ejemplo de navegación por la app</figcaption>
+</figure>
+
+### Práctica: Guía de estadios de fútbol
+
+El objetivo de esta práctica es crear una extensión de la guía de equipos de fútbol femenino para incluir la funcionalidad de estadios, jugadoras y partidos.
+
+Pasos a Seguir:
+
+1. **Completa el CRUD de estadios**
+
+- Añade los métodos create, store, edit, update y destroy al controlador `EstadioController`.
+- Modifica las vistas para la gestión del estadio (index, show, create, edit).
+- Modifica el componente de estadio para mostrar los equipos que juegan.
+
+2. **Jugadoras y partidos: Crear Migraciones y Modelos**
+
+- Genera una migración para las jugadoras, asociándolas con un equipo y con la posibilidad de poner una foto cada una.
+- Añade una migración para la tabla partidos, incluyendo equipos locales y visitantes, fecha del partido y resultado.
+- Ejecuta todas las migraciones.
+
+3. **Seeders y Factorías**
+
+- Crea seeders para las tablas jugadoras y partidos.
+- Usa factorías para generar datos de ejemplo para jugadoras y partidos.
+
+4. **Modelos y Relaciones**
+
+Define las relaciones en los modelos:
+
+- Un equipo tiene muchas jugadoras.
+- Un equipo puede tener muchos partidos como local o visitante.
+- Un partido tiene un equipo local y un equipo visitante.
+- Define las relaciones inversas y ajusta las configuraciones según sus necesidades.
+
+5. **Implementa las funcionalidades CRUD de jugadoras y partidos**
+
+- Implementa formularios para crear y editar jugadoras y partidos.
+- Asegúrate de que los campos estén correctamente validados antes de guardar los datos.
+- Cada jugador puede o no tener una foto.
+
+6. **Vistas y Componentes**
+
+- Modifica el componente de equipos para mostrar a las jugadoras.
+
+---
+
+#### Preguntas para reflexionar
+
+1. **Migraciones**: ¿Qué ventajas tiene utilizar migraciones para gestionar el esquema de la base de datos?
+2. **Relaciones**: ¿Cómo gestionarías las relaciones many-to-many (por ejemplo, entre equipos y partidos)?
+3. **Blade y Componentes**: ¿Qué beneficios aporta el uso de componentes Blade en formularios complejos?
 
 <!-- 
 ### Práctica: FernanChollo 
