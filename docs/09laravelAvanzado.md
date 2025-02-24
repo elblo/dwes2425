@@ -1019,6 +1019,28 @@ class AuthorFactory extends Factory
 }
 ```
 
+En modelos relacionados lo más sencillo es llamar a la factoría directamente en el campo de la relación:
+
+```php
+<?php
+namespace Database\Factories;
+
+use App\Models\Author;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class BookFactory extends Factory
+{
+    public function definition(): array
+    {
+        return [
+            'isbn' => fake()->isbn13(), // Crea un ISBN de 13 dígitos (formato actual)
+            'titulo' => fake()->sentence(5), // Genera un título de 5 palabras
+            'author_id' => Author::factory() // Crea un autor y lo relaciona con el libro
+        ];
+    }
+}
+```
+
 #### Asociar factoría al modelo
 
 Hay que asociar la factoría con el modelo tanto en la factoría como en el modelo.
@@ -1042,7 +1064,7 @@ class Author extends Model
 
 ```php
 <?php
-// Donde nos interese, por ejemplo en el controlador, modelo...
+// Donde nos interese, por ejemplo en el controlador, modelo... pero lo ideal es en un seeder
 use App\Models\Author;
 
 // Crear un autor
@@ -1050,6 +1072,14 @@ Author::factory()->create();
 
 // Crear 10 autores
 Author::factory()->count(10)->create();
+// También crea 10 autores
+Author::factory(10)->create();
+
+// Crea 10 autores con 3 libros para cada uno
+Author::factory()
+    ->count(10) 
+    ->hasBooks(3) 
+    ->create();
 ```
 
 #### Integración con seeders
@@ -1076,6 +1106,22 @@ class BooksSeeder extends Seeder
         $authors->each(function ($author) {
             Book::factory()->count(2)->create(['author_id' => $author->id]);
         });
+    }
+}
+```
+
+Opción más sencilla para **crear en el mismo seeder autores y libros relacionados**:
+
+```php
+<?php
+class AuthorsSeeder extends Seeder
+{
+    public function run()
+    {
+        Author::factory()
+            ->count(10) // Crea 10 autores
+            ->hasBooks(3) // Para cada autor crea 3 libros relacionados
+            ->create();
     }
 }
 ```
