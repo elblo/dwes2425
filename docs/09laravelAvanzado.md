@@ -881,10 +881,15 @@ Haz tú ahora la vista correspondiente a los alumnos que cursan una determinada 
 
 Los **mutatores** permiten transformar datos antes de guardarlos y los **accesores** los transforman al recuperarlos.
 
-Ejemplo sobre el atributo password:
+Ejemplo sobre el atributo `password` definido como `string` en la migración:
 
 - El mutador (set) encripta la contraseña con bcrypt().
 - El accesor (get) devuelve "********" para ocultar la contraseña al acceder al modelo.
+
+Y otro ejemplo más útil sobre el atributo `preferencias`, un array asociativo con el listado de preferencias del usuario. Como el tipo de dato `array` no existe, se define como `json` en la migración (también valdría `text`) y mediante el mutador y accesor lo transformamos:
+
+- El mutador (set) trata el array asociativo de PHP como un objeto JSON que codifica a un string (listo para almacenar en la BDD).
+- El accesor (get) decodifica el string a un objeto JSON accesible como array asociativo de PHP.
 
 ```php
 <?php
@@ -893,12 +898,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
+    // Atributo 'password∫' para usar con mutador (set) y accesor (get)
     protected function password(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => '********', // Oculta la contraseña al acceder
             set: fn ($value) => bcrypt($value), // Encripta al guardar
         );
+    }
+
+    // Atributo 'preferencias' para usar con mutador (set) y accesor (get)
+    protected function preferencias(): Attribute{
+
+      return Attribute::make(
+          get: fn ($value) => json_decode($value, true), // Accesor: Devuelve preferencias como array PHP (true para indicar que es asociativo)
+          set: fn ($value) => json_encode($value, JSON_UNESCAPED_UNICODE),  // Mutador: Transforma el array de preferencias a objeto JSON que almacena como string
+      );
     }
 }
 ```
@@ -913,10 +928,22 @@ $user = new User();
 $user->password = 'mi_contraseña_segura';
 echo $user->password; // Salida: ******** (accesor oculta el valor)
 
+// Internamente 'preferencias' guarda un JSON o string, pero se le asigna o recupera un array asociativo
+$user->preferencias = ["tema" => "claro", "idioma" => "ES", "mobile" => true, "size" => 12];
+dd($user->preferencias); 
+/* Salida: array:4 [▼ 
+  "tema" => "claro"
+  "idioma" => "ES"
+  "mobile" => true
+  "size" => 12
+]
+*/
+
 $user->save();
 
 // Verificamos en la base de datos
-echo $user->getAttributes()['password']; // Salida: $2y$10$...
+echo $user->getAttributes()['password']; // Salida del hash sin modificar: $2y$10$...
+dd($alumno->getAttributes()['preferencias']); // Salida como texto sin transformar: "{"tema":"claro","idioma":"ES","mobile":true,"size":12}" 
 ```
 
 Más info en [mutadores y accesores](https://laravel.com/docs/11.x/eloquent-mutators#defining-an-accessor).
