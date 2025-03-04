@@ -153,7 +153,7 @@ class SessionController extends Controller
        // Intentar iniciar sesión con esos datos (email y password)
        if (!Auth::attempt($attributes)) {
             throw ValidationException::withMessages([
-                'email' => 'Sorry, those credentials do not match.'
+                'email' => 'Esas credenciales no son correctas.'
             ]);
         }
 
@@ -430,6 +430,19 @@ Y ahora la vista en `/resources/views/sections/home.blade.php`:
 @endsection
 ```
 
+#### 6. Proteger rutas
+
+Mediante el middleware `auth` de Laravel, podemos proteger rutas para que solo los usuarios autenticados puedan acceder a ellas:
+
+```php
+<?php
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth');
+```
+
+En el siguiente punto se amplía el uso de middlewares.
+
 ### Resumen
 
 - Mediante `auth()` se acceden a los datos del usuario. Ej: `auth()->user()->name;`
@@ -438,6 +451,7 @@ Y ahora la vista en `/resources/views/sections/home.blade.php`:
 - Con `Auth::logout()` se cierra la sesión.
 - Se puede utilizar indistintamente el helper global `request()` o `$request` para trabajar con las peticiones. Si se hace con el segundo, hay que pasarlo explícitamente como parámetro `Request $request` en la función del controlador que se trate. Mejor práctica esta última porque mejora la legibilidad, el testing y mantenimiento.
 - Con las directivas `@auth` y `@guest` en plantillas se puede mostrar contenido visible para usuarios autenticados o para invitados respectivamente.
+- Mediante el middleware `auth` hacemos que ciertas rutas sólo sean accesibles a usuarios autenticados.
 - Utilizar `request()->session()->invalidate()` al cerrar la sesión o `request()->session()->regenerate()` en el login, son buenas prácticas que mejoran la seguridad.
 
 ## 10.2 Autorización
@@ -452,27 +466,37 @@ Los Gates son funciones de cierre (closures) que determinan si un usuario está 
 
 #### Definir un Gate
 
-Los Gates se definen en `app/Providers/AuthServiceProvider.php` dentro del método `boot()`:
+Los Gates se definen en `app/Providers/AppServiceProvider.php` dentro del método `boot()`. Los Gates siempre reciben la instancia del usuario como primer argumento y opcionalmente argumentos adicionales como otros modelos Eloquent que sean necesarios:
 
 ```php
 <?php
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 
-class AuthServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
+    // ...
+
     public function boot()
     {
         Gate::define('ver-admin', function (User $user) {
             return $user->role === 'admin';
         });
+
+        Gate::define('update-post', function (User $user, Post $post) {
+            return $user->id === $post->user_id;
+
+        // Como los controladores, los Gates también se pueden definir utilizando un array con la clase y función
+        Gate::define('update-post', [PostPolicy::class, 'update']);
+    });
     }
 }
 ```
 
 #### Usar un Gate
 
-Para verificar el permiso en un controlado:
+Para verificar el permiso en un controlador:
 
 ```php
 <?php
@@ -523,16 +547,21 @@ class PostPolicy
 
 #### Registrar una Policy
 
-En `AuthServiceProvider.php`:
+Por defecto Laravel descubre y asocia las policies si están correctamente nombradas y ubicadas, por ejemplo *PostPolicy* en `app/Policies` para una clase *Post* en `app/Models`. Si no fuera el caso, es posible registrar la asociación entre modelo y policy de forma manual en el método `boot()` de `AppServiceProvider.php`:
 
 ```php
 <?php
 use App\Models\Post;
 use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
 
-protected $policies = [
-    Post::class => PostPolicy::class,
-];  
+// ...
+
+public function boot(): void
+{
+    // Clase Post con policy PostPolicy (esto, Laravel lo saca solo, no sería necesario)
+    Gate::policy(Post::class, PostPolicy::class);
+}
 ```
 
 #### Usar una Policy
@@ -541,10 +570,27 @@ En un controlador:
 
 ```php
 <?php
-public function update(Request $request, Post $post)
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class PostController extends Controller
 {
-    $this->authorize('update', $post);
-    // Continuar con la lógica de actualización
+    // Actualizar el post pasado como argumento
+    public function update(Request $request, Post $post): RedirectResponse
+    {
+        if ($request->user()->cannot('update', $post)) {
+            abort(403);
+        }
+
+        // Aquí el código para actualizar el post...
+        
+        return redirect('/posts');
+    }
 }
 ```
 
@@ -591,8 +637,6 @@ php artisan make:middleware CheckRole
 
 Esto genera `app/Http/Middleware/CheckRole.php`, donde se puede definir la lógica de autorización. Los middlewares tienen un único método llamado `handle`, que recibe una petición y una función para llamar como continuación si pasa la verificación que especifiquemos. Y si la verificación falla, podemos devolver una respuesta o redirigir a otra ruta.
 
-
-
 ```php
 <?php
 use Closure;
@@ -609,15 +653,6 @@ class CheckRole
     }
 }
 ```
-NO ES NECESARIO
-Se registra en `app/Http/Kernel`.php:
-
-```php
-<?php
-protected $routeMiddleware = [
-    'checkRole' => \App\Http\Middleware\CheckRole::class,
-];
-```
 
 Y se usa en rutas:
 
@@ -626,30 +661,39 @@ Y se usa en rutas:
 Route::get('/admin', [AdminController::class, 'view'])->middleware('checkRole:admin');
 ```
 
+<!-- ## 10.3 Laravel Cloud
+Crear cuenta Sandbox
+Crear entorno con repo de GitHub y asociar BDD
+Desplegar
+Dominios personalizados
+Opciones: Hibernar, despliegues automáticos al hacer commit en el repo
+...
 
+## 10.4 Kits de inicio
+React mediante Innertia.js -->
 
+## Actividades
 
+A continuación se presentan 2 prácticas sobre autorización y autenticación. Escoge una de las 2 e impleméntala.
 
+### Gestión de usuarios
 
+Aplicación que permita gestionar usuarios con autenticación y autorización, implementando roles de usuario y permisos específicos.
 
-### Restringir una ruta
+- Implementar autenticación manual con Laravel.
+- Crear dos roles: admin y user.
+- Los administradores pueden gestionar (crear, editar y eliminar) usuarios.
+- Los usuarios pueden actualizar su propio perfil pero no el de otros.
+- Restringir acceso a las vistas según el rol del usuario.
 
-Si nos fijamos, en el nuevo controlador que se ha creado `HomeController` podemos ver unas líneas al principio del archivo que son las que determinan si la ruta está restringida a usuarios registrados y logueados.
+### Mini Instagram
 
-```php
-<?php
-public function __construct()
-{
-    $this->middleware('auth');
-}
-```
+Aplicación que permita a los usuarios subir fotos, ver las de otros, pero modificar únicamente las suyas.
 
-Mediante el uso del `middleware` llamado `auth` establecemos que todas las rutas que hagan uso de este controlador deban pasar por el login para mostrar el contenido.
-
-Por lo tanto, en nuestros proyectos es recomendable utilizar diferentes controladores para diferentes vistas; las que estén reestringidas por el login y las que no.
-
-
-
+- Implementar autenticación manual con Laravel.
+- Cada usuario podrá subir, editar y eliminar únicamente sus propias fotografías.
+- Todos los usuarios pueden ver las fotografías de los demás.
+- Implementar middlewares y policies para restringir la modificación y eliminación.
 
 
 

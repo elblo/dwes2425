@@ -83,7 +83,12 @@ Duración estimada: 86 horas
     * Relaciones entre modelos
     * Seeders y factorías
     * Mutadores y accesores
-10. [Servicios REST](10laravelRest.md) (12h)
+10. [Autenticación y autorización](10laravelAutenticacion.md) (12h)
+    * Autenticación
+    * Autorización
+    * Kits de inicio
+    * Laravel Cloud
+11. [Servicios REST](10laravelRest.md) (12h)
     * Producción y consumo.
     * *AJAX* con *JSON*.
 
