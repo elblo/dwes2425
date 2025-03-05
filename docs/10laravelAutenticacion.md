@@ -198,7 +198,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
         <div class="space-y-12">
           <div class="border-b border-gray-900/10 pb-12">
             <div class="flex flex-col gap-3">
-              
+
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                     <div class="mt-2">
@@ -209,7 +209,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                     <div class="mt-2">
@@ -220,7 +220,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <div class="mt-2">
@@ -231,7 +231,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Repite el Password</label>
                     <div class="mt-2">
@@ -242,7 +242,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
                         @enderror
                     </div>
                 </div>
-                
+
 
             </div>
           </div>
@@ -250,7 +250,7 @@ Vista para el fomulario de registro en `/resources/views/auth/register.blade.php
 
         <div class="mt-6 flex items-center justify-end gap-x-6">
           <a href="/" class="text-sm font-semibold leading-6 text-gray-900">Cancelar</a>
-          <input type="submit" value="Registro" />
+          <input type="submit" value="Registro" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
         </div>
       </form>
     </div>
@@ -287,7 +287,7 @@ Vista para el fomulario de login en `/resources/views/auth/login.blade.php`:
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <div class="mt-2">
@@ -298,14 +298,14 @@ Vista para el fomulario de login en `/resources/views/auth/login.blade.php`:
                         @enderror
                     </div>
                 </div>
-                
+
             </div>
           </div>
         </div>
 
         <div class="mt-6 flex items-center justify-end gap-x-6">
           <a href="/" class="text-sm font-semibold leading-6 text-gray-900">Cancelar</a>
-          <input type="submit" value="Log In" />
+          <input type="submit" value="Log In" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
         </div>
       </form>
     </div>
@@ -332,17 +332,17 @@ Crear la vista con la plantilla base en `/resources/views/layout/app.blade.php`:
 
         <!-- Styles / Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     </head>
-    <body class="font-sans antialiased">
-       <header>
+    <body class="flex flex-col min-h-screen">
+       <header class="bg-blue-800 text-white">
             @include('partials.menu')
        </header>
-       <main>
+       <main class="flex-grow">
             @yield('content')
        </main>
-       <footer>
-            Prueba de autenticación
+       <footer class="pl-10 text-center bg-blue-800 text-white py-4">
+            Aplicación desarrollada por 🦫 en 2025
        </footer>
     </body>
 </html>
@@ -356,16 +356,16 @@ Crear la vista con el menú con la navegación y opciones en `/resources/views/p
 <div class="flex h-16 items-center justify-between">
     <div class="flex items-center">
         <div class="ml-10 flex items-baseline space-x-4">
-            
+
             @php
                 $currentRoute = request()->path();
             @endphp
 
             <nav class="flex space-x-4">
-                <a href="/" class="{{ $currentRoute === '/' ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600' }}">
+                <a href="/" class="{{ $currentRoute === '/' ? 'text-orange-300 font-semibold' : ' hover:text-orange-300' }}">
                     Inicio
                 </a>
-                <a href="/usuarios" class="{{ $currentRoute === 'usuarios' ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600' }}">
+                <a href="/usuarios" class="{{ $currentRoute === 'usuarios' ? 'text-orange-300 font-semibold' : 'hover:text-orange-300' }}">
                     Usuarios
                 </a>
                 <!--
@@ -377,14 +377,14 @@ Crear la vista con el menú con la navegación y opciones en `/resources/views/p
     </div>
 
     <!-- Enlaces para login/register -->
-    <div class="ml-4 flex items-center md:ml-6">
+    <div class="ml-4 mr-10 flex items-center md:ml-6">
         <!-- Visible para invitados -->
         @guest
             <nav class="flex space-x-4">
-                <a href="/login" class="{{ $currentRoute === 'login' ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600' }}">
+                <a href="/login" class="{{ $currentRoute === 'login' ? 'text-orange-300 font-semibold' : ' hover:text-orange-300' }}">
                     Log In
                 </a>
-                <a href="/register" class="{{ $currentRoute === 'register' ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-indigo-600' }}">
+                <a href="/register" class="{{ $currentRoute === 'register' ? 'text-orange-300 font-semibold' : ' hover:text-orange-300' }}">
                     Registro
                 </a>
             </nav>
@@ -417,16 +417,23 @@ Y ahora la vista en `/resources/views/sections/home.blade.php`:
 ```html
 @extends('layout.app')
 @section('content')
-<h1>Home</h1>
+<div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md space-y-8">
 
-@auth
-    <h1>Hola {{ auth()->user()->name }}!</h1>
-@endauth
+      <div>
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Home</h2>
+      </div>
 
-@guest
-    <h1>Hola invitado/a!</h1>
-@endguest
+        @auth
+            <p class="text-center text-xl text-green-600">Bienvenido {{ auth()->user()->name }}!</p>
+        @endauth
 
+        @guest
+            <p class="text-center text-xl text-orange-400">Hola invitado/a.</p>
+            <p>Inicia sesión desde le menú superior o regístrate si todavía no tienes cuenta.</p>
+        @endguest
+    </div>
+</div>
 @endsection
 ```
 
@@ -529,6 +536,8 @@ Ejecutar el comando:
 php artisan make:policy PostPolicy
 ```
 
+Opcionalmente puedes indicarle el flag `--model=Modelo` para generar la policy con métodos de ejemplo sobre el modelo propuesto. 
+
 Esto crea `app/Policies/PostPolicy.php`, donde se definen los métodos de autorización:
 
 ```php
@@ -588,7 +597,7 @@ class PostController extends Controller
         }
 
         // Aquí el código para actualizar el post...
-        
+
         return redirect('/posts');
     }
 }
