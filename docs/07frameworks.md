@@ -600,6 +600,29 @@ $opcion = 2;
 @endswitch
 ```
 
+#### Directivas formularios
+
+Para el uso en formularios existen unas directivas Blade muy útiles:
+
+- `@checked`: Marca la casilla si la condición es `true`.
+- `@selected`: Selecciona una opción entre las disponibles en la lista desplegables.
+- `@readonly`: Añada el atributo `readonly` para hacer el elemento de solo lectura.
+- `@required`: Añada el atributo `required` para hacer el elemento obligatorio.
+
+Ejemplos:
+
+```html
+<input type="checkbox" name="subscribe" @checked($user->subscribed) />
+
+<select name="role">
+    <option value="admin" @selected($user->role ==='admin' )>Admin</option>
+</select>
+
+<input type="text" name="username" @readonly($user->is_admin) />
+
+<input type="email" name="email" @required($user->needs_verification) />
+```
+
 #### Componentes Blade
 
 Los Componentes Blade permiten definir elementos reutilizables:
