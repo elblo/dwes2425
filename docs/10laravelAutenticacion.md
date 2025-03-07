@@ -493,10 +493,10 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('update-post', function (User $user, Post $post) {
             return $user->id === $post->user_id;
+        });
 
-        // Como los controladores, los Gates también se pueden definir utilizando un array con la clase y función
+        // Como en las rutas, los Gates también se pueden definir utilizando un array con la clase y función
         Gate::define('update-post', [PostPolicy::class, 'update']);
-    });
     }
 }
 ```
@@ -508,11 +508,11 @@ Para verificar el permiso en un controlador:
 ```php
 <?php
 if (Gate::allows('ver-admin')) {
-    // El usuario tiene permiso
+    // El usuario tiene autorización
 }
 
-if (Gate::denies('ver-admin')) {
-    // El usuario no tiene permiso
+if (Gate::denies('update-post', $post)) {
+    // El usuario no tiene autorización
 }
 ```
 
@@ -523,6 +523,28 @@ En una vista Blade:
     <p>Eres administrador.</p>
 @endcan
 ```
+
+??? info "Métodos de Gates"
+    Existen más métodos en las Gates. Anímate a investigarlos en la [documentación oficial](https://laravel.com/docs/12.x/authorization). Tanto los métodos de Gate para autorizar acciones como `allows`, `denies`, `check`, `any`, `none`, `authorize`, `can`, `cannot` y las directivas de autorización Blade `@can`, `@cannot`, `@canany` pueden recibir un array como segundo argumento, cuyos elementos se pasan como parámetros a la función closure de la Gate y se pueden uilizar utilizar para dar contexto adicional.
+
+    ```php
+    <?php
+    // En AppServiceProvider -> boot()
+    Gate::define('create-post', function (User $user, Category $category, bool $pinned) {
+        if (! $user->canPublishToGroup($category->group)) {
+            return false;
+        } elseif ($pinned && ! $user->canPinPosts()) {
+            return false;
+        }
+    
+        return true;
+    });
+    
+    // En un controlador donde sea necesario comprobar si el usuario tiene la autorización
+    if (Gate::check('create-post', [$category, $pinned])) {
+        // The user can create the post...
+    }
+    ```
 
 ### Policies
 
