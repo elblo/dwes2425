@@ -594,7 +594,7 @@ class PostController extends Controller
     {
         if ($request->user()->cannot('update', $post)) {
             abort(403);
-        }
+        }      
 
         // Aquí el código para actualizar el post...
 
@@ -608,7 +608,36 @@ En una vista Blade:
 ```html
 @can('update', $post)
     <button>Editar</button>
-@endcan    
+@endcan
+```
+
+En algunos casos es necesario pasar la propia definición de la clase en lugar de una instancia de la misma, como hacíamos con `post` en el ejemplo anterior.
+
+En un controlador:
+
+```php
+<?php
+public function usuarios(Request $request){
+    // Las 3 opciones siguientes son válidas
+    // if ($request->user()->cannot('show', $request->user())) { 
+    // if ($request->user()->cannot('show', Auth::user())) { 
+    if ($request->user()->cannot('show', User::class)) { 
+        abort(403);
+    }
+
+    return view('sections.usuarios');
+}
+```
+
+En una vista Blade:
+
+```php
+// Las 3 opciones siguientes son válidas
+// @can('show', auth()->user())
+// @can('show', Auth::user())
+@can('show', 'App\Models\User')
+    <p>Tienes autorización para ver este contenido.</p>
+@endcan
 ```
 
 ### Middlewares
@@ -633,7 +662,11 @@ Para aplicar autorización específica en rutas mediante gates o policies defini
 ```php
 <?php
 Route::get('/admin', [AdminController::class, 'view'])->middleware('can:ver-admin');
+
 Route::get('/post/{post}/edit', [PostController::class, 'edit'])->middleware('can:update, post');
+
+Route::get('/usuarios', [PagesController::class, 'usuarios'])->middleware('can:show, App\Models\User'); 
+
 ```
 
 #### Middleware personalizado
@@ -667,7 +700,7 @@ Y se usa en rutas:
 
 ```php
 <?php
-Route::get('/admin', [AdminController::class, 'view'])->middleware('checkRole:admin');
+Route::get('/admin', [AdminController::class, 'view'])->middleware(CheckRole::class.":admin");
 ```
 
 <!-- ## 10.3 Laravel Cloud
