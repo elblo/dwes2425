@@ -685,6 +685,8 @@ Para aplicar autorización específica en rutas mediante gates o policies defini
 <?php
 Route::get('/admin', [AdminController::class, 'view'])->middleware('can:ver-admin');
 
+// OJO! Para que coja 'post' como objeto del tipo Post y no como id (string), en la función edit hay 
+// que pasar el parámetro como Post y así Laravel recuperará automáticamente el Post con ese id
 Route::get('/post/{post}/edit', [PostController::class, 'edit'])->middleware('can:update, post');
 
 Route::get('/usuarios', [PagesController::class, 'usuarios'])->middleware('can:show, App\Models\User'); 
